@@ -22,6 +22,15 @@ public class MusicExtractor {
         this.filePath = filePath;
         audioInputStream = AudioSystem.getAudioInputStream(new File(filePath));
     }
+
+    /**
+     * returns the number of seconds this audio takes to play;
+     **/
+    public double getAudioLengthInSeconds(){
+        return audioInputStream.getFrameLength()/audioInputStream.getFormat().getFrameRate();
+    }
+
+
     /**
      * closes the AudioInputStream
      * **/
