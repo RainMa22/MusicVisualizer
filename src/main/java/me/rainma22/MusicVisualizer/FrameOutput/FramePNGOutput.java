@@ -32,6 +32,6 @@ public class FramePNGOutput implements FrameOutput {
     }
 
     public void writeImage(BufferedImage image, int index) throws IOException {
-        ImageIO.write(image, "PNG", new File(String.format(formatString, index)));
+        ImageIO.write(image, "PNG", new File(folder,String.format(formatString, index)));
     }
 }

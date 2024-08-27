@@ -23,7 +23,7 @@
 
 ### TO-DO List
 - [x] basic image generation behavior
-    - [ ] chunk size calculated on a FPS target
+    - [x] chunk size calculated on a FPS target
     - [ ] center image
     - [ ] foreground rotation
     - [ ] background image
