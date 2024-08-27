@@ -1,6 +1,7 @@
 package me.rainma22.MusicVisualizer;
 
 import com.tambapps.fft4j.FastFouriers;
+import me.rainma22.MusicVisualizer.ImageProcessor.AwtImageProcessor;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -10,17 +11,18 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class Main {
-    private static final int CHUNK_SIZE = 2048;
+    private static int chunkSize = 2048;
+    private static final float FPS_TARGET = 60;
 
     public static void main(String[] args) {
 
         if (args.length < 2) {
-            System.out.println("Usage: java -jar MusicVisualizer [CUI|GUI] [filename]");
+            System.out.println("Usage: java -jar MusicVisualizer (CUI|GUI) (filename)");
             return;
         }
-        boolean isGUI = args[0].equals("GUI");
+        boolean isGUI = !args[0].equalsIgnoreCase("CUI");
 
-        ImageProcessor processor = new ImageProcessor(1920, 1080);
+        AwtImageProcessor processor = new AwtImageProcessor(1920, 1080);
         if (!isGUI) {
             new File("output").mkdir();
             MusicExtractor me;
@@ -28,8 +30,8 @@ public class Main {
                 me = new MusicExtractor(args[1]);
                 double[] frames = me.readFile();
                 System.out.printf("number of Channel: %d\n", me.getNumChannels());
-                for (int j = 0; j < frames.length; j += CHUNK_SIZE) {
-                    double[] RE = Arrays.copyOfRange(frames, j, j + CHUNK_SIZE);
+                for (int j = 0; j < frames.length; j += chunkSize) {
+                    double[] RE = Arrays.copyOfRange(frames, j, j + chunkSize);
 
                     double[] IM = new double[RE.length];
                     double[] outRE = new double[RE.length];
@@ -40,11 +42,11 @@ public class Main {
 //                        System.out.printf("sample %d:channel %d: %f, converted to %f+%fi\n", (j + i) / 2, i % 2, RE[i],
 //                                outRE[i], outIM[i]);
 //                    }
-                    int i = j/CHUNK_SIZE;
+                    int i = j/ chunkSize;
                     BufferedImage image = processor.processSample(outRE, outIM);
                     String fileName = String.format("output/%04d.png", i);
                     ImageIO.write(image, "png", new File(fileName));
-                    System.out.printf("Written Image %d out of %d\n", i, frames.length/CHUNK_SIZE + 1);
+                    System.out.printf("Written Image %d out of %d\n", i, frames.length/ chunkSize + 1);
                 }
                 me.close();
             } catch (UnsupportedAudioFileException e) {

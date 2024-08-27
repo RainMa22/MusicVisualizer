@@ -1,4 +1,4 @@
-package me.rainma22.MusicVisualizer;
+package me.rainma22.MusicVisualizer.ImageProcessor;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -7,16 +7,16 @@ import java.awt.image.BufferedImage;
  * An image processor that takes a list of float and outputs them onto an image
  * using Java.awt.Image
  **/
-public class ImageProcessor {
+public class AwtImageProcessor {
     private int width, height;
 
     /**
-     * Creates a new ImageProcessor
+     * Creates a new AwtImageProcessor
      *
      * @param width  the desired Image Width
      * @param height the desired Image Height
      **/
-    public ImageProcessor(int width, int height) {
+    public AwtImageProcessor(int width, int height) {
         this.width = width;
         this.height = height;
     }
