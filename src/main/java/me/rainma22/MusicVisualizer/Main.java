@@ -1,13 +1,13 @@
 package me.rainma22.MusicVisualizer;
 
 import com.tambapps.fft4j.FastFouriers;
+import me.rainma22.MusicVisualizer.FrameOutput.FrameOutput;
+import me.rainma22.MusicVisualizer.FrameOutput.FramePNGOutput;
 import me.rainma22.MusicVisualizer.ImageProcessor.AwtImageProcessor;
 import me.rainma22.MusicVisualizer.Utils.BinaryOperations;
 
-import javax.imageio.ImageIO;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -25,7 +25,8 @@ public class Main {
 
         AwtImageProcessor processor = new AwtImageProcessor(1920, 1080);
         if (!isGUI) {
-            new File("output").mkdir();
+//            new File("output").mkdir();
+            FrameOutput output = new FramePNGOutput("output");
             MusicExtractor me;
             try {
                 me = new MusicExtractor(args[1]);
@@ -47,9 +48,7 @@ public class Main {
 
                     int i = j/ samplesPerVideoFrame;
                     BufferedImage image = processor.processSample(outRE, outIM);
-                    String fileName = String.format("output/%04d.png", i);
-                    ImageIO.write(image, "png", new File(fileName));
-                    System.out.printf("Written Image %d out of %d\n", i+1, samples.length/samplesPerVideoFrame + 1);
+                    output.writeImage(image,i);
                 }
                 me.close();
             } catch (UnsupportedAudioFileException e) {
