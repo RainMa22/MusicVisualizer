@@ -5,7 +5,7 @@
 
 - this is a rapidly put together music visualizer made using java and
 [fft4j by tombaApp](https://github.com/tambapps/fourier-transform-library)
-
+- currently supports only `.wav` files 
 ## Build Dependencies
 ```xml
         <dependency>
