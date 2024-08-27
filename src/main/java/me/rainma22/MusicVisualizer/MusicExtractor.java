@@ -78,16 +78,25 @@ public class MusicExtractor {
                 }
             }
 
+//            System.out.println(audioInputStream.getFormat().getEncoding().toString());
             switch (audioInputStream.getFormat().getEncoding().toString()) {
                 case "PCM_SIGNED":
                     int bitsToExtend = Long.SIZE - bitsPerSample;
                     sample = (temp << bitsToExtend) >> bitsToExtend;
+                    sample = normalize(sample);
                     break;
                 case "PCM_UNSIGNED":
                     sample = temp - (1L << bitsPerSample);
+                    sample = normalize(sample);
+
                     break;
                 case "PCM_FLOAT":
-                    sample = Double.longBitsToDouble(temp);
+                    if (bitsPerSample == 64)
+                        sample = Double.longBitsToDouble(temp);
+                    else if (bitsPerSample == 32)
+                        sample = Float.intBitsToFloat((int )temp);
+                    else
+                        sample = 0f;
                     break;
                 case "ALAW":
                     temp ^= 0x55L;
