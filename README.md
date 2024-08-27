@@ -14,3 +14,17 @@
             <version>2.0</version>
         </dependency>
 ```
+
+### TO-DO List
+- [x] basic image generation behavior
+    - [ ] chunk size calculated on a FPS target
+    - [ ] center image
+    - [ ] foreground rotation
+    - [ ] background image
+        - [ ] background image blue
+- [ ] Save to a video
+  - [ ] ...with music 
+- [ ] User Interface
+  - [x] basic command line control
+    - [ ] More options
+  - [ ] basic GUI
