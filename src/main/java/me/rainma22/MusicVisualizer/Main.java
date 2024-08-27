@@ -45,10 +45,6 @@ public class Main {
                     double[] outIM = new double[chunkSize];
                     FastFouriers.ITERATIVE_COOLEY_TUKEY.transform(RE, IM, outRE, outIM);
 
-//                    for (int i = 0; i < CHUNK_SIZE; i++) {
-//                        System.out.printf("sample %d:channel %d: %f, converted to %f+%fi\n", (j + i) / 2, i % 2, RE[i],
-//                                outRE[i], outIM[i]);
-//                    }
                     int i = j/ samplesPerVideoFrame;
                     BufferedImage image = processor.processSample(outRE, outIM);
                     String fileName = String.format("output/%04d.png", i);
