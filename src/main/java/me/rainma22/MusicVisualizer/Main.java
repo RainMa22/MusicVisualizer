@@ -48,7 +48,7 @@ public class Main {
 
                     int i = j/ samplesPerVideoFrame;
                     BufferedImage image = processor.processSample(outRE, outIM);
-                    output.writeImage(image,i);
+                    output.writeImage(image, i);
                 }
                 me.close();
             } catch (UnsupportedAudioFileException e) {

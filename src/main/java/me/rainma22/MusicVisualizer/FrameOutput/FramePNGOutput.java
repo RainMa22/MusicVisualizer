@@ -26,7 +26,8 @@ public class FramePNGOutput implements FrameOutput {
      * @param estimatedNumItems the estimated number of Items
      * **/
     public FramePNGOutput(String folderPath, int estimatedNumItems){
-        formatString = "%0"+Math.ceil(Math.log10(estimatedNumItems))+".png";
+        formatString = "%0"+(int)Math.ceil(Math.log10(estimatedNumItems))+"d.png";
+//        System.out.println(formatString);
         folder = new File(folderPath);
         folder.mkdirs();
     }
