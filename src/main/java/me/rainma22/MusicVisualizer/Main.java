@@ -32,7 +32,8 @@ public class Main {
                     FastFouriers.ITERATIVE_COOLEY_TUKEY.transform(RE, IM,outRE,outIM);
 
                     for (int i = 0; i < CHUNK_SIZE; i++) {
-                        System.out.printf("sample %d:channel %d: %f, converted to %f\n", (j+i)/2, i%2, RE[i], outRE[i]);
+                        System.out.printf("sample %d:channel %d: %f, converted to %f+%fi\n", (j+i)/2, i%2, RE[i],
+                                outRE[i],outIM[i]);
                     }
                 }
                 me.close();
