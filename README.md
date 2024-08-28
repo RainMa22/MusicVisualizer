@@ -19,6 +19,11 @@
             <artifactId>jcodec</artifactId>
             <version>0.2.5</version>
         </dependency>
+            <dependency>
+            <groupId>org.jcodec</groupId>
+            <artifactId>jcodec-javase</artifactId>
+            <version>0.2.5</version>
+        </dependency>
 ```
 
 ### TO-DO List
@@ -28,8 +33,9 @@
     - [ ] foreground rotation
     - [ ] background image
         - [ ] background image blue
-- [ ] Save to a video
-  - [ ] ...with music 
+- [x] (Slow)Save to a video
+  - [ ] with FFmpeg
+    - [ ] with sound
 - [ ] User Interface
   - [x] basic command line control
     - [ ] More options

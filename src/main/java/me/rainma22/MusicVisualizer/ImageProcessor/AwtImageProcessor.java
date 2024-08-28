@@ -41,7 +41,7 @@ public class AwtImageProcessor {
      * @param sampleIm Sample Amplitude
      */
     public BufferedImage processSample(double[] sampleRe, double[] sampleIm) {
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = (Graphics2D) image.getGraphics().create();
         g.fillRect(0, 0, width, height);
         int[] xPos = new int[sampleIm.length];
