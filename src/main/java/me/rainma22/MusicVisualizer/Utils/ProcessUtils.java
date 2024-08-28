@@ -17,7 +17,7 @@ public class ProcessUtils {
                 p.destroyForcibly();
             return true;
         } catch (Exception exception){
-            exception.printStackTrace();
+//            exception.printStackTrace();
             return false;
         }
     }
