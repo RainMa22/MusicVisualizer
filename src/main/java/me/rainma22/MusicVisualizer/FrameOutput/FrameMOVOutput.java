@@ -17,7 +17,7 @@ public class FrameMOVOutput implements FrameOutput {
      * **/
 
     public FrameMOVOutput(String folderPath) throws IOException {
-        this(folderPath, "output.mkv", 60);
+        this(folderPath, "output.mov", 60);
     }
 
     /**
