@@ -14,6 +14,7 @@ import java.util.Arrays;
 public class Main {
     private static int chunkSize;
     private static final float FPS_TARGET = 60;
+    private static final String FFMPEG_PATH = "ffmpeg";
 
     public static void main(String[] args) {
 
