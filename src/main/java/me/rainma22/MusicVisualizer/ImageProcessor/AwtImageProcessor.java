@@ -50,12 +50,17 @@ public class AwtImageProcessor {
         float[] amp = new float[sampleIm.length];
         for (int i = 0; i < sampleRe.length; i++) {
             amp[i] = (float) Math.abs(Math.atan(Math.sqrt(sampleRe[i]*sampleRe[i] + sampleIm[i] * sampleIm[i])));
+
+            if (amp[i] == 0 && i != 0) amp[i] = amp[i - 1];
+            else if (amp[i] == 0 && i != sampleRe.length-1) amp[i] = amp[i + 1];
+
+            if (i == amp.length-1) amp[i] = amp[i - 1];
+
             if (amp[i] < threshold) amp[i] = 0;
 
             amp[i] = (float) (amp[i]/(2*Math.PI));
 
-//            if (amp[i] == 0 && i != 0) amp[i] = amp[i - 1];
-//            else if (amp[i] == 0 && i != sampleRe.length-1) amp[i] = amp[i + 1];
+
 
             double theta = 2*Math.PI/sampleRe.length*i;
             double radius = (width/5 + amp[i] * width/2);
@@ -65,7 +70,7 @@ public class AwtImageProcessor {
             yPos[i] = (height - yPos[i]) / 2;
         }
         g.setColor(Color.BLUE);
-        g.drawPolygon(xPos, yPos, yPos.length);
+        g.drawPolyline(xPos, yPos, yPos.length);
 //        //DEBUG
 //        g.setColor(Color.RED);
 //        for (int i = 0; i < sampleRe.length; i++) {

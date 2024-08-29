@@ -22,13 +22,14 @@ class SettingsManager extends Hashtable<String,String> {
         put("path_to_ffmpeg", "ffmpeg");
         put("output_format", "MOV");
         put("output_path", "./output");
+        put("out_file_name", "output");
         put("width", "1920");
         put("height", "1080");
     }
 
     public String getSettingsString(){
         StringJoiner joiner = new StringJoiner(" ");
-        forEach((key, value) -> joiner.add(String.format("[%s = %s]", key, value)));
+        forEach((key, value) -> joiner.add(String.format("[%s=%s]", key, value)));
         return joiner.toString();
     }
 

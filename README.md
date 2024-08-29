@@ -48,8 +48,8 @@
     - [ ] background image
         - [ ] background image blue
 - [x] (Slow)Save to a video
-  - [ ] with FFmpeg
-    - [ ] with sound
+  - [x] with FFmpeg
+    - [x] with sound
 - [ ] User Interface
   - [x] basic command line control
     - [ ] More options
