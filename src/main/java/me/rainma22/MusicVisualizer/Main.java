@@ -10,6 +10,7 @@ import me.rainma22.MusicVisualizer.Utils.BinaryOperations;
 import me.rainma22.MusicVisualizer.Utils.ProcessUtils;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
@@ -80,11 +81,18 @@ public class Main {
         String ffmpegPath = settings.get("path_to_ffmpeg");
         int width = settings.getInt("width", 1920);
         int height = settings.getInt("height", 1080);
+        BufferedImage foregroundImage = settings.getImage("foreground_img", null);
+        double rotationPerTheta = settings.getDouble("rotation_per_theta", Math.PI/60);
+        double amplitudeThreshold = settings.getDouble("amplitude_threshold", 0);
+
         if (!(ffmpegEnabled = ProcessUtils.isProgramRunnable(ffmpegPath))) {
             System.err.println("FFmpeg not usable! Using JCodec instead(Very Slow and no Audio in video output)!");
         }
 
-        AwtImageProcessor processor = new AwtImageProcessor(width, height);
+        Color lineColor = settings.getColor("line_color_hex", Color.black);
+        AwtImageProcessor processor = new AwtImageProcessor(width, height, amplitudeThreshold,
+                foregroundImage,rotationPerTheta);
+        processor.setLineColor(lineColor);
 
         FrameOutput output;
         MusicExtractor me;

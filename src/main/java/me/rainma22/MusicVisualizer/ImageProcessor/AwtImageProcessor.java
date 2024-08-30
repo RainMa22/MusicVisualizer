@@ -1,6 +1,9 @@
 package me.rainma22.MusicVisualizer.ImageProcessor;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
 /**
@@ -10,8 +13,17 @@ import java.awt.image.BufferedImage;
 public class AwtImageProcessor {
     private int width, height;
     private double threshold;
+    private BufferedImage circleImage;
+    private int frameIndex;
+    private double rotationPerFrameTheta;
+    private Ellipse2D circleClip;
+    private Color lineColor;
     /**
-     * Creates a new AwtImageProcessor
+     * Creates a new AwtImageProcessor, setting:
+     * threshold to 0
+     * lineColor to Black
+     * circleImage to null
+     * rotation per frame to Math.PI/60
      *
      * @param width  the desired Image Width
      * @param height the desired Image Height
@@ -21,18 +33,54 @@ public class AwtImageProcessor {
     }
 
     /**
-     * Creates a new AwtImageProcessor
+     * Creates a new AwtImageProcessor, setting:
+     * lineColor to Black
+     * circleImage to null
+     * rotation per frame to Math.PI/60
      *
      * @param width  the desired Image Width
      * @param height the desired Image Height
      * @param threshold  the amplitude threshold, sound will only render if they go pass this threshold
      **/
     public AwtImageProcessor(int width, int height,double threshold) {
+        this(width,height,threshold, null, Math.PI/60);
+    }
+
+    /**
+     * Creates a new AwtImageProcessor, Setting
+     *
+     * @param width  the desired Image Width
+     * @param height the desired Image Height
+     * @param threshold  the amplitude threshold, sound will only render if they go pass this threshold
+     * @param circleImage Nullable, the circle image to be rendered by the ImageRender;
+     * @param rotationPerFrameTheta the amount of foreground rotation per frame;
+     **/
+    public AwtImageProcessor(int width, int height,double threshold, BufferedImage circleImage, double rotationPerFrameTheta) {
         this.width = width;
         this.height = height;
         this.threshold = threshold;
+        setCircleImage(circleImage);
+        frameIndex = 0;
+        setRotationPerFrameTheta(rotationPerFrameTheta);
+        lineColor = Color.BLACK;
     }
 
+
+    public void setCircleImage(BufferedImage circleImage) {
+        this.circleImage = circleImage;
+    }
+
+    /**
+     * sets the rotationPerFrameTheta
+     * WARNING: may cause unexpected/interesting behavior when the rendering process has already started
+     * **/
+    public void setRotationPerFrameTheta(double rotationPerFrameTheta) {
+        this.rotationPerFrameTheta = rotationPerFrameTheta;
+    }
+
+    public void setLineColor(Color lineColor) {
+        this.lineColor = lineColor;
+    }
 
     /**
      * processes the given sample Frequency and sample Amplitude into an Image, and returns it
@@ -51,40 +99,41 @@ public class AwtImageProcessor {
         for (int i = 0; i < sampleRe.length; i++) {
 //            amp[i] = (float) Math.abs(Math.atan(Math.sqrt(sampleRe[i]*sampleRe[i] + sampleIm[i] * sampleIm[i])));
             amp[i] = (float) Math.log(Math.sqrt(sampleRe[i]*sampleRe[i] + sampleIm[i] * sampleIm[i]) + 1);
-//            threshold = .5;
+            amp[i] = (float) (amp[i]/(2*Math.PI));
+
             if (amp[i] < threshold) amp[i] = (float) (threshold*7/8);
 
 
-            amp[i] = (float) (amp[i]/(2*Math.PI));
-
-
-
             double theta = 2*Math.PI/sampleRe.length*i;
-            double radius = (width/5 + amp[i] * width/2);
+            theta += frameIndex*rotationPerFrameTheta;
+
+            double radius = (width/5d + amp[i] * width/2);
             xPos[i] = (int) (radius * Math.cos(theta) + .5);
             xPos[i] = (width - xPos[i]) / 2;
             yPos[i] = (int) (radius * Math.sin(theta) + .5);
             yPos[i] = (height - yPos[i]) / 2;
         }
-        g.setColor(Color.BLUE);
+        g.setColor(lineColor);
         g.drawPolyline(xPos, yPos, yPos.length);
-//        //DEBUG
-//        g.setColor(Color.RED);
-//        for (int i = 0; i < sampleRe.length; i++) {
-//            amp[i] = (float) Math.atan(Math.sqrt(sampleRe[i]*sampleRe[i] + sampleIm[i] * sampleIm[i]));
-//            amp[i] = (float) Math.max(0, amp[i]-threshold);
-//
-//            xPos[i] = (int) (((float)width/sampleRe.length)*i);
-//            yPos[i] = (int) ((height)/2 - amp[i]*width/8);
-//        }
-//        g.drawPolyline(xPos, yPos, yPos.length);
-
-        g.setStroke(new BasicStroke(10));
-        g.setColor(Color.BLACK);
-
-        g.drawOval((width - width / 5) / 2, (height - width / 5) / 2, width / 5, width / 5);
-
+        int circleDiameter = width/5;
+        int circleX =(width - circleDiameter) / 2;
+        int circleY = (height - circleDiameter) / 2;
+        if (this.circleImage == null) {
+            g.setStroke(new BasicStroke((float) width /192));
+            g.setColor(Color.BLACK);
+            g.drawOval(circleX, circleY, circleDiameter,circleDiameter);
+        } else {
+            if (circleClip == null) circleClip = new Ellipse2D.Double(circleX, circleY, circleDiameter,circleDiameter);
+            AffineTransform at = new AffineTransform();
+            at.scale((double) circleDiameter /circleImage.getWidth(), (double) circleDiameter /circleImage.getHeight());
+            at.rotate(frameIndex * rotationPerFrameTheta);
+            AffineTransformOp operation = new AffineTransformOp(at,AffineTransformOp.TYPE_BILINEAR);
+            g.setClip(circleClip);
+            g.drawImage(circleImage,operation,(width - width / 5) / 2, (height - width / 5) / 2);
+            g.setClip(null);
+        }
         g.dispose();
+        frameIndex++;
         return image;
     }
 
