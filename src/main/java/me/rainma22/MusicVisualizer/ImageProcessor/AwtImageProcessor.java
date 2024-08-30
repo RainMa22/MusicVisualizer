@@ -50,7 +50,7 @@ public class AwtImageProcessor {
         float[] amp = new float[sampleIm.length];
         for (int i = 0; i < sampleRe.length; i++) {
 //            amp[i] = (float) Math.abs(Math.atan(Math.sqrt(sampleRe[i]*sampleRe[i] + sampleIm[i] * sampleIm[i])));
-            amp[i] = (float) Math.log(Math.sqrt(sampleRe[i]*sampleRe[i] + sampleIm[i] * sampleIm[i]));
+            amp[i] = (float) Math.log(Math.sqrt(sampleRe[i]*sampleRe[i] + sampleIm[i] * sampleIm[i]) + 1);
 //            threshold = .5;
             if (amp[i] < threshold) amp[i] = (float) (threshold*7/8);
 
