@@ -49,14 +49,11 @@ public class AwtImageProcessor {
 
         float[] amp = new float[sampleIm.length];
         for (int i = 0; i < sampleRe.length; i++) {
-            amp[i] = (float) Math.abs(Math.atan(Math.sqrt(sampleRe[i]*sampleRe[i] + sampleIm[i] * sampleIm[i])));
+//            amp[i] = (float) Math.abs(Math.atan(Math.sqrt(sampleRe[i]*sampleRe[i] + sampleIm[i] * sampleIm[i])));
+            amp[i] = (float) Math.log(Math.sqrt(sampleRe[i]*sampleRe[i] + sampleIm[i] * sampleIm[i]));
+//            threshold = .5;
+            if (amp[i] < threshold) amp[i] = (float) (threshold*7/8);
 
-            if (amp[i] == 0 && i != 0) amp[i] = amp[i - 1];
-            else if (amp[i] == 0 && i != sampleRe.length-1) amp[i] = amp[i + 1];
-
-            if (i == amp.length-1) amp[i] = amp[i - 1];
-
-            if (amp[i] < threshold) amp[i] = 0;
 
             amp[i] = (float) (amp[i]/(2*Math.PI));
 
