@@ -13,11 +13,12 @@ import java.awt.image.BufferedImage;
 public class AwtImageProcessor {
     private int width, height;
     private double threshold;
-    private BufferedImage circleImage;
+    private BufferedImage foregroundImage;
     private int frameIndex;
     private double rotationPerFrameTheta;
     private Ellipse2D circleClip;
     private Color lineColor;
+    private BufferedImage backgroundImage;
 
     /**
      * Creates a new AwtImageProcessor, setting:
@@ -44,7 +45,7 @@ public class AwtImageProcessor {
      * @param threshold the amplitude threshold, sound will only render if they go pass this threshold
      **/
     public AwtImageProcessor(int width, int height, double threshold) {
-        this(width, height, threshold, null, Math.PI / 60);
+        this(width, height, threshold, null, null,Math.PI / 60);
     }
 
     /**
@@ -53,22 +54,27 @@ public class AwtImageProcessor {
      * @param width                 the desired Image Width
      * @param height                the desired Image Height
      * @param threshold             the amplitude threshold, sound will only render if they go pass this threshold
-     * @param circleImage           Nullable, the circle image to be rendered by the ImageRender;
+     * @param foregroundImage           Nullable, the circle image to be rendered by the ImageRender;
      * @param rotationPerFrameTheta the amount of foreground rotation per frame;
      **/
-    public AwtImageProcessor(int width, int height, double threshold, BufferedImage circleImage, double rotationPerFrameTheta) {
+    public AwtImageProcessor(int width, int height, double threshold, BufferedImage foregroundImage,BufferedImage backgroundImage, double rotationPerFrameTheta) {
         this.width = width;
         this.height = height;
         this.threshold = threshold;
-        setCircleImage(circleImage);
+        setForegroundImage(foregroundImage);
         frameIndex = 0;
         setRotationPerFrameTheta(rotationPerFrameTheta);
         lineColor = Color.BLACK;
+        setBackgroundImage(backgroundImage);
     }
 
 
-    public void setCircleImage(BufferedImage circleImage) {
-        this.circleImage = circleImage;
+    public void setForegroundImage(BufferedImage foregroundImage) {
+        this.foregroundImage = foregroundImage;
+    }
+
+    public void setBackgroundImage(BufferedImage backgroundImage) {
+        this.backgroundImage = backgroundImage;
     }
 
     /**
@@ -91,8 +97,16 @@ public class AwtImageProcessor {
      */
     public BufferedImage processSample(double[] sampleRe, double[] sampleIm) {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
         Graphics2D g = (Graphics2D) image.getGraphics().create();
-        g.fillRect(0, 0, width, height);
+        if (backgroundImage != null) {
+            AffineTransform at = new AffineTransform();
+            double scale = Math.max((double) width / backgroundImage.getWidth(), (double) height / backgroundImage.getHeight());
+            at.scale(scale, scale);
+            g.drawImage(backgroundImage, at, null);
+        }
+//        g.fillRect(0, 0, width, height);
+
         int[] xPos = new int[sampleIm.length];
         int[] yPos = new int[sampleIm.length];
 
@@ -122,21 +136,21 @@ public class AwtImageProcessor {
         int circleDiameter = width / 5;
         int circleX = (width - circleDiameter) / 2;
         int circleY = (height - circleDiameter) / 2;
-        if (this.circleImage == null) {
+        if (this.foregroundImage == null) {
             g.setStroke(new BasicStroke((float) width / 192));
             g.setColor(Color.BLACK);
             g.drawOval(circleX, circleY, circleDiameter, circleDiameter);
         } else {
             if (circleClip == null) circleClip = new Ellipse2D.Double(circleX, circleY, circleDiameter, circleDiameter);
             AffineTransform at = new AffineTransform();
-            double scale = Math.max((double) circleDiameter / circleImage.getWidth(), (double) circleDiameter / circleImage.getHeight());
+            double scale = Math.max((double) circleDiameter / foregroundImage.getWidth(), (double) circleDiameter / foregroundImage.getHeight());
             at.scale(scale, scale);
-            double rotateAnchor = Math.min(circleImage.getWidth() / 2d, circleImage.getHeight() / 2d);
+            double rotateAnchor = Math.min(foregroundImage.getWidth() / 2d, foregroundImage.getHeight() / 2d);
             at.rotate(frameIndex * rotationPerFrameTheta, rotateAnchor, rotateAnchor);
 
             AffineTransformOp operation = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
             g.setClip(circleClip);
-            g.drawImage(circleImage, operation, (width - width / 5) / 2, (height - width / 5) / 2);
+            g.drawImage(foregroundImage, operation, (width - width / 5) / 2, (height - width / 5) / 2);
             g.setClip(null);
         }
         g.dispose();
