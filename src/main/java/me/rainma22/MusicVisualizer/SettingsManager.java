@@ -28,7 +28,7 @@ class SettingsManager extends Hashtable<String,String> {
         put("output_format", "MOV");
         put("output_path", "./output");
         put("out_file_name", "output");
-        put("foreground_img", "defaults/foregroundIMG.png");
+        put("foreground_img", "defaults/foregroundIMG.jpg");
         put("rotation_per_theta", "0.05235987755");
         put("line_color_hex", "0xff0000");
         put("amplitude_threshold", "0");
