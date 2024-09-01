@@ -121,7 +121,7 @@ public class imageUtils {
     public static int[] GuassianBlur(int[] srcRGB, int w, int h, int kernelSize) {
         if (kernelSize <= 1) return srcRGB;
         float sigma = kernelSize / 2f;
-        sigma = 100000;
+//        sigma = 100000;
         IntBuffer buffer = IntBuffer.allocate(w * h);
         for (int i = 0; i < srcRGB.length; i += 3) {
             buffer.put(packRGB(new int[]{srcRGB[i], srcRGB[i + 1], srcRGB[i + 2]}));
