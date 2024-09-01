@@ -40,6 +40,7 @@ public class FrameFFMPEGOutput implements FrameOutput{
                 "-r", String.valueOf(fps),
                 "-i", "pipe:0",
                 "-i", new File(pathToAudio).getAbsolutePath(),
+                "-y",
                 new File(folder,fileNameWithExtension).getAbsolutePath());
 //        builder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
         builder.redirectError(ProcessBuilder.Redirect.INHERIT);

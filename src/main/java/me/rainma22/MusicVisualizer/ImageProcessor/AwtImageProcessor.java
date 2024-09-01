@@ -6,6 +6,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
+import static me.rainma22.MusicVisualizer.Utils.imageUtils.GuassianBlur;
+
 /**
  * An image processor that takes a list of float and outputs them onto an image
  * using Java.awt.Image
@@ -19,6 +21,9 @@ public class AwtImageProcessor {
     private Ellipse2D circleClip;
     private Color lineColor;
     private BufferedImage backgroundImage;
+
+    private BufferedImage blurredImage;
+    private int blurSize;
 
     /**
      * Creates a new AwtImageProcessor, setting:
@@ -45,8 +50,9 @@ public class AwtImageProcessor {
      * @param threshold the amplitude threshold, sound will only render if they go pass this threshold
      **/
     public AwtImageProcessor(int width, int height, double threshold) {
-        this(width, height, threshold, null, null,Math.PI / 60);
+        this(width, height, threshold, null, null, Math.PI / 60);
     }
+
 
     /**
      * Creates a new AwtImageProcessor, Setting
@@ -54,10 +60,10 @@ public class AwtImageProcessor {
      * @param width                 the desired Image Width
      * @param height                the desired Image Height
      * @param threshold             the amplitude threshold, sound will only render if they go pass this threshold
-     * @param foregroundImage           Nullable, the circle image to be rendered by the ImageRender;
+     * @param foregroundImage       Nullable, the circle image to be rendered by the ImageRender;
      * @param rotationPerFrameTheta the amount of foreground rotation per frame;
      **/
-    public AwtImageProcessor(int width, int height, double threshold, BufferedImage foregroundImage,BufferedImage backgroundImage, double rotationPerFrameTheta) {
+    public AwtImageProcessor(int width, int height, double threshold, BufferedImage foregroundImage, BufferedImage backgroundImage, double rotationPerFrameTheta) {
         this.width = width;
         this.height = height;
         this.threshold = threshold;
@@ -65,9 +71,9 @@ public class AwtImageProcessor {
         frameIndex = 0;
         setRotationPerFrameTheta(rotationPerFrameTheta);
         lineColor = Color.BLACK;
+        blurSize = 0;
         setBackgroundImage(backgroundImage);
     }
-
 
     public void setForegroundImage(BufferedImage foregroundImage) {
         this.foregroundImage = foregroundImage;
@@ -75,6 +81,17 @@ public class AwtImageProcessor {
 
     public void setBackgroundImage(BufferedImage backgroundImage) {
         this.backgroundImage = backgroundImage;
+        if (backgroundImage != null) {
+            double scale = Math.max((double) width / backgroundImage.getWidth(), (double) height / backgroundImage.getHeight());
+            int newWidth = (int) (backgroundImage.getWidth() * scale);
+            int newHeight =(int) (backgroundImage.getHeight() * scale);
+            this.backgroundImage = new BufferedImage(newWidth, newHeight, backgroundImage.getType());
+            Graphics2D g = this.backgroundImage.createGraphics();
+            g.drawImage(backgroundImage,0,0,newWidth,newHeight,null);
+            g.dispose();
+        }
+        setBlurSize(blurSize);
+
     }
 
     /**
@@ -90,6 +107,20 @@ public class AwtImageProcessor {
     }
 
     /**
+     * sets the blur size and also updates the blur image
+     **/
+    public void setBlurSize(int blurSize) {
+        this.blurSize = blurSize;
+        if (backgroundImage != null) {
+            blurredImage = new BufferedImage(backgroundImage.getWidth(),backgroundImage.getHeight(),backgroundImage.getType());
+            int[] colors = GuassianBlur(backgroundImage.getData().getPixels(0,0,backgroundImage.getWidth(),
+                    backgroundImage.getHeight(), (int []) null), backgroundImage.getWidth(), backgroundImage.getHeight(),
+                    blurSize);
+            blurredImage.getRaster().setPixels(0,0,backgroundImage.getWidth(), backgroundImage.getHeight(), colors);
+        }
+    }
+
+    /**
      * processes the given sample Frequency and sample Amplitude into an Image, and returns it
      *
      * @param sampleRe Sample Frequency
@@ -99,11 +130,12 @@ public class AwtImageProcessor {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
         Graphics2D g = (Graphics2D) image.getGraphics().create();
-        if (backgroundImage != null) {
+        if (blurredImage != null) {
             AffineTransform at = new AffineTransform();
-            double scale = Math.max((double) width / backgroundImage.getWidth(), (double) height / backgroundImage.getHeight());
+            double scale = Math.max((double) width / blurredImage.getWidth(), (double) height / blurredImage.getHeight());
             at.scale(scale, scale);
-            g.drawImage(backgroundImage, at, null);
+            AffineTransformOp operation = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+            g.drawImage(blurredImage,operation,0,0);
         }
 //        g.fillRect(0, 0, width, height);
 

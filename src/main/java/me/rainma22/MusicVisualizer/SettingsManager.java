@@ -30,9 +30,10 @@ class SettingsManager extends Hashtable<String,String> {
         put("out_file_name", "output");
         put("foreground_img", "defaults/foregroundIMG.jpg");
         put("background_img", "defaults/bg.jpg");
-        put("rotation_per_theta", "0.05235987755");
-        put("line_color_hex", "0xff0000");
+        put("rotation_per_theta", "0.0");
+        put("line_color_hex", "0x0000ee");
         put("amplitude_threshold", "0");
+        put("blur_size", "10");
         put("width", "1920");
         put("height", "1080");
     }
