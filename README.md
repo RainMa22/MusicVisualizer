@@ -43,10 +43,12 @@
 ## TO-DO List
 - [x] basic image generation behavior
     - [x] chunk size calculated on a FPS target
-    - [ ] center image
-    - [ ] foreground rotation
-    - [ ] background image
-        - [ ] background image blue
+      - [ ] user specified chunk size support
+    - [x] center image
+    - [x] foreground rotation
+    - [x] background image
+        - [?] background image blur
+          - [ ] Acceleration with FFT
 - [x] (Slow)Save to a video
   - [x] with FFmpeg
     - [x] with sound
@@ -54,3 +56,4 @@
   - [x] basic command line control
     - [ ] More options
   - [ ] basic GUI
+- Alternative Rendering Style
