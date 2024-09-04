@@ -5,11 +5,13 @@ import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.transform.TransformType;
+import org.apache.commons.math3.util.FastMath;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.nio.DoubleBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static java.lang.Double.NaN;
@@ -20,8 +22,7 @@ import static java.lang.Double.NaN;
 public class GaussianBlur {
     private final double[] kernel;
     private final FastFourierTransformer transformer;
-    private Complex[] transformedKernelX;
-    private Complex[] transformedKernelY;
+    private ArrayList<Complex[]> transformedKernels;
     private boolean active;
 
     public GaussianBlur(float sigma) {
@@ -39,6 +40,9 @@ public class GaussianBlur {
         else if (size % 2 == 0) size++;
         this.kernel = calculateKernel(sigma, size);
         transformer = new FastFourierTransformer(DftNormalization.STANDARD);
+        transformedKernels = new ArrayList<>(2);
+        transformedKernels.add(null);
+        transformedKernels.add(null);
     }
 
     /**
@@ -65,63 +69,65 @@ public class GaussianBlur {
         return out;
     }
 
-    private void filterWidth(int inputWidth, int inputHeight, Raster imgData, WritableRaster outputRaster) {
+    private void filterHelper(int inputWidth, int inputHeight, Raster imgData, WritableRaster outputRaster, FilterDirection direction) {
 
-        int transformSize = BinaryOperations.nextPowerOfTwo(inputWidth + kernel.length);
+        boolean isHorizontal = direction == FilterDirection.HORIZONTAL;
+        int ogSize;
+        int otherSize;
+        int transformSize;
+        int transformedKernelID;
 
-        if (transformedKernelX == null || transformedKernelX.length != inputWidth) {
-            transformedKernelX = transformer.transform(Arrays.copyOf(kernel, transformSize), TransformType.FORWARD);
+        if (isHorizontal) {
+            ogSize = inputWidth;
+            otherSize = inputHeight;
+            transformSize = BinaryOperations.nextPowerOfTwo(ogSize + kernel.length * 2);
+            transformedKernelID = 0;
+        } else { //direction == FilterDirection.Vertical
+            ogSize = inputHeight;
+            otherSize = inputWidth;
+            transformSize = BinaryOperations.nextPowerOfTwo(ogSize + kernel.length * 2);
+            transformedKernelID = 1;
         }
+
+        Complex[] transformedKernel = transformedKernels.get(transformedKernelID);
+        if (transformedKernel == null || transformedKernel.length != ogSize) {
+            transformedKernels.set(transformedKernelID,
+                    transformer.transform(Arrays.copyOf(kernel, transformSize), TransformType.FORWARD));
+            transformedKernel = transformedKernels.get(transformedKernelID);
+        }
+
         DoubleBuffer buffer = DoubleBuffer.allocate(transformSize);
-        for (int i = 0; i < inputHeight; i++) {
+        for (int i = 0; i < otherSize; i++) {
             for (int colorBand = 0; colorBand < 3; colorBand++) {
-                double[] rowData_OneColor = imgData.getSamples(0, i, inputWidth, 1, colorBand, new double[inputWidth]);
-//                rowData_OneColor = Arrays.stream(rowData_OneColor).map(x -> FastMath.pow(x, 2)).toArray();
-                rowData_OneColor = Arrays.copyOf(rowData_OneColor, transformSize);
-                Complex[] transformed_OneColor = transformer.transform(rowData_OneColor, TransformType.FORWARD);
+
+                double[] Sample_OneColor;
+                if (isHorizontal)
+                    Sample_OneColor = imgData.getSamples(0, i, ogSize, 1, colorBand, new double[ogSize]);
+                else
+                    Sample_OneColor = imgData.getSamples(i, 0, 1, ogSize, colorBand, new double[ogSize]);
+
+                Sample_OneColor = Arrays.stream(Sample_OneColor).map(x -> FastMath.pow(x, 2)).toArray();
+                Sample_OneColor = Arrays.copyOf(Sample_OneColor, transformSize);
+                Complex[] transformed_OneColor = transformer.transform(Sample_OneColor, TransformType.FORWARD);
                 for (int j = 0; j < transformed_OneColor.length; j++) {
-                    transformed_OneColor[j] = transformed_OneColor[j].multiply(transformedKernelX[j]);
+                    transformed_OneColor[j] = transformed_OneColor[j].multiply(transformedKernel[j]);
                 }
 
                 Complex[] outData_oneColor = transformer.transform(transformed_OneColor, TransformType.INVERSE);
-                for (int j = 0; j < inputWidth; j++) {
-//                    buffer.put(FastMath.sqrt(outData_oneColor[j].getReal()));
-                    buffer.put(outData_oneColor[j].getReal());
+                for (int j = 0; j < ogSize; j++) {
+                    buffer.put(FastMath.sqrt(outData_oneColor[j].getReal()));
                 }
                 buffer.clear();
-                outputRaster.setSamples(0, i, inputWidth, 1, colorBand, buffer.array());
+
+                if (isHorizontal)
+                    outputRaster.setSamples(0, i, ogSize, 1, colorBand, buffer.array());
+                else
+                    outputRaster.setSamples(i, 0, 1, ogSize, colorBand, buffer.array());
             }
         }
     }
 
-    private void filterHeight(int inputWidth, int inputHeight, Raster imgData, WritableRaster outputRaster) {
-        int transformSize = BinaryOperations.nextPowerOfTwo(inputHeight + kernel.length);
-
-        if (transformedKernelY == null || transformedKernelY.length != inputHeight) {
-            transformedKernelY = transformer.transform(Arrays.copyOf(kernel, transformSize), TransformType.FORWARD);
-        }
-        DoubleBuffer buffer = DoubleBuffer.allocate(transformSize);
-        for (int i = 0; i < inputWidth; i++) {
-            for (int colorBand = 0; colorBand < 3; colorBand++) {
-                double[] columnData_OneColor = imgData.getSamples(i, 0, 1, inputHeight, colorBand, new double[inputHeight]);
-//                columnData_OneColor = Arrays.stream(columnData_OneColor).map(x-> FastMath.pow(x, 2)).toArray();
-                columnData_OneColor = Arrays.copyOf(columnData_OneColor, transformSize);
-                Complex[] transformed_OneColor = transformer.transform(columnData_OneColor, TransformType.FORWARD);
-                for (int j = 0; j < transformed_OneColor.length; j++) {
-                    transformed_OneColor[j] = transformed_OneColor[j].multiply(transformedKernelY[j]);
-                }
-
-                Complex[] outData_oneColor = transformer.transform(transformed_OneColor, TransformType.INVERSE);
-                for (int j = 0; j < inputHeight; j++) {
-//                    buffer.put(FastMath.sqrt(outData_oneColor[j].getReal()));
-                    buffer.put(outData_oneColor[j].getReal());
-                }
-                buffer.clear();
-                outputRaster.setSamples(i, 0, 1, inputHeight, colorBand, buffer.array());
-            }
-        }
-        return;
-    }
+    ;
 
     public BufferedImage filter(BufferedImage input, BufferedImage output) {
         if (!active) return input;
@@ -134,10 +140,44 @@ public class GaussianBlur {
             output = new BufferedImage(inputWidth, inputHeight, input.getType());
         }
         WritableRaster outputRaster = output.getRaster();
-        filterWidth(inputWidth, inputHeight, imgData, outputRaster);
+        filterHelper(inputWidth, inputHeight, imgData, outputRaster, FilterDirection.HORIZONTAL);
         imgData = output.getData();
-        filterHeight(inputWidth, inputHeight, imgData, outputRaster);
+        filterHelper(inputWidth, inputHeight, imgData, outputRaster, FilterDirection.VERTICAL);
         return output;
+    }
+
+//    private void filterHeight(int inputWidth, int inputHeight, Raster imgData, WritableRaster outputRaster) {
+//        int transformSize = BinaryOperations.nextPowerOfTwo(inputHeight + kernel.length);
+//
+//        if (transformedKernelY == null || transformedKernelY.length != inputHeight) {
+//            transformedKernelY = transformer.transform(Arrays.copyOf(kernel, transformSize), TransformType.FORWARD);
+//        }
+//        DoubleBuffer buffer = DoubleBuffer.allocate(transformSize);
+//        for (int i = 0; i < inputWidth; i++) {
+//            for (int colorBand = 0; colorBand < 3; colorBand++) {
+//                double[] columnData_OneColor = imgData.getSamples(i, 0, 1, inputHeight, colorBand, new double[inputHeight]);
+//                columnData_OneColor = Arrays.stream(columnData_OneColor).map(x-> FastMath.pow(x, 2)).toArray();
+//                columnData_OneColor = Arrays.copyOf(columnData_OneColor, transformSize);
+//                Complex[] transformed_OneColor = transformer.transform(columnData_OneColor, TransformType.FORWARD);
+//                for (int j = 0; j < transformed_OneColor.length; j++) {
+//                    transformed_OneColor[j] = transformed_OneColor[j].multiply(transformedKernelY[j]);
+//                }
+//
+//                Complex[] outData_oneColor = transformer.transform(transformed_OneColor, TransformType.INVERSE);
+//                for (int j = 0; j < inputHeight; j++) {
+//                    buffer.put(FastMath.sqrt(outData_oneColor[j].getReal()));
+////                    buffer.put(outData_oneColor[j].getReal());
+//                }
+//                buffer.clear();
+//                outputRaster.setSamples(i, 0, 1, inputHeight, colorBand, buffer.array());
+//            }
+//        }
+//        return;
+//    }
+
+    private enum FilterDirection {
+        HORIZONTAL,
+        VERTICAL
     }
 
 }
