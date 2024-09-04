@@ -1,5 +1,8 @@
 package me.rainma22.MusicVisualizer.ImageProcessor;
 
+import org.apache.commons.math3.complex.Complex;
+import org.apache.commons.math3.util.FastMath;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
@@ -123,10 +126,9 @@ public class AwtImageProcessor {
     /**
      * processes the given sample Frequency and sample Amplitude into an Image, and returns it
      *
-     * @param sampleRe Sample Frequency
-     * @param sampleIm Sample Amplitude
+     * @param sampleData an Array of FFTed result
      */
-    public BufferedImage processSample(double[] sampleRe, double[] sampleIm) {
+    public BufferedImage processSample(Complex[] sampleData) {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
         Graphics2D g = (Graphics2D) image.getGraphics().create();
@@ -139,22 +141,24 @@ public class AwtImageProcessor {
         }
 //        g.fillRect(0, 0, width, height);
 
-        int[] xPos = new int[sampleIm.length];
-        int[] yPos = new int[sampleIm.length];
+        int[] xPos = new int[sampleData.length];
+        int[] yPos = new int[sampleData.length];
 
-        float[] amp = new float[sampleIm.length];
-        for (int i = 0; i < sampleRe.length; i++) {
+        float[] amp = new float[sampleData.length];
+        for (int i = 0; i < sampleData.length; i++) {
 //            amp[i] = (float) Math.abs(Math.atan(Math.sqrt(sampleRe[i]*sampleRe[i] + sampleIm[i] * sampleIm[i])));
-            amp[i] = (float) Math.log(Math.sqrt(sampleRe[i] * sampleRe[i] + sampleIm[i] * sampleIm[i]) + 1);
+            double real = sampleData[i].getReal();
+            double imaginary = sampleData[i].getImaginary();
+            amp[i] = (float) FastMath.log(FastMath.sqrt(real*real + imaginary*imaginary) + 1);
             if (amp[i] == 0 && i != 0) amp[i] = amp[i - 1];
-            else if (amp[i] == 0 && i != sampleRe.length - 1) amp[i] = amp[i + 1];
+            else if (amp[i] == 0 && i != sampleData.length - 1) amp[i] = amp[i + 1];
 
             amp[i] = (float) (amp[i] / (2 * Math.PI));
 
             if (amp[i] < threshold) amp[i] = (float) (threshold * 7 / 8);
 
 
-            double theta = 2 * Math.PI / sampleRe.length * i;
+            double theta = 2 * Math.PI / sampleData.length * i;
             theta += frameIndex * rotationPerFrameTheta;
 
             double radius = (width / 5d + amp[i] * width / 2);

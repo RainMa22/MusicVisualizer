@@ -1,6 +1,5 @@
 package me.rainma22.MusicVisualizer;
 
-import com.tambapps.fft4j.FastFouriers;
 import me.rainma22.MusicVisualizer.FrameOutput.FrameFFMPEGOutput;
 import me.rainma22.MusicVisualizer.FrameOutput.FrameMOVOutput;
 import me.rainma22.MusicVisualizer.FrameOutput.FrameOutput;
@@ -8,6 +7,10 @@ import me.rainma22.MusicVisualizer.FrameOutput.FramePNGOutput;
 import me.rainma22.MusicVisualizer.ImageProcessor.AwtImageProcessor;
 import me.rainma22.MusicVisualizer.Utils.BinaryOperations;
 import me.rainma22.MusicVisualizer.Utils.ProcessUtils;
+import org.apache.commons.math3.complex.Complex;
+import org.apache.commons.math3.transform.DftNormalization;
+import org.apache.commons.math3.transform.FastFourierTransformer;
+import org.apache.commons.math3.transform.TransformType;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
@@ -22,6 +25,7 @@ public class Main {
 
 
     static FrameOutput createOutput(String pathToAudio,int numFrames) throws IOException {
+
         String format = settings.get("output_format");
         String outPath = settings.get("output_path");
         String outFileName = settings.get("out_file_name");
@@ -102,6 +106,7 @@ public class Main {
 
         FrameOutput output;
         MusicExtractor me;
+        FastFourierTransformer transformer = new FastFourierTransformer(DftNormalization.STANDARD);
         try {
             me = new MusicExtractor(args[1]);
             output = createOutput(args[1],(int) (me.getAudioLengthInSeconds() * FPS_TARGET + .5));
@@ -115,13 +120,10 @@ public class Main {
             for (int j = 0; j < samples.length; j += samplesPerVideoFrame) {
                 double[] RE = Arrays.copyOfRange(samples, j, j + samplesPerVideoFrame);
                 RE = Arrays.copyOf(RE, chunkSize);
-                double[] IM = new double[chunkSize];
-                double[] outRE = new double[chunkSize];
-                double[] outIM = new double[chunkSize];
-                FastFouriers.ITERATIVE_COOLEY_TUKEY.transform(RE, IM, outRE, outIM);
+                Complex[] transformedData = transformer.transform(RE, TransformType.FORWARD);
 
                 int i = j / samplesPerVideoFrame;
-                BufferedImage image = processor.processSample(outRE, outIM);
+                BufferedImage image = processor.processSample(transformedData);
                 output.writeImage(image, i);
                 System.out.printf("Image %d out of %d done\n", i + 1, samples.length / samplesPerVideoFrame + 1);
             }
