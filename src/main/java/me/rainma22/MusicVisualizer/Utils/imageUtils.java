@@ -70,19 +70,41 @@ public class imageUtils {
         return sum;
     }
 
+    /**
+     * retrives the value from the array
+     *          out of bound methods will be mapped to the flipped coordinates of array, horizontal if x, vertical if y
+     *
+     * @param array a flattened array of int
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param w the width of the array
+     * @param h the height of the array
+     * @param isRowMajor if the array is row major
+     * @return the value from the array
+     *              out of bound methods will be mapped to the flipped coordinates of array, horizontal if x, vertical if y
+     */
     private static int retrieve_safe(int[] array, int x, int y, int w, int h, boolean isRowMajor) {
-        x = Math.abs(x) % w;
-        y = Math.abs(y) % h;
+        x = (x<w) ? Math.abs(x): Math.abs(2*w-x);
+        y = (y<h) ? Math.abs(y): Math.abs(2*w-x);
         int index = getFlattenedIndices(x, y, w, h, isRowMajor);
         return array[index];
     }
 
-    private static int[] unpackRGB(int val) {
+    /**
+     * unpacks the rgb into an array of 3 ints in the order of R, G, and B
+     * @param val the color value to be converted to array
+     * @return an array of 3 ints in the order of R, G, and B
+     */
+    public static int[] unpackRGB(int val) {
         return new int[]{(val >> 16) & 0xFF, (val >> 8) & 0xFF, val & 0xFF};
     }
 
-
-    private static int packRGB(int[] rgb) {
+    /**
+     * turns an array of 3 ints in the order of RGB into 1 RGB int
+     * @param rgb the array of the rgb int
+     * @return an int representing a RGB value, in that order.
+     */
+    public static int packRGB(int[] rgb) {
         return ((rgb[0] & 0xFF) << 16) + ((rgb[1] & 0xFF) << 8) + (rgb[2] & 0xFF);
     }
 
