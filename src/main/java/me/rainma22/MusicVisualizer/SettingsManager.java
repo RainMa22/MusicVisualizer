@@ -33,7 +33,7 @@ class SettingsManager extends Hashtable<String,String> {
         put("rotation_per_theta", "0.0");
         put("line_color_hex", "0x0000ee");
         put("amplitude_threshold", "0");
-        put("blur_size", "5");
+        put("blur_size", "50");
         put("width", "1920");
         put("height", "1080");
     }

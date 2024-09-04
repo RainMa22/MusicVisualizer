@@ -95,7 +95,7 @@ public class Main {
         BufferedImage foregroundImage = settings.getImage("foreground_img", null);
         BufferedImage backgroundImage = settings.getImage("background_img", null);
         Color lineColor = settings.getColor("line_color_hex", Color.BLUE);
-        int blurSize = Math.max(0,settings.getInt("blur_size", 5));
+        int blurSize = Math.max(0,settings.getInt("blur_size", 50));
         if (blurSize %2 ==0) blurSize++;
 
         AwtImageProcessor processor = new AwtImageProcessor(width, height, amplitudeThreshold,

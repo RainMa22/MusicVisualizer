@@ -1,5 +1,6 @@
 package me.rainma22.MusicVisualizer.ImageProcessor;
 
+import me.rainma22.MusicVisualizer.ImageProcessor.Blur.GaussianBlur;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.util.FastMath;
 
@@ -8,8 +9,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-
-import static me.rainma22.MusicVisualizer.Utils.imageUtils.GuassianBlur;
 
 /**
  * An image processor that takes a list of float and outputs them onto an image
@@ -115,11 +114,13 @@ public class AwtImageProcessor {
     public void setBlurSize(int blurSize) {
         this.blurSize = blurSize;
         if (backgroundImage != null) {
-            blurredImage = new BufferedImage(backgroundImage.getWidth(),backgroundImage.getHeight(),backgroundImage.getType());
-            int[] colors = GuassianBlur(backgroundImage.getData().getPixels(0,0,backgroundImage.getWidth(),
-                    backgroundImage.getHeight(), (int []) null), backgroundImage.getWidth(), backgroundImage.getHeight(),
-                    blurSize);
-            blurredImage.getRaster().setPixels(0,0,backgroundImage.getWidth(), backgroundImage.getHeight(), colors);
+//            blurredImage = new BufferedImage(backgroundImage.getWidth(),backgroundImage.getHeight(),backgroundImage.getType());
+//            int[] colors = GuassianBlur(backgroundImage.getData().getPixels(0,0,backgroundImage.getWidth(),
+//                    backgroundImage.getHeight(), (int []) null), backgroundImage.getWidth(), backgroundImage.getHeight(),
+//                    blurSize);
+//            blurredImage.getRaster().setPixels(0,0,backgroundImage.getWidth(), backgroundImage.getHeight(), colors);
+            GaussianBlur blur = new GaussianBlur(blurSize);
+            blurredImage = blur.filter(backgroundImage,null);
         }
     }
 
