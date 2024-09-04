@@ -14,7 +14,7 @@ import java.nio.DoubleBuffer;
 import java.util.Arrays;
 
 /**
- * a Gaussian Blur implementation using 2-pass 1D guassian and FFT
+ * a Gaussian Blur implementation using 2-pass 1D gaussian and FFT
  **/
 public class GaussianBlur {
     private final double[] kernel;
