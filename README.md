@@ -25,6 +25,9 @@
             <version>0.2.5</version>
         </dependency>
 ```
+> Apache Commons Math is licensed under Apache Licenses 2.0
+
+> jcodec is licensed under BSD 2-Clause License
 ## Testing Dependencies
 ```xml
         <dependency>
@@ -40,6 +43,7 @@
             <scope>test</scope>
         </dependency>
 ```
+> The JUnit Library is licensed under Eclipse Public License v1.0
 ## TO-DO List
 - [x] basic image generation behavior
     - [x] chunk size calculated on a FPS target
