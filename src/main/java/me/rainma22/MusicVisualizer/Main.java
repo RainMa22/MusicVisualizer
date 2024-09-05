@@ -43,7 +43,7 @@ public class Main {
 
         String ffmpegPath = settings.get("path_to_ffmpeg");
         if (!(ffmpegEnabled = ProcessUtils.isProgramRunnable(ffmpegPath))) {
-            System.err.println("FFmpeg not usable! Using JCodec instead(Very Slow and no Audio in video output)!");
+            System.err.println("FFmpeg not usable! Using Pure Java instead(Very Slow and no Audio in video output)!");
         }
         if (!isGUI)
             new CommandLine(filePath,ffmpegEnabled)
