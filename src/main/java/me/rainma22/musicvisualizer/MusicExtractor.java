@@ -1,4 +1,4 @@
-package me.rainma22.MusicVisualizer;
+package me.rainma22.musicvisualizer;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;

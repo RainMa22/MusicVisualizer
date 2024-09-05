@@ -1,4 +1,4 @@
-package me.rainma22.MusicVisualizer.FrameOutput;
+package me.rainma22.musicvisualizer.frameoutput;
 
 import org.jcodec.api.awt.AWTSequenceEncoder;
 

@@ -1,7 +1,7 @@
-package me.rainma22.MusicVisualizer.ImageProcessor.Blur;
+package me.rainma22.musicvisualizer.imageprocessor.blur;
 
-import me.rainma22.MusicVisualizer.Utils.BinaryOperations;
-import me.rainma22.MusicVisualizer.Utils.ImageUtils;
+import me.rainma22.musicvisualizer.util.BinaryOperations;
+import me.rainma22.musicvisualizer.util.ImageUtils;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;

@@ -1,6 +1,6 @@
-package me.rainma22.MusicVisualizer.ImageProcessor;
+package me.rainma22.musicvisualizer.imageprocessor;
 
-import me.rainma22.MusicVisualizer.ImageProcessor.Blur.GaussianBlur;
+import me.rainma22.musicvisualizer.imageprocessor.blur.GaussianBlur;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.util.FastMath;
 

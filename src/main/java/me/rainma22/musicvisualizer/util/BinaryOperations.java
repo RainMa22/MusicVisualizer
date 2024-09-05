@@ -1,4 +1,4 @@
-package me.rainma22.MusicVisualizer.Utils;
+package me.rainma22.musicvisualizer.util;
 
 public class BinaryOperations {
     public static long nextPowerOfTwo(long in){

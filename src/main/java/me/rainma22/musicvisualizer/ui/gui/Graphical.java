@@ -1,4 +1,4 @@
-package me.rainma22.MusicVisualizer.UserInterface.GUI;
+package me.rainma22.musicvisualizer.ui.gui;
 
 
 import javax.swing.*;

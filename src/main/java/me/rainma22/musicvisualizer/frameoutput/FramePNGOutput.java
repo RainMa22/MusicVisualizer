@@ -1,4 +1,4 @@
-package me.rainma22.MusicVisualizer.FrameOutput;
+package me.rainma22.musicvisualizer.frameoutput;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

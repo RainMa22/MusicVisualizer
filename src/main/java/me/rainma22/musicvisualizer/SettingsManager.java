@@ -1,4 +1,4 @@
-package me.rainma22.MusicVisualizer;
+package me.rainma22.musicvisualizer;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

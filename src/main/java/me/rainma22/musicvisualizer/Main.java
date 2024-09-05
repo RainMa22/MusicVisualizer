@@ -1,8 +1,8 @@
-package me.rainma22.MusicVisualizer;
+package me.rainma22.musicvisualizer;
 
-import me.rainma22.MusicVisualizer.UserInterface.CommandLine;
-import me.rainma22.MusicVisualizer.UserInterface.GUI.Graphical;
-import me.rainma22.MusicVisualizer.Utils.ProcessUtils;
+import me.rainma22.musicvisualizer.ui.CommandLine;
+import me.rainma22.musicvisualizer.ui.gui.Graphical;
+import me.rainma22.musicvisualizer.util.ProcessUtils;
 
 public class Main {
     private static int chunkSize;

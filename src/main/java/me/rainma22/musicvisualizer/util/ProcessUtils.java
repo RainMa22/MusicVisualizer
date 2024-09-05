@@ -1,4 +1,4 @@
-package me.rainma22.MusicVisualizer.Utils;
+package me.rainma22.musicvisualizer.util;
 
 import java.util.concurrent.TimeUnit;
 

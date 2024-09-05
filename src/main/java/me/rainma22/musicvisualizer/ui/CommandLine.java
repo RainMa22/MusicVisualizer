@@ -1,10 +1,10 @@
-package me.rainma22.MusicVisualizer.UserInterface;
+package me.rainma22.musicvisualizer.ui;
 
-import me.rainma22.MusicVisualizer.FrameOutput.FrameOutput;
-import me.rainma22.MusicVisualizer.ImageProcessor.AwtImageProcessor;
-import me.rainma22.MusicVisualizer.MusicExtractor;
-import me.rainma22.MusicVisualizer.SettingsManager;
-import me.rainma22.MusicVisualizer.Utils.BinaryOperations;
+import me.rainma22.musicvisualizer.frameoutput.FrameOutput;
+import me.rainma22.musicvisualizer.imageprocessor.AwtImageProcessor;
+import me.rainma22.musicvisualizer.MusicExtractor;
+import me.rainma22.musicvisualizer.SettingsManager;
+import me.rainma22.musicvisualizer.util.BinaryOperations;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;
@@ -16,7 +16,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static me.rainma22.MusicVisualizer.Utils.MusicUtils.createOutput;
+import static me.rainma22.musicvisualizer.util.MusicUtils.createOutput;
 
 public class CommandLine {
     private final SettingsManager settings;

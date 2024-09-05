@@ -1,10 +1,10 @@
-package me.rainma22.MusicVisualizer.Utils;
+package me.rainma22.musicvisualizer.util;
 
-import me.rainma22.MusicVisualizer.FrameOutput.FrameFFMPEGOutput;
-import me.rainma22.MusicVisualizer.FrameOutput.FrameMOVOutput;
-import me.rainma22.MusicVisualizer.FrameOutput.FrameOutput;
-import me.rainma22.MusicVisualizer.FrameOutput.FramePNGOutput;
-import me.rainma22.MusicVisualizer.SettingsManager;
+import me.rainma22.musicvisualizer.frameoutput.FrameFFMPEGOutput;
+import me.rainma22.musicvisualizer.frameoutput.FrameMOVOutput;
+import me.rainma22.musicvisualizer.frameoutput.FrameOutput;
+import me.rainma22.musicvisualizer.frameoutput.FramePNGOutput;
+import me.rainma22.musicvisualizer.SettingsManager;
 
 import java.io.IOException;
 
