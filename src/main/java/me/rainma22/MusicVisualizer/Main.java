@@ -1,6 +1,7 @@
 package me.rainma22.MusicVisualizer;
 
 import me.rainma22.MusicVisualizer.UserInterface.CommandLine;
+import me.rainma22.MusicVisualizer.UserInterface.Graphical;
 import me.rainma22.MusicVisualizer.Utils.ProcessUtils;
 
 public class Main {
@@ -10,19 +11,19 @@ public class Main {
 
 
     public static void main(String[] args) {
+        boolean isGUI = true;
+        String filePath = "";
+        if (args.length > 0) {
+            isGUI = !args[0].equalsIgnoreCase("CLI");
+        }
         //Check if enough args are used
-        if (args.length < 2) {
+        if (args.length < 2 && !isGUI) {
             System.out.println("Usage: java -jar MusicVisualizer (CLI|GUI) (filename) " +
                     settings.getSettingsString());
             return;
+        } else if (args.length >= 2) {
+            filePath = args[1];
         }
-        String filePath = args[1];
-        boolean isGUI = !args[0].equalsIgnoreCase("CLI");
-        if (isGUI) {
-            System.err.println("GUI not Implemented, exiting");
-            return;
-        }
-
         // Parse Settings
         for (int i = 2; i < args.length; i++) {
             String[] keyValPair = args[i].split("=");
@@ -46,10 +47,10 @@ public class Main {
             System.err.println("FFmpeg not usable! Using Pure Java instead(Very Slow and no Audio in video output)!");
         }
         if (!isGUI)
-            new CommandLine(filePath,ffmpegEnabled)
+            new CommandLine(filePath, ffmpegEnabled)
                     .start();
         else
-            //TODO
-            return;
+            new Graphical(1600, 900).start();
+        return;
     }
 }
