@@ -51,8 +51,8 @@
     - [x] center image
     - [x] foreground rotation
     - [x] background image
-        - [?] background image blur
-          - [ ] Acceleration with FFT
+        - [x] background image blur
+          - [x] Acceleration with FFT
 - [x] (Slow)Save to a video
   - [x] with FFmpeg
     - [x] with sound

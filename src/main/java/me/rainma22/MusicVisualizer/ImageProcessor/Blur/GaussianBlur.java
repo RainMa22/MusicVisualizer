@@ -1,6 +1,7 @@
 package me.rainma22.MusicVisualizer.ImageProcessor.Blur;
 
 import me.rainma22.MusicVisualizer.Utils.BinaryOperations;
+import me.rainma22.MusicVisualizer.Utils.ImageUtils;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;
@@ -89,6 +90,7 @@ public class GaussianBlur {
             transformedKernelID = 1;
         }
 
+        int paddingSize = kernel.length;
         Complex[] transformedKernel = transformedKernels.get(transformedKernelID);
         if (transformedKernel == null || transformedKernel.length != ogSize) {
             transformedKernels.set(transformedKernelID,
@@ -100,22 +102,24 @@ public class GaussianBlur {
         for (int i = 0; i < otherSize; i++) {
             for (int colorBand = 0; colorBand < 3; colorBand++) {
 
-                double[] Sample_OneColor;
+                double[] sample_OneColor;
                 if (isHorizontal)
-                    Sample_OneColor = imgData.getSamples(0, i, ogSize, 1, colorBand, new double[ogSize]);
+                    sample_OneColor = imgData.getSamples(0, i, ogSize, 1, colorBand, new double[ogSize]);
                 else
-                    Sample_OneColor = imgData.getSamples(i, 0, 1, ogSize, colorBand, new double[ogSize]);
+                    sample_OneColor = imgData.getSamples(i, 0, 1, ogSize, colorBand, new double[ogSize]);
 
-                Sample_OneColor = Arrays.stream(Sample_OneColor).map(x -> FastMath.pow(x, 2)).toArray();
-                Sample_OneColor = Arrays.copyOf(Sample_OneColor, transformSize);
-                Complex[] transformed_OneColor = transformer.transform(Sample_OneColor, TransformType.FORWARD);
+                sample_OneColor = Arrays.stream(sample_OneColor).map(x -> FastMath.pow(x, 2)).toArray();
+                sample_OneColor = ImageUtils.addPaddingReflect(sample_OneColor, paddingSize,paddingSize);
+                sample_OneColor = Arrays.copyOf(sample_OneColor, transformSize);
+                Complex[] transformed_OneColor = transformer.transform(sample_OneColor, TransformType.FORWARD);
                 for (int j = 0; j < transformed_OneColor.length; j++) {
                     transformed_OneColor[j] = transformed_OneColor[j].multiply(transformedKernel[j]);
                 }
 
                 Complex[] outData_oneColor = transformer.transform(transformed_OneColor, TransformType.INVERSE);
                 for (int j = 0; j < ogSize; j++) {
-                    buffer.put(FastMath.sqrt(outData_oneColor[j].getReal()));
+                    int index = j + paddingSize;
+                    buffer.put(FastMath.sqrt(outData_oneColor[index].getReal()));
                 }
                 buffer.clear();
 
