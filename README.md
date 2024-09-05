@@ -29,6 +29,11 @@
             <artifactId>javafx-controls</artifactId>
             <version>21.0.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>21.0.4</version>
+        </dependency>
 ```
 > Apache Commons Math is licensed under Apache Licenses 2.0
 
