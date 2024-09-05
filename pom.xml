@@ -38,16 +38,6 @@
             <version>5.9.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>21.0.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>21.0.4</version>
-        </dependency>
     </dependencies>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -62,15 +52,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.0</version>
             </plugin>
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
-                <configuration>
-                    <mainClass>me.rainma22.MusicVisualizer.UserInterface.Graphical</mainClass>
-                </configuration>
-            </plugin>
-
         </plugins>
     </build>
 

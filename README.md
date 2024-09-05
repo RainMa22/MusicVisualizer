@@ -24,23 +24,11 @@
             <artifactId>jcodec-javase</artifactId>
             <version>0.2.5</version>
         </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>21.0.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>21.0.4</version>
-        </dependency>
 ```
 > Apache Commons Math is licensed under Apache Licenses 2.0
 
 > jcodec is licensed under BSD 2-Clause License
 
-> OpenJFX is licensed under GNU General Public License, version 2,
-with the Classpath Exception
 ## Testing Dependencies
 ```xml
         <dependency>
