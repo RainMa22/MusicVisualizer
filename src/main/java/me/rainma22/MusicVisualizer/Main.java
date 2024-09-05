@@ -1,7 +1,7 @@
 package me.rainma22.MusicVisualizer;
 
 import me.rainma22.MusicVisualizer.UserInterface.CommandLine;
-import me.rainma22.MusicVisualizer.UserInterface.Graphical;
+import me.rainma22.MusicVisualizer.UserInterface.GUI.Graphical;
 import me.rainma22.MusicVisualizer.Utils.ProcessUtils;
 
 public class Main {

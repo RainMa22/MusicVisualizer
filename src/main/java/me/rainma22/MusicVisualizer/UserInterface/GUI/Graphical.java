@@ -1,9 +1,8 @@
-package me.rainma22.MusicVisualizer.UserInterface;
+package me.rainma22.MusicVisualizer.UserInterface.GUI;
 
 
 import javax.swing.*;
 import java.awt.*;
-
 public class Graphical extends JFrame {
     public Graphical(int width, int height){
         super("Music Visualizer");
