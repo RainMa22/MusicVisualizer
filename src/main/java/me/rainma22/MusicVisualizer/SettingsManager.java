@@ -11,7 +11,7 @@ import java.util.StringJoiner;
 /**
  * Singleton Class that manages settings specific to Main
  **/
-class SettingsManager extends Hashtable<String,String> {
+public class SettingsManager extends Hashtable<String,String> {
     private static SettingsManager manager = null;
 
     public static SettingsManager getSettingsManager(){
