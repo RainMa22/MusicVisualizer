@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="CLI_WithFFmpeg" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="me.rainma22.musicvisualizer.Main" />
+    <module name="MusicVisualizer" />
+    <option name="PROGRAM_PARAMETERS" value="CLI test_32bitFloat.wav path_to_ffmpeg=G:/ffmpeg/bin/ffmpeg.exe output_format=mov fps=60" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
