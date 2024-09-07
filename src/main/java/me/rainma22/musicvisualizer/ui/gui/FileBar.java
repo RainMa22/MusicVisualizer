@@ -5,6 +5,7 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class FileBar extends JPanel {
     private JFileChooser chooser;
@@ -25,6 +26,9 @@ public class FileBar extends JPanel {
         chooserBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                File currentPath = new File(pathField.getText());
+                if (currentPath.exists())
+                    chooser.setCurrentDirectory(currentPath);
                 int result = chooser.showOpenDialog(null);
                 if (result == JFileChooser.APPROVE_OPTION)
                     pathField.setText(chooser.getSelectedFile().getAbsolutePath());
