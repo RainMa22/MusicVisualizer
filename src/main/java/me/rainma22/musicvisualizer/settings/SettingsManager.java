@@ -28,7 +28,7 @@ public class SettingsManager  {
     private SettingsManager(){
         super();
         table = new Hashtable<>();
-        put("fps", SettingsEntry.newIntEntry("60","Frames Per Second of Output"));
+        put("fps", SettingsEntry.newIntEntry("60",12,60,"Frames Per Second of Output"));
         put("path_to_ffmpeg", SettingsEntry.newFileEntry("ffmpeg", "Path to FFMpeg.exe"));
         put("output_format", new SettingsEntry("MOV",EntryType.FACTOR,
                 MusicUtils.SUPPORTED_OUTPUTS,"The Output Extension"));
@@ -36,12 +36,12 @@ public class SettingsManager  {
         put("out_file_name", SettingsEntry.newStringEntry("output",  "Output File Name"));
         put("foreground_img", SettingsEntry.newFileEntry("defaults/foregroundIMG.jpg", "Path to Foreground Image"));
         put("background_img", SettingsEntry.newFileEntry("defaults/bg.jpg",  "Path to Background Image"));
-        put("rotation_per_theta", SettingsEntry.newDoubleEntry("0.0","Theta Rotation per Frame"));
+        put("rotation_per_theta", SettingsEntry.newDoubleEntry("0.0",0,4,"Theta Rotation per Frame"));
         put("line_color_hex", SettingsEntry.newColorEntry("0x0000ee", "Color of the Visualization Line"));
-        put("amplitude_threshold", SettingsEntry.newDoubleEntry("0", "Amplitude Threshold"));
-        put("blur_size", SettingsEntry.newIntEntry("50", "Blur Size"));
-        put("width", SettingsEntry.newIntEntry("1920", "Output Width"));
-        put("height", SettingsEntry.newIntEntry("1080", "Output Height"));
+        put("amplitude_threshold", SettingsEntry.newDoubleEntry("0",0,5, "Amplitude Threshold"));
+        put("blur_size", SettingsEntry.newIntEntry("50",1,500, "Blur Size"));
+        put("width", SettingsEntry.newIntEntry("1920",360,5000, "Output Width"));
+        put("height", SettingsEntry.newIntEntry("1080",360,5000, "Output Height"));
     }
 
     public String getSettingsString() {

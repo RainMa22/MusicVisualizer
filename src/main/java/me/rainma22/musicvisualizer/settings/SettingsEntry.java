@@ -21,10 +21,15 @@ public class SettingsEntry {
     public static SettingsEntry newIntEntry(String value, String description) {
         return new SettingsEntry(value, EntryType.INT, null, description);
     }
-
-
+    public static SettingsEntry newIntEntry(String value,int min, int max, String description) {
+        return new SettingsEntry(value, EntryType.INT, new String[]{String.valueOf(min), String.valueOf(max)}, description);
+    }
     public static SettingsEntry newDoubleEntry(String value, String description) {
         return new SettingsEntry(value, EntryType.DOUBLE, null, description);
+    }
+
+    public static SettingsEntry newDoubleEntry(String value,double min, double max, String description) {
+        return new SettingsEntry(value, EntryType.DOUBLE, new String[]{String.valueOf(min), String.valueOf(max)}, description);
     }
 
     public static SettingsEntry newColorEntry(String value, String description) {
