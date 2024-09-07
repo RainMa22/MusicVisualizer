@@ -29,13 +29,13 @@ public class SettingsManager  {
         super();
         table = new Hashtable<>();
         put("fps", SettingsEntry.newIntEntry("60","Frames Per Second of Output"));
-        put("path_to_ffmpeg", SettingsEntry.newStringEntry("ffmpeg", "Path to FFMpeg.exe"));
+        put("path_to_ffmpeg", SettingsEntry.newFileEntry("ffmpeg", "Path to FFMpeg.exe"));
         put("output_format", new SettingsEntry("MOV",EntryType.FACTOR,
                 MusicUtils.SUPPORTED_OUTPUTS,"The Output Extension"));
-        put("output_path", SettingsEntry.newStringEntry("./output",  "Output Folder of File"));
+        put("output_path", SettingsEntry.newFolderEntry("./output",  "Output Folder of File"));
         put("out_file_name", SettingsEntry.newStringEntry("output",  "Output File Name"));
-        put("foreground_img", SettingsEntry.newStringEntry("defaults/foregroundIMG.jpg", "Path to Foreground Image"));
-        put("background_img", SettingsEntry.newStringEntry("defaults/bg.jpg",  "Path to Background Image"));
+        put("foreground_img", SettingsEntry.newFileEntry("defaults/foregroundIMG.jpg", "Path to Foreground Image"));
+        put("background_img", SettingsEntry.newFileEntry("defaults/bg.jpg",  "Path to Background Image"));
         put("rotation_per_theta", SettingsEntry.newDoubleEntry("0.0","Theta Rotation per Frame"));
         put("line_color_hex", SettingsEntry.newColorEntry("0x0000ee", "Color of the Visualization Line"));
         put("amplitude_threshold", SettingsEntry.newDoubleEntry("0", "Amplitude Threshold"));

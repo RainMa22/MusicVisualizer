@@ -5,5 +5,7 @@ public enum EntryType{
     DOUBLE,
     STRING,
     COLOR,
-    FACTOR
+    FACTOR,
+    FILE,
+    FOLDER,
 }
