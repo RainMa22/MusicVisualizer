@@ -40,6 +40,9 @@ public class FileBar extends JPanel {
     public void addFileFilter(FileFilter filter){
         chooser.addChoosableFileFilter(filter);
     }
+    public void setFileFilter(FileFilter filter){
+        chooser.setFileFilter(filter);
+    }
 
     @Override
     public void setBounds(int x, int y, int width, int height) {
