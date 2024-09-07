@@ -5,6 +5,7 @@ import me.rainma22.musicvisualizer.settings.SettingsManager;
 import org.apache.commons.math3.util.FastMath;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -24,6 +25,7 @@ public class SettingsPanel extends JPanel {
     private static JPanel panelFromSetting(String key, SettingsEntry entry) {
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+        panel.setBorder(new LineBorder(Color.LIGHT_GRAY,1, true));
         panel.setLayout(layout);
         panel.add(new JLabel(entry.getDescription(), SwingConstants.CENTER));
         switch (entry.getType()) {
@@ -87,8 +89,18 @@ public class SettingsPanel extends JPanel {
                 panel.add(chooserBtn1);
                 break;
             case COLOR:
-//                selector = new JColorChooser();
-//                break;
+                JTextField colorField = new JTextField(entry.toString());
+                JButton colorBtn = new JButton("choose");
+                colorBtn.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Color color = JColorChooser.showDialog(panel,
+                                "Choose a color", Color.decode(colorField.getText()),false);
+                        colorField.setText(String.format("0x%6x",color.getRGB()&0xFFFFFF));
+                    }
+                });
+                panel.add(colorField);panel.add(colorBtn);
+                break;
             case DOUBLE:
             case STRING:
             default:
