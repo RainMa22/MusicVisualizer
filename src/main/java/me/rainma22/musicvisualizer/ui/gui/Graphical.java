@@ -5,11 +5,14 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 public class Graphical extends JFrame {
+
+    private JComponent settingField;
     private FileBar inputFileBar;
 
     public Graphical(int width, int height){
         super("Music Visualizer");
-        JComponent dummy = new JTextField("dummy");
+//        settingField = new JTextField("dummy");
+        settingField = SettingsPanel.fromSettings();
         JPanel dummy2 = new JPanel();
         inputFileBar = new FileBar("Input","");
         inputFileBar.setFileFilter(new FileNameExtensionFilter("Wave File(.wav)", "wav", "Wav","WAV"));
@@ -19,9 +22,9 @@ public class Graphical extends JFrame {
         setMinimumSize(new Dimension(640,360));
         setResizable(true);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-        dummy.setPreferredSize(new Dimension(width,height/10*8));
+        settingField.setPreferredSize(new Dimension(width,height/10*8));
         dummy2.setPreferredSize(new Dimension(width,height/10));
-        add(dummy);
+        add(settingField);
         add(inputFileBar);
         add(dummy2);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
