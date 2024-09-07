@@ -4,11 +4,13 @@ import me.rainma22.musicvisualizer.frameoutput.FrameFFMPEGOutput;
 import me.rainma22.musicvisualizer.frameoutput.FrameMOVOutput;
 import me.rainma22.musicvisualizer.frameoutput.FrameOutput;
 import me.rainma22.musicvisualizer.frameoutput.FramePNGOutput;
-import me.rainma22.musicvisualizer.SettingsManager;
+import me.rainma22.musicvisualizer.settings.SettingsManager;
 
 import java.io.IOException;
 
 public class MusicUtils {
+
+    public static final String[] SUPPORTED_OUTPUTS = new String[]{"PNG", "MOV"};
 
     public static FrameOutput createOutput(String pathToAudio, int numFrames, boolean ffmpegEnabled) throws IOException {
         SettingsManager settings = SettingsManager.getSettingsManager();

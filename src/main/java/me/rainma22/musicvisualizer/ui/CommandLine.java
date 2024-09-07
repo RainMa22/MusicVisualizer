@@ -3,7 +3,7 @@ package me.rainma22.musicvisualizer.ui;
 import me.rainma22.musicvisualizer.frameoutput.FrameOutput;
 import me.rainma22.musicvisualizer.imageprocessor.AwtImageProcessor;
 import me.rainma22.musicvisualizer.MusicExtractor;
-import me.rainma22.musicvisualizer.SettingsManager;
+import me.rainma22.musicvisualizer.settings.SettingsManager;
 import me.rainma22.musicvisualizer.util.BinaryOperations;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;

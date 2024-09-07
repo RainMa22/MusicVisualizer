@@ -1,6 +1,6 @@
 package me.rainma22.musicvisualizer.ui.gui;
 
-import me.rainma22.musicvisualizer.SettingsManager;
+import me.rainma22.musicvisualizer.settings.SettingsManager;
 import org.apache.commons.math3.util.FastMath;
 
 import javax.swing.*;
