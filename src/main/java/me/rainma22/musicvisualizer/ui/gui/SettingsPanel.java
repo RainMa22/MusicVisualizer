@@ -90,13 +90,16 @@ public class SettingsPanel extends JPanel {
                 break;
             case COLOR:
                 JTextField colorField = new JTextField(entry.toString());
-                JButton colorBtn = new JButton("choose");
+                JButton colorBtn = new JButton();
+                colorBtn.setBackground(Color.decode(colorField.getText()));
+                colorBtn.setPreferredSize(new Dimension(20,20));
                 colorBtn.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         Color color = JColorChooser.showDialog(panel,
                                 "Choose a color", Color.decode(colorField.getText()),false);
                         colorField.setText(String.format("0x%6x",color.getRGB()&0xFFFFFF));
+                        colorBtn.setForeground(color);
                     }
                 });
                 panel.add(colorField);panel.add(colorBtn);
