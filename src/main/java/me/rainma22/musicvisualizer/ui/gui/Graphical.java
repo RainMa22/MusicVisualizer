@@ -8,11 +8,16 @@ public class Graphical extends JFrame {
         super("Music Visualizer");
         setSize(new Dimension(width,height));
         setResizable(false);
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         add(new JTextField("Hello world!"));
+        add(new FileBar("test",""));
+        add(new FileBar("test2", ""));
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
     public void start(){
         setVisible(true);
         revalidate();
+
     }
 
 }
