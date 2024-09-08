@@ -186,7 +186,7 @@ public class AwtImageProcessor {
             yPos[i] = (height - yPos[i]) / 2;
         }
         g.setColor(lineColor);
-        g.drawPolyline(xPos, yPos, yPos.length);
+        g.drawPolygon(xPos, yPos, yPos.length);
         int circleDiameter = width / 5;
         int circleX = (width - circleDiameter) / 2;
         int circleY = (height - circleDiameter) / 2;

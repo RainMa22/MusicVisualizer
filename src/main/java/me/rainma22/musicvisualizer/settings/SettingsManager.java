@@ -36,7 +36,7 @@ public class SettingsManager  {
         put("background_img", SettingsEntry.newImageEntry("defaults/bg.jpg",  "Path to Background Image"));
         put("rotation_per_theta", SettingsEntry.newDoubleEntry("0.0",0, FastMath.PI,"Theta Rotation per Frame"));
         put("line_color_hex", SettingsEntry.newColorEntry("0x0000ee", "Color of the Visualization Line"));
-        put("amplitude_threshold", SettingsEntry.newDoubleEntry("0",0,5, "Amplitude Threshold"));
+        put("amplitude_threshold", SettingsEntry.newDoubleEntry("0",0,2, "Amplitude Threshold"));
         put("blur_size", SettingsEntry.newIntEntry("50",1,500, "Blur Size"));
         put("width", SettingsEntry.newIntEntry("1920",360,5000, "Output Width"));
         put("height", SettingsEntry.newIntEntry("1080",360,5000, "Output Height"));

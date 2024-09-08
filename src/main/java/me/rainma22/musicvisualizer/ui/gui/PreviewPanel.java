@@ -13,7 +13,6 @@ import java.awt.image.BufferedImage;
 
 public class PreviewPanel extends JPanel implements SettingsChangeListener {
     private AwtImageProcessor previewProcessor;
-    private JPanel wrapperPanel;
     private SettingsManager settings;
     private Canvas imagePreview;
     private Complex[] samples;
@@ -26,26 +25,35 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
 
         setMinimumSize(new Dimension(100, 100));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        wrapperPanel = new JPanel();
-        wrapperPanel.setSize(this.getSize());
         imagePreview = new Canvas() {
             public void paint(Graphics g) {
                 Graphics2D g2d = (Graphics2D) g;
-                g2d.drawImage(previewProcessor.processSample(samples), 0, 0, PreviewPanel.this.getWidth(), PreviewPanel.this.getHeight(), this);
+                BufferedImage image = previewProcessor.processSample(samples);
+                g2d.drawImage(image, 0, 0,
+                        image.getWidth(), image.getHeight(), this);
                 g2d.dispose();
             }
         };
         imagePreview.setSize(this.getSize());
         imagePreview.createBufferStrategy(1);
-        wrapperPanel.add(imagePreview);
-        wrapperPanel.setToolTipText("Preview");
-        add(wrapperPanel);
+        add(imagePreview);
 
     }
 
     private void initPreviewProcessor() {
+        int viewWidth = this.getWidth();
+        int viewHeight = this.getHeight();
+        if (viewWidth == 0 || viewHeight == 0) return;
+
         int width = (Integer) settings.getObj("width");
         int height = (Integer) settings.getObj("height");
+
+        float scale = FastMath.min((float)viewWidth/width, (float) viewHeight/height);
+        if (scale > 1) scale = 1;
+
+        width = FastMath.round(width*scale);
+        height = FastMath.round(height*scale);
+
         double threshold = (Double) settings.getObj("amplitude_threshold");
         BufferedImage foregroundImg = (BufferedImage) settings.getObj("foreground_img");
         BufferedImage backgroundImg = (BufferedImage) settings.getObj("background_img");
@@ -75,10 +83,8 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
     @Override
     public void setBounds(int x, int y, int width, int height) {
         super.setBounds(x, y, width, height);
-        wrapperPanel.setSize(width, height);
-        wrapperPanel.setMaximumSize(new Dimension(width, height));
         imagePreview.setSize(width, height);
-        imagePreview.repaint();
+        update(null,null);
 
     }
 
