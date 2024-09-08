@@ -57,11 +57,11 @@ public class GaussianBlur {
         if (!active) return new double[]{NaN};
         double[] out = new double[size];
         double sum = 0;
-        double a = (2 * Math.PI * sigma * sigma);
+        double a = (2 * FastMath.PI * sigma * sigma);
         for (int i = -size / 2 - 1; i < size / 2; i++) {
 
             int xPos = i + size / 2 + 1;
-            out[xPos] = (Math.exp(-(i * i) / (2 * sigma * sigma)) / a);
+            out[xPos] = (FastMath.exp(-(i * i) / (2 * sigma * sigma)) / a);
             sum += out[xPos];
         }
         for (int i = 0; i < size; i++) {

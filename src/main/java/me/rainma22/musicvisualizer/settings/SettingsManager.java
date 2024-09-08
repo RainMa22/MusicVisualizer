@@ -15,9 +15,9 @@ import java.util.List;
  **/
 public class SettingsManager  {
     private static SettingsManager manager = null;
-//    private Hashtable<String,SettingsEntry> table;
-    private List<String> keys = new ArrayList<>();
-    private List<SettingsEntry> values = new ArrayList<>();
+    private List<String> keys;
+    private List<SettingsEntry> values;
+    private List<SettingsChangeListener> listeners;
     public static SettingsManager getSettingsManager(){
         if (manager == null){
             manager = new SettingsManager();
@@ -27,7 +27,9 @@ public class SettingsManager  {
 
     private SettingsManager(){
         super();
-//        table = new Hashtable<>();
+        keys = new ArrayList<>();
+        values = new ArrayList<>();
+        listeners = new ArrayList<>(1);
         put("fps", SettingsEntry.newIntEntry("60",5,120,"Frames Per Second of Output"));
         put("path_to_ffmpeg", SettingsEntry.newExecutableEntry("ffmpeg", "Path to FFmpeg Executable"));
         put("foreground_img", SettingsEntry.newImageEntry("defaults/foregroundIMG.jpg", "Path to Foreground Image"));
@@ -45,8 +47,12 @@ public class SettingsManager  {
         for (int i = 0; i < keys.size(); i++) {
             joiner.add(String.format("[%s=%s]", keys.get(i), values.get(i)));
         }
-//        table.forEach((key, value) -> joiner.add(String.format("[%s=%s]", key, value)));
         return joiner.toString();
+    }
+
+    public void addListener(SettingsChangeListener listener){
+        if (listeners.contains(listener)) return;
+        listeners.add(listener);
     }
 
     public void put(String key,String value){
@@ -57,7 +63,6 @@ public class SettingsManager  {
     }
 
     private void put(String key, SettingsEntry entry){
-//        table.put(key, entry);
         if (!keys.contains(key)){
             keys.add(key);
             values.add(entry);
@@ -66,13 +71,17 @@ public class SettingsManager  {
         }
     }
 
+
+    public void notifyUpdate(String key){
+        listeners.forEach(x -> x.update(key,getEntry(key)));
+
+    }
+
     public String get(String key){
-//        return table.get(key).toString();
         return values.get(keys.indexOf(key)).toString();
     }
 
     public SettingsEntry getEntry(String key){
-//        return table.get(key);
         return values.get(keys.indexOf(key));
     }
 
@@ -80,13 +89,31 @@ public class SettingsManager  {
         return Collections.unmodifiableCollection(keys);
     }
 
-//    public String get(String key, String defaultVal){
-//        return table.get(key).toString();
-//    }
-
     public boolean containsKey(String key){
-//        return table.containsKey(key);
         return keys.contains(key);
+    }
+
+    public Object getObj(String key){
+        SettingsEntry entry = getEntry(key);
+        switch (entry.getType()){
+            case EXECUTABLE:
+            case FOLDER:
+            case COLOR:
+            case STRING:
+            case FACTOR:
+            default:
+                return get(key);
+            case DOUBLE:
+                return Double.parseDouble(get(key));
+            case INT:
+                return Integer.parseInt(get(key));
+            case IMAGE:
+                try {
+                    return ImageIO.read(new File(get(key)));
+                } catch (IOException e) {
+                    return null;
+                }
+        }
     }
 
 

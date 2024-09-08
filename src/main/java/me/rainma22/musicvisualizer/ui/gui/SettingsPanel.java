@@ -62,8 +62,12 @@ public class SettingsPanel extends JPanel {
             public void insertUpdate(DocumentEvent e) {
                 try {
                     String text = textField.getText();
-                    slider.setValue(Integer.parseInt(text));
-                    SettingsManager.getSettingsManager().put(key, text);
+                    int value = Integer.parseInt(text);
+                    if (value >= slider.getMinimum()) {
+                        slider.setValue(value);
+                        SettingsManager.getSettingsManager().put(key, text);
+                    }
+
                 } catch (NumberFormatException ignored) {
                     SwingUtilities.invokeLater(() -> {
                         textField.setText(String.valueOf(slider.getValue()));
@@ -84,6 +88,7 @@ public class SettingsPanel extends JPanel {
             public void focusLost(FocusEvent e) {
                 //forcefully update text
                 textField.setText("inserting text");
+                SettingsManager.getSettingsManager().notifyUpdate(key);
             }
         });
         panel.add(slider);
@@ -128,8 +133,11 @@ public class SettingsPanel extends JPanel {
                 try {
                     String text = textField.getText();
                     if (!text.isEmpty()) {
-                        slider.setValue(FastMath.round(Float.parseFloat(text) * 1000));
-                        SettingsManager.getSettingsManager().put(key, text);
+                        int sliderVal = FastMath.round(Float.parseFloat(text) * 1000);
+                        if (sliderVal >= slider.getMinimum()) {
+                            slider.setValue(sliderVal);
+                            SettingsManager.getSettingsManager().put(key, text);
+                        }
                     }
                 } catch (NumberFormatException ignored) {
 
@@ -138,6 +146,7 @@ public class SettingsPanel extends JPanel {
                     });
                 }
             }
+
 
             @Override
             public void removeUpdate(DocumentEvent e) {
@@ -154,6 +163,7 @@ public class SettingsPanel extends JPanel {
             public void focusLost(FocusEvent e) {
                 //forcefully update text
                 textField.setText("inserting text");
+                SettingsManager.getSettingsManager().notifyUpdate(key);
             }
         });
         panel.add(slider);
@@ -211,7 +221,7 @@ public class SettingsPanel extends JPanel {
                     "Bitmap file (.bmp)"};
             for (int i = 0; i < accepted.length; i++) {
                 if (i == 0)
-                    chooser.setFileFilter(new FileNameExtensionFilter(acceptedName[i],accepted[i]));
+                    chooser.setFileFilter(new FileNameExtensionFilter(acceptedName[i], accepted[i]));
                 else
                     chooser.addChoosableFileFilter(new FileNameExtensionFilter(acceptedName[i], accepted[i]));
             }
@@ -300,6 +310,7 @@ public class SettingsPanel extends JPanel {
             case STRING:
             default:
                 panel.add(new JTextField(entry.toString()));
+                break;
         }
         return panel;
     }

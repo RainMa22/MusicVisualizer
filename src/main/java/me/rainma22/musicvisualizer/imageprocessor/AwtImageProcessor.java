@@ -20,7 +20,6 @@ public class AwtImageProcessor {
     private BufferedImage foregroundImage;
     private int frameIndex;
     private double rotationPerFrameTheta;
-    private Ellipse2D circleClip;
     private Color lineColor;
     private BufferedImage backgroundImage;
 
@@ -77,11 +76,28 @@ public class AwtImageProcessor {
         setBackgroundImage(backgroundImage);
     }
 
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setThreshold(double threshold) {
+        this.threshold = threshold;
+    }
+
+    public void setFrameIndex(int frameIndex) {
+        this.frameIndex = frameIndex;
+    }
+
     public void setForegroundImage(BufferedImage foregroundImage) {
         this.foregroundImage = foregroundImage;
     }
 
     public void setBackgroundImage(BufferedImage backgroundImage) {
+        if (backgroundImage !=null && backgroundImage.equals(this.backgroundImage)) return;
         this.backgroundImage = backgroundImage;
         if (backgroundImage != null) {
             double scale = Math.max((double) width / backgroundImage.getWidth(), (double) height / backgroundImage.getHeight());
@@ -93,7 +109,6 @@ public class AwtImageProcessor {
             g.dispose();
         }
         setBlurSize(blurSize);
-
     }
 
     /**
@@ -112,15 +127,17 @@ public class AwtImageProcessor {
      * sets the blur size and also updates the blur image
      **/
     public void setBlurSize(int blurSize) {
+        if (blurSize == this.blurSize) return;
         this.blurSize = blurSize;
         if (backgroundImage != null) {
-//            blurredImage = new BufferedImage(backgroundImage.getWidth(),backgroundImage.getHeight(),backgroundImage.getType());
-//            int[] colors = GuassianBlur(backgroundImage.getData().getPixels(0,0,backgroundImage.getWidth(),
-//                    backgroundImage.getHeight(), (int []) null), backgroundImage.getWidth(), backgroundImage.getHeight(),
-//                    blurSize);
-//            blurredImage.getRaster().setPixels(0,0,backgroundImage.getWidth(), backgroundImage.getHeight(), colors);
             GaussianBlur blur = new GaussianBlur(blurSize);
-            blurredImage = blur.filter(backgroundImage,null);
+            if (blurredImage !=null &&
+                    blurredImage.getWidth() == backgroundImage.getWidth() &&
+                    blurredImage.getHeight() == backgroundImage.getHeight())
+                blurredImage = blur.filter(backgroundImage,blurredImage);
+            else
+                blurredImage = blur.filter(backgroundImage,null);
+
         }
     }
 
@@ -178,11 +195,11 @@ public class AwtImageProcessor {
             g.setColor(Color.BLACK);
             g.drawOval(circleX, circleY, circleDiameter, circleDiameter);
         } else {
-            if (circleClip == null) circleClip = new Ellipse2D.Double(circleX, circleY, circleDiameter, circleDiameter);
+            Ellipse2D circleClip = new Ellipse2D.Float(circleX, circleY, circleDiameter, circleDiameter);
             AffineTransform at = new AffineTransform();
-            double scale = Math.max((double) circleDiameter / foregroundImage.getWidth(), (double) circleDiameter / foregroundImage.getHeight());
+            float scale = FastMath.max((float) circleDiameter / foregroundImage.getWidth(), (float) circleDiameter / foregroundImage.getHeight());
             at.scale(scale, scale);
-            double rotateAnchor = Math.min(foregroundImage.getWidth() / 2d, foregroundImage.getHeight() / 2d);
+            float rotateAnchor = FastMath.min(foregroundImage.getWidth() / 2f, foregroundImage.getHeight() / 2f);
             at.rotate(frameIndex * rotationPerFrameTheta, rotateAnchor, rotateAnchor);
 
             AffineTransformOp operation = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);

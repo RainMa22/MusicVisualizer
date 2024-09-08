@@ -13,7 +13,8 @@ public class Graphical extends JFrame {
 
     public Graphical(int width, int height){
         super("Music Visualizer");
-        dummy = new JTextField("dummy");
+//        dummy = new JTextField("dummy");
+        dummy = new PreviewPanel();
         settingField = SettingsPanel.fromSettings();
 
         inputFileBar = new FileBar("Input","");
