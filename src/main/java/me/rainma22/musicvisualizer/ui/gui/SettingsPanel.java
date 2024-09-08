@@ -243,14 +243,11 @@ public class SettingsPanel extends JPanel {
     }
 
     private static JPanel panelFromSetting(String key, SettingsEntry entry) {
-        SettingsManager settings = SettingsManager.getSettingsManager();
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
         panel.setBorder(new LineBorder(Color.LIGHT_GRAY, 1, true));
         panel.setLayout(layout);
         JLabel label = new JLabel(entry.getDescription() + ":");
-        //        label.setAlignmentX(JLabel.LEFT_ALIGNMENT);
-        //        label.setBorder(new LineBorder(Color.BLACK, 1));
         panel.add(label);
         switch (entry.getType()) {
             case FACTOR:
