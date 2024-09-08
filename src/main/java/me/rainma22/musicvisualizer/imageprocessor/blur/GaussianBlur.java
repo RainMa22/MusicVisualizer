@@ -131,8 +131,6 @@ public class GaussianBlur {
         }
     }
 
-    ;
-
     public BufferedImage filter(BufferedImage input, BufferedImage output) {
         if (!active) return input;
         int inputWidth = input.getWidth();
@@ -150,34 +148,6 @@ public class GaussianBlur {
         return output;
     }
 
-//    private void filterHeight(int inputWidth, int inputHeight, Raster imgData, WritableRaster outputRaster) {
-//        int transformSize = BinaryOperations.nextPowerOfTwo(inputHeight + kernel.length);
-//
-//        if (transformedKernelY == null || transformedKernelY.length != inputHeight) {
-//            transformedKernelY = transformer.transform(Arrays.copyOf(kernel, transformSize), TransformType.FORWARD);
-//        }
-//        DoubleBuffer buffer = DoubleBuffer.allocate(transformSize);
-//        for (int i = 0; i < inputWidth; i++) {
-//            for (int colorBand = 0; colorBand < 3; colorBand++) {
-//                double[] columnData_OneColor = imgData.getSamples(i, 0, 1, inputHeight, colorBand, new double[inputHeight]);
-//                columnData_OneColor = Arrays.stream(columnData_OneColor).map(x-> FastMath.pow(x, 2)).toArray();
-//                columnData_OneColor = Arrays.copyOf(columnData_OneColor, transformSize);
-//                Complex[] transformed_OneColor = transformer.transform(columnData_OneColor, TransformType.FORWARD);
-//                for (int j = 0; j < transformed_OneColor.length; j++) {
-//                    transformed_OneColor[j] = transformed_OneColor[j].multiply(transformedKernelY[j]);
-//                }
-//
-//                Complex[] outData_oneColor = transformer.transform(transformed_OneColor, TransformType.INVERSE);
-//                for (int j = 0; j < inputHeight; j++) {
-//                    buffer.put(FastMath.sqrt(outData_oneColor[j].getReal()));
-////                    buffer.put(outData_oneColor[j].getReal());
-//                }
-//                buffer.clear();
-//                outputRaster.setSamples(i, 0, 1, inputHeight, colorBand, buffer.array());
-//            }
-//        }
-//        return;
-//    }
 
     private enum FilterDirection {
         HORIZONTAL,
