@@ -22,11 +22,13 @@ public class CommandLine {
     private final SettingsManager settings;
     private final String filePath;
     private final boolean ffmpegEnabled;
+    private final String outFilePath;
 
-    public CommandLine(String filePath, boolean ffmpegEnabled) {
+    public CommandLine(String filePath, boolean ffmpegEnabled, String outFilePath) {
         settings = SettingsManager.getSettingsManager();
         this.filePath =filePath;
         this.ffmpegEnabled = ffmpegEnabled;
+        this.outFilePath = outFilePath;
     }
 
     public void start() {
@@ -55,7 +57,7 @@ public class CommandLine {
         FastFourierTransformer transformer = new FastFourierTransformer(DftNormalization.STANDARD);
         try {
             me = new MusicExtractor(filePath);
-            FrameOutput output = createOutput(filePath, (int) (me.getAudioLengthInSeconds() * FPS_TARGET + .5), ffmpegEnabled);
+            FrameOutput output = createOutput(filePath, (int) (me.getAudioLengthInSeconds() * FPS_TARGET + .5), ffmpegEnabled, outFilePath);
             double[] samples = me.readFile();
 
             int samplesPerVideoFrame = (int) (samples.length / (me.getAudioLengthInSeconds() * FPS_TARGET));

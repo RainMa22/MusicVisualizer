@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="CLI_JCodec" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="me.rainma22.musicvisualizer.Main" />
+    <option name="MAIN_CLASS_NAME" value="me.rainma22.musicvisualizer.ui.Main" />
     <module name="MusicVisualizer" />
-    <option name="PROGRAM_PARAMETERS" value="CLI test_16bitInt.wav width=640 height=360" />
+    <option name="PROGRAM_PARAMETERS" value="CLI test_16bitInt.wav Output/out.mov width=640 height=360" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

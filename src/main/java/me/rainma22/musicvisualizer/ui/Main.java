@@ -14,19 +14,21 @@ public class Main {
     public static void main(String[] args) {
         boolean isGUI = true;
         String filePath = "";
+        String outFilePath = "";
         if (args.length > 0) {
             isGUI = !args[0].equalsIgnoreCase("CLI");
         }
         //Check if enough args are used
-        if (args.length < 2 && !isGUI) {
-            System.out.println("Usage: java -jar MusicVisualizer (CLI|GUI) (filename) " +
+        if (args.length < 3 && !isGUI) {
+            System.out.println("Usage: java -jar MusicVisualizer (CLI|GUI) (filename) (outFilePath)" +
                     settings.getSettingsString());
             return;
-        } else if (args.length >= 2) {
+        } else if (args.length >= 3) {
             filePath = args[1];
+            outFilePath = args[2];
         }
         // Parse Settings
-        for (int i = 2; i < args.length; i++) {
+        for (int i = 3; i < args.length; i++) {
             String[] keyValPair = args[i].split("=");
             if (keyValPair.length < 2) {
                 System.err.printf("Argument \"%s\" does not have a equal sign, ignoring! \n", args[i]);
@@ -48,7 +50,7 @@ public class Main {
             System.err.println("FFmpeg not usable! Using Pure Java instead(Very Slow and no Audio in video output)!");
         }
         if (!isGUI)
-            new CommandLine(filePath, ffmpegEnabled)
+            new CommandLine(filePath, ffmpegEnabled, outFilePath)
                     .start();
         else
             new Graphical(1600, 900).start();

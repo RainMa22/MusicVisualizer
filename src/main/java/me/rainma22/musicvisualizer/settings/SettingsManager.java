@@ -30,10 +30,10 @@ public class SettingsManager  {
         table = new Hashtable<>();
         put("fps", SettingsEntry.newIntEntry("60",12,60,"Frames Per Second of Output"));
         put("path_to_ffmpeg", SettingsEntry.newFileEntry("ffmpeg", "Path to FFMpeg.exe"));
-        put("output_format", new SettingsEntry("MOV",EntryType.FACTOR,
-                MusicUtils.SUPPORTED_OUTPUTS,"The Output Extension"));
-        put("output_path", SettingsEntry.newFolderEntry("./output",  "Output Folder of File"));
-        put("out_file_name", SettingsEntry.newStringEntry("output",  "Output File Name"));
+//        put("output_format", new SettingsEntry("MOV",EntryType.FACTOR,
+//                MusicUtils.SUPPORTED_OUTPUTS,"The Output Extension"));
+//        put("output_path", SettingsEntry.newFolderEntry("./output",  "Output Folder of File"));
+//        put("out_file_name", SettingsEntry.newStringEntry("output",  "Output File Name"));
         put("foreground_img", SettingsEntry.newFileEntry("defaults/foregroundIMG.jpg", "Path to Foreground Image"));
         put("background_img", SettingsEntry.newFileEntry("defaults/bg.jpg",  "Path to Background Image"));
         put("rotation_per_theta", SettingsEntry.newDoubleEntry("0.0",0,4,"Theta Rotation per Frame"));

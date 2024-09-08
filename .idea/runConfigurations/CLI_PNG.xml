@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="CLI_PNG" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="me.rainma22.musicvisualizer.Main" />
+    <option name="MAIN_CLASS_NAME" value="me.rainma22.musicvisualizer.ui.Main" />
     <module name="MusicVisualizer" />
-    <option name="PROGRAM_PARAMETERS" value="CLI test_16bitInt.wav width=640 height=360 output_format=PNG" />
+    <option name="PROGRAM_PARAMETERS" value="CLI test_16bitInt.wav output/out.PNG width=640 height=360 output_format=PNG" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
