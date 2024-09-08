@@ -5,6 +5,7 @@
 
 - this is a rapidly put together music visualizer made using java and:
 - [Apache Commons Math3](https://commons.apache.org/proper/commons-math/)
+- [Apache Commons Lang3](https://commons.apache.org/proper/commons-lang/)
 - [jcodec](https://github.com/jcodec/jcodec)
 - currently supports only `.wav` files 
 ## Build Dependencies
