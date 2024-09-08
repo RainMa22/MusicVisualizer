@@ -28,7 +28,7 @@ public class SettingsManager  {
     private SettingsManager(){
         super();
 //        table = new Hashtable<>();
-        put("fps", SettingsEntry.newIntEntry("60",12,60,"Frames Per Second of Output"));
+        put("fps", SettingsEntry.newIntEntry("60",5,120,"Frames Per Second of Output"));
         put("path_to_ffmpeg", SettingsEntry.newFileEntry("ffmpeg", "Path to FFMpeg.exe"));
         put("foreground_img", SettingsEntry.newFileEntry("defaults/foregroundIMG.jpg", "Path to Foreground Image"));
         put("background_img", SettingsEntry.newFileEntry("defaults/bg.jpg",  "Path to Background Image"));

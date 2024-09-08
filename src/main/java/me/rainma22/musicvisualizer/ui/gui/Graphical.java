@@ -32,7 +32,7 @@ public class Graphical extends JFrame {
 
         splitPane.setPreferredSize(new Dimension(width,height/10*9));
         splitPane.setSize(width,height/10*9);
-
+        splitPane.setDividerLocation(.2);
 
         splitPane.setLeftComponent(settingField);
         splitPane.setRightComponent(dummy);

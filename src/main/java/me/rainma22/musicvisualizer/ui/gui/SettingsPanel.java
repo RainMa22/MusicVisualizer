@@ -8,9 +8,13 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.io.File;
 import java.util.Collection;
 
@@ -22,7 +26,7 @@ public class SettingsPanel extends JPanel {
         setLayout(layout);
     }
 
-    private static JPanel newIntPanel(SettingsEntry entry){
+    private static JPanel newIntPanel(String key, SettingsEntry entry) {
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel, BoxLayout.X_AXIS);
         panel.setLayout(layout);
@@ -45,16 +49,38 @@ public class SettingsPanel extends JPanel {
         slider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                textField.setText(String.valueOf(slider.getValue()));
+                SwingUtilities.invokeLater(() -> {
+                    textField.setText(String.valueOf(slider.getValue()));
+                });
             }
         });
-        textField.addActionListener(new ActionListener() {
+        textField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void insertUpdate(DocumentEvent e) {
                 try {
-                    slider.setValue(Integer.parseInt(textField.getText()));
+                    String text = textField.getText();
+                    slider.setValue(Integer.parseInt(text));
+                    SettingsManager.getSettingsManager().put(key, text);
                 } catch (NumberFormatException ignored) {
+                    SwingUtilities.invokeLater(() -> {
+                        textField.setText(String.valueOf(slider.getValue()));
+                    });
                 }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
+        textField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                //forcefully update text
+                textField.setText("inserting text");
             }
         });
         panel.add(slider);
@@ -62,7 +88,7 @@ public class SettingsPanel extends JPanel {
         return panel;
     }
 
-    private static JPanel newDoublePanel(SettingsEntry entry){
+    private static JPanel newDoublePanel(String key, SettingsEntry entry) {
         String[] possibleValues = entry.getPossibleValues();
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel, BoxLayout.X_AXIS);
@@ -81,23 +107,50 @@ public class SettingsPanel extends JPanel {
             }
         }
         JSlider slider = new JSlider(JSlider.HORIZONTAL,
-                FastMath.round((float) min * 1024),
-                FastMath.round((float) max * 1024),
-                FastMath.round((float) val * 1024));
+                FastMath.round((float) min * 1000),
+                FastMath.round((float) max * 1000),
+                FastMath.round((float) val * 1000));
         JTextField textField = new JTextField(String.valueOf(val));
         slider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                textField.setText(String.format("%.8f",slider.getValue()/1024d));
+                SwingUtilities.invokeLater(() -> {
+                    textField.setText(String.format("%.3f", slider.getValue() / 1000d));
+                });
             }
         });
-        textField.addActionListener(new ActionListener() {
+        textField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void insertUpdate(DocumentEvent e) {
                 try {
-                    slider.setValue(FastMath.round(Float.parseFloat(textField.getText())*1024));
+                    String text = textField.getText();
+                    if (!text.isEmpty()) {
+                        slider.setValue(FastMath.round(Float.parseFloat(text) * 1000));
+                        SettingsManager.getSettingsManager().put(key, text);
+                    }
                 } catch (NumberFormatException ignored) {
+
+                    SwingUtilities.invokeLater(() -> {
+                        textField.setText(String.format("%.3f", slider.getValue() / 1000d));
+                    });
                 }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+        });
+        textField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                //forcefully update text
+                textField.setText("inserting text");
             }
         });
         panel.add(slider);
@@ -105,7 +158,7 @@ public class SettingsPanel extends JPanel {
         return panel;
     }
 
-    private static JPanel newFolderPanel(SettingsEntry entry){
+    private static JPanel newFolderPanel(String key, SettingsEntry entry) {
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel, BoxLayout.X_AXIS);
         panel.setLayout(layout);
@@ -118,7 +171,9 @@ public class SettingsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int result = chooser.showOpenDialog(panel);
                 if (result == JFileChooser.APPROVE_OPTION) {
-                    textField.setText(chooser.getSelectedFile().getAbsolutePath());
+                    String folderPath = chooser.getSelectedFile().getAbsolutePath();
+                    textField.setText(folderPath);
+                    SettingsManager.getSettingsManager().put(key, folderPath);
                 }
             }
         });
@@ -126,7 +181,8 @@ public class SettingsPanel extends JPanel {
         panel.add(chooserBtn);
         return panel;
     }
-    private static JPanel newFilePanel(SettingsEntry entry){
+
+    private static JPanel newFilePanel(String key, SettingsEntry entry) {
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel, BoxLayout.X_AXIS);
         panel.setLayout(layout);
@@ -139,7 +195,9 @@ public class SettingsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int result = chooser.showOpenDialog(panel);
                 if (result == JFileChooser.APPROVE_OPTION) {
-                    textField.setText(chooser.getSelectedFile().getAbsolutePath());
+                    String filePath = chooser.getSelectedFile().getAbsolutePath();
+                    textField.setText(filePath);
+                    SettingsManager.getSettingsManager().put(key, filePath);
                 }
             }
         });
@@ -148,11 +206,12 @@ public class SettingsPanel extends JPanel {
         return panel;
     }
 
-    private static JPanel newColorPanel(SettingsEntry entry){
+    private static JPanel newColorPanel(String key, SettingsEntry entry) {
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel, BoxLayout.X_AXIS);
         panel.setLayout(layout);
         JTextField colorField = new JTextField(entry.toString());
+        colorField.setEnabled(false);
         JButton colorBtn = new JButton();
         colorBtn.setBackground(Color.decode(colorField.getText()));
         colorBtn.addActionListener(new ActionListener() {
@@ -160,8 +219,10 @@ public class SettingsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 Color color = JColorChooser.showDialog(panel,
                         "Choose a color", Color.decode(colorField.getText()), false);
-                colorField.setText(String.format("0x%6x", color.getRGB() & 0xFFFFFF));
-                colorBtn.setForeground(color);
+                String colorText = String.format("0x%6x", color.getRGB() & 0xFFFFFF);
+                SettingsManager.getSettingsManager().put(key, colorText);
+                colorField.setText(colorText);
+                colorBtn.setBackground(color);
             }
         });
         panel.add(colorField);
@@ -169,33 +230,46 @@ public class SettingsPanel extends JPanel {
         return panel;
     }
 
+    private static JPanel newFactorPanel(String key, SettingsEntry entry) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        JComboBox<String> comboBox = new JComboBox<>(entry.getPossibleValues());
+        comboBox.addActionListener((e) -> {
+            SettingsManager.getSettingsManager().put(key, String.valueOf(comboBox.getSelectedItem()));
+        });
+
+        panel.add(comboBox);
+        return panel;
+    }
+
     private static JPanel panelFromSetting(String key, SettingsEntry entry) {
+        SettingsManager settings = SettingsManager.getSettingsManager();
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
         panel.setBorder(new LineBorder(Color.LIGHT_GRAY, 1, true));
         panel.setLayout(layout);
         JLabel label = new JLabel(entry.getDescription() + ":");
-//        label.setAlignmentX(JLabel.LEFT_ALIGNMENT);
-//        label.setBorder(new LineBorder(Color.BLACK, 1));
+        //        label.setAlignmentX(JLabel.LEFT_ALIGNMENT);
+        //        label.setBorder(new LineBorder(Color.BLACK, 1));
         panel.add(label);
         switch (entry.getType()) {
             case FACTOR:
-                panel.add(new JComboBox<String>(entry.getPossibleValues()));
+                panel.add(newFactorPanel(key, entry));
                 break;
             case INT:
-                panel.add(newIntPanel(entry));
+                panel.add(newIntPanel(key, entry));
                 break;
             case DOUBLE:
-                panel.add(newDoublePanel(entry));
+                panel.add(newDoublePanel(key, entry));
                 break;
             case FOLDER:
-                panel.add(newFolderPanel(entry));
+                panel.add(newFolderPanel(key, entry));
                 break;
             case FILE:
-                panel.add(newFilePanel(entry));
+                panel.add(newFilePanel(key, entry));
                 break;
             case COLOR:
-                panel.add(newColorPanel(entry));
+                panel.add(newColorPanel(key, entry));
                 break;
             case STRING:
             default:
