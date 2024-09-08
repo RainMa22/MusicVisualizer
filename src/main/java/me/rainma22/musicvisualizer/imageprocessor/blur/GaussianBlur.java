@@ -132,15 +132,20 @@ public class GaussianBlur {
     }
 
     public BufferedImage filter(BufferedImage input, BufferedImage output) {
-        if (!active) return input;
         int inputWidth = input.getWidth();
         int inputHeight = input.getHeight();
-
-        Raster imgData = input.getData();
 
         if (output == null) {
             output = new BufferedImage(inputWidth, inputHeight, input.getType());
         }
+        if (!active){
+            input.copyData(output.getRaster());
+            return output;
+        }
+
+        Raster imgData = input.getData();
+
+
         WritableRaster outputRaster = output.getRaster();
         filterHelper(inputWidth, inputHeight, imgData, outputRaster, FilterDirection.HORIZONTAL);
         imgData = output.getData();
