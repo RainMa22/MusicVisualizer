@@ -20,7 +20,6 @@ public class FileBar extends JPanel {
         pathField = new JTextField(path);
         chooserBtn = new JButton("Browse");
         label = new JLabel(name + " ", SwingConstants.CENTER);
-//        label.setBorder(new LineBorder(Color.BLACK, 1));
         leftPadding = new JPanel();
         rightPadding = new JPanel();
         chooserBtn.addActionListener(new ActionListener() {

@@ -22,10 +22,11 @@ import java.io.File;
 import java.util.Collection;
 
 public class SettingsPanel extends JPanel {
-    public SettingsPanel(int numItems) {
+    public SettingsPanel() {
         super();
-        int size = (int) (FastMath.sqrt(numItems)) + 1;
-        GridLayout layout = new GridLayout(numItems, 1);
+//        int size = (int) (FastMath.sqrt(numItems)) + 1;
+//        GridLayout layout = new GridLayout(numItems, 1);
+        BoxLayout layout = new BoxLayout(this, BoxLayout.Y_AXIS);
         setLayout(layout);
     }
     private static FocusAdapter numberFocusAdaptor(JTextField textField, String key){
@@ -325,10 +326,13 @@ public class SettingsPanel extends JPanel {
     public static SettingsPanel fromSettings() {
         SettingsManager settings = SettingsManager.getSettingsManager();
         Collection<String> keys = settings.keyCollection();
-        SettingsPanel out = new SettingsPanel(keys.size());
+        SettingsPanel out = new SettingsPanel();
         for (String key : keys) {
+            if (key.equals("path_to_ffmpeg")) continue;
             out.add(panelFromSetting(key, settings.getEntry(key)));
         }
+        out.add(new JButton("Export"));
+
         return out;
     }
 }
