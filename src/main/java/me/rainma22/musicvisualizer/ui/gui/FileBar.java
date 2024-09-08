@@ -18,8 +18,8 @@ public class FileBar extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         chooser = new JFileChooser(path);
         pathField = new JTextField(path);
-        chooserBtn = new JButton("File");
-        label = new JLabel(name, SwingConstants.CENTER);
+        chooserBtn = new JButton("Browse");
+        label = new JLabel(name + " ", SwingConstants.CENTER);
 //        label.setBorder(new LineBorder(Color.BLACK, 1));
         leftPadding = new JPanel();
         rightPadding = new JPanel();
@@ -57,11 +57,16 @@ public class FileBar extends JPanel {
         setPreferredSize(selfDimensions);
         int childWidthUnit = selfDimensions.width / 10;
         int childHeightUnit = selfDimensions.height / 10;
-        leftPadding.setPreferredSize(new Dimension(childWidthUnit/2, 10*childWidthUnit));
-        label.setPreferredSize(new Dimension(childWidthUnit, 8 * childHeightUnit));
-        pathField.setPreferredSize(new Dimension(7* childWidthUnit, 8 * childHeightUnit));
-        chooserBtn.setPreferredSize(new Dimension(childWidthUnit, 8 * childHeightUnit));
-        rightPadding.setPreferredSize(new Dimension(childWidthUnit/2, 10*childWidthUnit));
+        leftPadding.setMaximumSize(new Dimension(childWidthUnit/2, 10*childWidthUnit));
+        leftPadding.setSize(new Dimension(childWidthUnit/2, 10*childWidthUnit));
+        label.setMaximumSize(new Dimension(childWidthUnit, 8 * childHeightUnit));
+        label.setSize(new Dimension(childWidthUnit, 8 * childHeightUnit));
+        pathField.setMaximumSize(new Dimension(7* childWidthUnit, 8 * childHeightUnit));
+        pathField.setSize(new Dimension(7* childWidthUnit, 8 * childHeightUnit));
+        chooserBtn.setMaximumSize(new Dimension(childWidthUnit, 8 * childHeightUnit));
+        chooserBtn.setSize(new Dimension(childWidthUnit, 8 * childHeightUnit));
+        rightPadding.setSize(new Dimension(childWidthUnit, 8 * childHeightUnit));
+        rightPadding.setMaximumSize(new Dimension(childWidthUnit/2, 10*childWidthUnit));
     }
 
 
