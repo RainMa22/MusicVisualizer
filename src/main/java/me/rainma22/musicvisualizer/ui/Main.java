@@ -1,7 +1,7 @@
-package me.rainma22.musicvisualizer;
+package me.rainma22.musicvisualizer.ui;
 
 import me.rainma22.musicvisualizer.settings.SettingsManager;
-import me.rainma22.musicvisualizer.ui.CommandLine;
+import me.rainma22.musicvisualizer.ui.cli.CommandLine;
 import me.rainma22.musicvisualizer.ui.gui.Graphical;
 import me.rainma22.musicvisualizer.util.ProcessUtils;
 

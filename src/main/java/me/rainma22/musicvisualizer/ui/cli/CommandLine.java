@@ -1,4 +1,4 @@
-package me.rainma22.musicvisualizer.ui;
+package me.rainma22.musicvisualizer.ui.cli;
 
 import me.rainma22.musicvisualizer.frameoutput.FrameOutput;
 import me.rainma22.musicvisualizer.imageprocessor.AwtImageProcessor;
