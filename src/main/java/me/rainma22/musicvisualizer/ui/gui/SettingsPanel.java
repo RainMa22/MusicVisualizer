@@ -12,7 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Set;
+import java.util.Collection;
 
 public class SettingsPanel extends JPanel {
     public SettingsPanel(int numItems) {
@@ -206,7 +206,7 @@ public class SettingsPanel extends JPanel {
 
     public static SettingsPanel fromSettings() {
         SettingsManager settings = SettingsManager.getSettingsManager();
-        Set<String> keys = settings.keySet();
+        Collection<String> keys = settings.keyCollection();
         SettingsPanel out = new SettingsPanel(keys.size());
         for (String key : keys) {
             out.add(panelFromSetting(key, settings.getEntry(key)));

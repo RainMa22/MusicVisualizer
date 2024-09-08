@@ -7,17 +7,17 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.Set;
-import java.util.StringJoiner;
+import java.util.*;
+import java.util.List;
 
 /**
  * Singleton Class that manages settings specific to Main
  **/
 public class SettingsManager  {
     private static SettingsManager manager = null;
-    private Hashtable<String,SettingsEntry> table;
+//    private Hashtable<String,SettingsEntry> table;
+    private List<String> keys = new ArrayList<>();
+    private List<SettingsEntry> values = new ArrayList<>();
     public static SettingsManager getSettingsManager(){
         if (manager == null){
             manager = new SettingsManager();
@@ -27,7 +27,7 @@ public class SettingsManager  {
 
     private SettingsManager(){
         super();
-        table = new Hashtable<>();
+//        table = new Hashtable<>();
         put("fps", SettingsEntry.newIntEntry("60",12,60,"Frames Per Second of Output"));
         put("path_to_ffmpeg", SettingsEntry.newFileEntry("ffmpeg", "Path to FFMpeg.exe"));
         put("foreground_img", SettingsEntry.newFileEntry("defaults/foregroundIMG.jpg", "Path to Foreground Image"));
@@ -42,31 +42,42 @@ public class SettingsManager  {
 
     public String getSettingsString() {
         StringJoiner joiner = new StringJoiner(" ");
-        table.forEach((key, value) -> joiner.add(String.format("[%s=%s]", key, value)));
+        for (int i = 0; i < keys.size(); i++) {
+            joiner.add(String.format("[%s=%s]", keys.get(i), values.get(i)));
+        }
+//        table.forEach((key, value) -> joiner.add(String.format("[%s=%s]", key, value)));
         return joiner.toString();
     }
 
     public void put(String key,String value){
-        assert table.containsKey(key);
-        SettingsEntry entry = table.get(key);
+        assert containsKey(key);
+        SettingsEntry entry = values.get(keys.indexOf(key));
         assert entry.getType() != EntryType.FACTOR || Arrays.asList(entry.getPossibleValues()).contains(value);
         entry.setValue(value);
     }
 
     private void put(String key, SettingsEntry entry){
-        table.put(key, entry);
+//        table.put(key, entry);
+        if (!keys.contains(key)){
+            keys.add(key);
+            values.add(entry);
+        }else {
+            values.set(keys.indexOf(key), entry);
+        }
     }
 
     public String get(String key){
-        return table.get(key).toString();
+//        return table.get(key).toString();
+        return values.get(keys.indexOf(key)).toString();
     }
 
     public SettingsEntry getEntry(String key){
-        return table.get(key);
+//        return table.get(key);
+        return values.get(keys.indexOf(key));
     }
 
-    public Set<String> keySet(){
-        return table.keySet();
+    public Collection<String> keyCollection(){
+        return Collections.unmodifiableCollection(keys);
     }
 
 //    public String get(String key, String defaultVal){
@@ -74,8 +85,10 @@ public class SettingsManager  {
 //    }
 
     public boolean containsKey(String key){
-        return table.containsKey(key);
+//        return table.containsKey(key);
+        return keys.contains(key);
     }
+
 
     public double getDouble(String key, double defaultVal){
         double val;
