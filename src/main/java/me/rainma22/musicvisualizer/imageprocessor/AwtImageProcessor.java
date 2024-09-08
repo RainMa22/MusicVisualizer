@@ -108,7 +108,23 @@ public class AwtImageProcessor {
             g.drawImage(backgroundImage,0,0,newWidth,newHeight,null);
             g.dispose();
         }
-        setBlurSize(blurSize);
+        setBlurSize(blurSize, true);
+    }
+
+    public void setBackgroundImageAndBlurSize(BufferedImage backgroundImage, int blurSize) {
+        if (backgroundImage !=null && backgroundImage.equals(this.backgroundImage))
+            setBlurSize(blurSize,false);
+        this.backgroundImage = backgroundImage;
+        if (backgroundImage != null) {
+            double scale = Math.max((double) width / backgroundImage.getWidth(), (double) height / backgroundImage.getHeight());
+            int newWidth = (int) (backgroundImage.getWidth() * scale);
+            int newHeight =(int) (backgroundImage.getHeight() * scale);
+            this.backgroundImage = new BufferedImage(newWidth, newHeight, backgroundImage.getType());
+            Graphics2D g = this.backgroundImage.createGraphics();
+            g.drawImage(backgroundImage,0,0,newWidth,newHeight,null);
+            g.dispose();
+        }
+        setBlurSize(blurSize, true);
     }
 
     /**
@@ -127,7 +143,10 @@ public class AwtImageProcessor {
      * sets the blur size and also updates the blur image
      **/
     public void setBlurSize(int blurSize) {
-        if (blurSize == this.blurSize) return;
+        setBlurSize(blurSize, false);
+    }
+    private void setBlurSize(int blurSize, boolean forceChange) {
+        if (!forceChange && (blurSize == this.blurSize)) return;
         this.blurSize = blurSize;
         if (backgroundImage != null) {
             GaussianBlur blur = new GaussianBlur(blurSize);
@@ -137,7 +156,6 @@ public class AwtImageProcessor {
                 blurredImage = blur.filter(backgroundImage,blurredImage);
             else
                 blurredImage = blur.filter(backgroundImage,null);
-
         }
     }
 

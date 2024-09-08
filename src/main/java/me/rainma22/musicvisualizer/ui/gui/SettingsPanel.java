@@ -28,6 +28,16 @@ public class SettingsPanel extends JPanel {
         GridLayout layout = new GridLayout(numItems, 1);
         setLayout(layout);
     }
+    private static FocusAdapter numberFocusAdaptor(JTextField textField, String key){
+        return new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                //forcefully update text
+                textField.setText("inserting text");
+                SettingsManager.getSettingsManager().notifyUpdate(key);
+            }
+        };
+    }
 
     private static JPanel newIntPanel(String key, SettingsEntry entry) {
         JPanel panel = new JPanel();
@@ -49,6 +59,8 @@ public class SettingsPanel extends JPanel {
         }
         JSlider slider = new JSlider(JSlider.HORIZONTAL, min, max, val);
         JTextField textField = new JTextField(String.valueOf(val));
+        FocusAdapter focusAdapter = numberFocusAdaptor(textField,key);
+
         slider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -83,14 +95,8 @@ public class SettingsPanel extends JPanel {
             public void changedUpdate(DocumentEvent e) {
             }
         });
-        textField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                //forcefully update text
-                textField.setText("inserting text");
-                SettingsManager.getSettingsManager().notifyUpdate(key);
-            }
-        });
+        textField.addFocusListener(focusAdapter);
+        slider.addFocusListener(focusAdapter);
         panel.add(slider);
         panel.add(textField);
         return panel;
@@ -119,6 +125,9 @@ public class SettingsPanel extends JPanel {
                 FastMath.round((float) max * 1000),
                 FastMath.round((float) val * 1000));
         JTextField textField = new JTextField(String.valueOf(val));
+
+        FocusAdapter focusAdapter = numberFocusAdaptor(textField,key);
+
         slider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -158,14 +167,8 @@ public class SettingsPanel extends JPanel {
 
             }
         });
-        textField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                //forcefully update text
-                textField.setText("inserting text");
-                SettingsManager.getSettingsManager().notifyUpdate(key);
-            }
-        });
+        textField.addFocusListener(focusAdapter);
+        slider.addFocusListener(focusAdapter);
         panel.add(slider);
         panel.add(textField);
         return panel;
@@ -187,6 +190,7 @@ public class SettingsPanel extends JPanel {
                     String folderPath = chooser.getSelectedFile().getAbsolutePath();
                     textField.setText(folderPath);
                     SettingsManager.getSettingsManager().put(key, folderPath);
+                    SettingsManager.getSettingsManager().notifyUpdate(key);
                 }
             }
         });
@@ -236,6 +240,7 @@ public class SettingsPanel extends JPanel {
                     String filePath = chooser.getSelectedFile().getAbsolutePath();
                     textField.setText(filePath);
                     SettingsManager.getSettingsManager().put(key, filePath);
+                    SettingsManager.getSettingsManager().notifyUpdate(key);
                 }
             }
         });
@@ -261,6 +266,7 @@ public class SettingsPanel extends JPanel {
                 SettingsManager.getSettingsManager().put(key, colorText);
                 colorField.setText(colorText);
                 colorBtn.setBackground(color);
+                SettingsManager.getSettingsManager().notifyUpdate(key);
             }
         });
         panel.add(colorField);
@@ -274,6 +280,7 @@ public class SettingsPanel extends JPanel {
         JComboBox<String> comboBox = new JComboBox<>(entry.getPossibleValues());
         comboBox.addActionListener((e) -> {
             SettingsManager.getSettingsManager().put(key, String.valueOf(comboBox.getSelectedItem()));
+            SettingsManager.getSettingsManager().notifyUpdate(key);
         });
 
         panel.add(comboBox);

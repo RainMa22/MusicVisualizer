@@ -14,8 +14,9 @@ import java.awt.image.BufferedImage;
 public class PreviewPanel extends JPanel implements SettingsChangeListener {
     private AwtImageProcessor previewProcessor;
     private SettingsManager settings;
-    private Canvas imagePreview;
     private Complex[] samples;
+    private String foregroundImageString;
+    private String backgroundImageString;
 
     public PreviewPanel() {
         super();
@@ -25,19 +26,17 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
 
         setMinimumSize(new Dimension(100, 100));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        imagePreview = new Canvas() {
-            public void paint(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g;
-                BufferedImage image = previewProcessor.processSample(samples);
-                g2d.drawImage(image, 0, 0,
-                        image.getWidth(), image.getHeight(), this);
-                g2d.dispose();
-            }
-        };
-        imagePreview.setSize(this.getSize());
-        imagePreview.createBufferStrategy(1);
-        add(imagePreview);
+        setDoubleBuffered(true);
 
+    }
+    @Override
+    public void paint(Graphics g) {
+        g.clearRect(0,0, getWidth(),getHeight());
+        Graphics2D g2d = (Graphics2D) g;
+        BufferedImage image = previewProcessor.processSample(samples);
+        g2d.drawImage(image, 0, 0,
+                image.getWidth(), image.getHeight(), this);
+        g2d.dispose();
     }
 
     private void initPreviewProcessor() {
@@ -55,8 +54,18 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
         height = FastMath.round(height*scale);
 
         double threshold = (Double) settings.getObj("amplitude_threshold");
-        BufferedImage foregroundImg = (BufferedImage) settings.getObj("foreground_img");
-        BufferedImage backgroundImg = (BufferedImage) settings.getObj("background_img");
+        BufferedImage foregroundImg = null;
+        boolean changeForeground;
+        if ((changeForeground = !settings.get("foreground_img").equals(foregroundImageString))){
+            foregroundImg = (BufferedImage) settings.getObj("foreground_img");
+            foregroundImageString = settings.get("foreground_img");
+        }
+        boolean changeBackground;
+        BufferedImage backgroundImg = null;
+        if ((changeBackground = !settings.get("background_img").equals(backgroundImageString))) {
+            backgroundImg=(BufferedImage) settings.getObj("background_img");
+            backgroundImageString = settings.get("background_img");
+        }
         double rotationPerFrameTheta = (Double) settings.getObj("rotation_per_theta");
         String lineColor = settings.get("line_color_hex");
         int blurSize = (Integer) settings.getObj("blur_size");
@@ -67,23 +76,26 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
             }
         }
         if (previewProcessor == null) {
-            previewProcessor = new AwtImageProcessor(width, height, threshold, foregroundImg, backgroundImg, rotationPerFrameTheta);
+            previewProcessor = new AwtImageProcessor(width, height, threshold, null, null, rotationPerFrameTheta);
         } else {
             previewProcessor.setWidth(width);
             previewProcessor.setHeight(height);
             previewProcessor.setThreshold(threshold);
-            previewProcessor.setForegroundImage(foregroundImg);
-            previewProcessor.setBackgroundImage(backgroundImg);
             previewProcessor.setRotationPerFrameTheta(rotationPerFrameTheta);
         }
         previewProcessor.setLineColor(Color.decode(lineColor));
-        previewProcessor.setBlurSize(blurSize);
+        if (changeForeground)
+            previewProcessor.setForegroundImage(foregroundImg);
+
+        if (changeBackground)
+            previewProcessor.setBackgroundImageAndBlurSize(backgroundImg,blurSize);
+        else
+            previewProcessor.setBlurSize(blurSize);
     }
 
     @Override
     public void setBounds(int x, int y, int width, int height) {
         super.setBounds(x, y, width, height);
-        imagePreview.setSize(width, height);
         update(null,null);
 
     }
@@ -91,6 +103,6 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
     @Override
     public void update(String UpdatedKey, SettingsEntry entry) {
         initPreviewProcessor();
-        if (imagePreview != null) imagePreview.repaint();
+        repaint();
     }
 }
