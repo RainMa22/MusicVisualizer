@@ -15,6 +15,11 @@
             <version>3.6.1</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.17.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.jcodec</groupId>
             <artifactId>jcodec</artifactId>
             <version>0.2.5</version>
@@ -26,6 +31,8 @@
         </dependency>
 ```
 > Apache Commons Math is licensed under Apache Licenses 2.0
+
+> Apache Commons Lang is licensed under Apache Licenses 2.0
 
 > jcodec is licensed under BSD 2-Clause License
 

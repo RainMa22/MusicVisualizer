@@ -1,7 +1,9 @@
 package me.rainma22.musicvisualizer.ui.gui;
 
+import me.rainma22.musicvisualizer.settings.EntryType;
 import me.rainma22.musicvisualizer.settings.SettingsEntry;
 import me.rainma22.musicvisualizer.settings.SettingsManager;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.math3.util.FastMath;
 
 import javax.swing.*;
@@ -10,6 +12,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -186,9 +189,34 @@ public class SettingsPanel extends JPanel {
         JPanel panel = new JPanel();
         BoxLayout layout = new BoxLayout(panel, BoxLayout.X_AXIS);
         panel.setLayout(layout);
+        EntryType type = entry.getType();
         JTextField textField = new JTextField(entry.toString());
         JFileChooser chooser = new JFileChooser(new File(textField.getText()));
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        if (type == EntryType.EXECUTABLE) {
+            if (SystemUtils.IS_OS_WINDOWS) {
+                chooser.setFileFilter(new FileNameExtensionFilter("Executable file", "exe"));
+            }
+        } else if (type == EntryType.IMAGE) {
+            String[][] accepted = new String[][]{
+                    new String[]{"jpg", "jpeg"},
+                    new String[]{"png"},
+                    new String[]{"webp"},
+                    new String[]{"bmp"}};
+            String[] acceptedName = new String[]{
+                    "JPEG file (.jpg) (.jpeg)",
+                    "Portable Network Graphics (.png)",
+                    "WEBP image (.webp)",
+                    "Bitmap file (.bmp)"};
+            for (int i = 0; i < accepted.length; i++) {
+                if (i == 0)
+                    chooser.setFileFilter(new FileNameExtensionFilter(acceptedName[i],accepted[i]));
+                else
+                    chooser.addChoosableFileFilter(new FileNameExtensionFilter(acceptedName[i], accepted[i]));
+            }
+        }
+
         JButton chooserBtn1 = new JButton("Choose");
         chooserBtn1.addActionListener(new ActionListener() {
             @Override
@@ -262,7 +290,8 @@ public class SettingsPanel extends JPanel {
             case FOLDER:
                 panel.add(newFolderPanel(key, entry));
                 break;
-            case FILE:
+            case IMAGE:
+            case EXECUTABLE:
                 panel.add(newFilePanel(key, entry));
                 break;
             case COLOR:

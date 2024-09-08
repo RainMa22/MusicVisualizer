@@ -29,9 +29,9 @@ public class SettingsManager  {
         super();
 //        table = new Hashtable<>();
         put("fps", SettingsEntry.newIntEntry("60",5,120,"Frames Per Second of Output"));
-        put("path_to_ffmpeg", SettingsEntry.newFileEntry("ffmpeg", "Path to FFMpeg.exe"));
-        put("foreground_img", SettingsEntry.newFileEntry("defaults/foregroundIMG.jpg", "Path to Foreground Image"));
-        put("background_img", SettingsEntry.newFileEntry("defaults/bg.jpg",  "Path to Background Image"));
+        put("path_to_ffmpeg", SettingsEntry.newExecutableEntry("ffmpeg", "Path to FFmpeg Executable"));
+        put("foreground_img", SettingsEntry.newImageEntry("defaults/foregroundIMG.jpg", "Path to Foreground Image"));
+        put("background_img", SettingsEntry.newImageEntry("defaults/bg.jpg",  "Path to Background Image"));
         put("rotation_per_theta", SettingsEntry.newDoubleEntry("0.0",0, FastMath.PI,"Theta Rotation per Frame"));
         put("line_color_hex", SettingsEntry.newColorEntry("0x0000ee", "Color of the Visualization Line"));
         put("amplitude_threshold", SettingsEntry.newDoubleEntry("0",0,5, "Amplitude Threshold"));

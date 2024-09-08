@@ -6,6 +6,7 @@ public enum EntryType{
     STRING,
     COLOR,
     FACTOR,
-    FILE,
+    IMAGE,
+    EXECUTABLE,
     FOLDER,
 }

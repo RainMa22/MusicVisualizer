@@ -35,9 +35,13 @@ public class SettingsEntry {
     public static SettingsEntry newColorEntry(String value, String description) {
         return new SettingsEntry(value, EntryType.COLOR, null, description);
     }
-    public static SettingsEntry newFileEntry(String value, String description) {
-        return new SettingsEntry(value, EntryType.FILE, null, description);
+    public static SettingsEntry newImageEntry(String value, String description) {
+        return new SettingsEntry(value, EntryType.IMAGE, null, description);
     }
+    public static SettingsEntry newExecutableEntry(String value, String description) {
+        return new SettingsEntry(value, EntryType.EXECUTABLE, null, description);
+    }
+
     public static SettingsEntry newFolderEntry(String value, String description) {
         return new SettingsEntry(value, EntryType.FOLDER, null, description);
     }
