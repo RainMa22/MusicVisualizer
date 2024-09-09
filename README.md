@@ -21,6 +21,11 @@
             <version>3.17.0</version>
         </dependency>
         <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.5.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.jcodec</groupId>
             <artifactId>jcodec</artifactId>
             <version>0.2.5</version>
@@ -34,6 +39,8 @@
 > Apache Commons Math is licensed under Apache Licenses 2.0
 
 > Apache Commons Lang is licensed under Apache Licenses 2.0
+
+> flatlaf is licensed under Apache Licenses 2.0
 
 > jcodec is licensed under BSD 2-Clause License
 

@@ -1,5 +1,6 @@
 package me.rainma22.musicvisualizer.ui;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import me.rainma22.musicvisualizer.settings.SettingsManager;
 import me.rainma22.musicvisualizer.ui.cli.CommandLine;
 import me.rainma22.musicvisualizer.ui.gui.Graphical;
@@ -52,8 +53,10 @@ public class Main {
         if (!isGUI)
             new CommandLine(filePath, ffmpegEnabled, outFilePath)
                     .start();
-        else
+        else {
+            FlatLightLaf.setup();
             new Graphical(1600, 900).start();
+        }
         return;
     }
 }
