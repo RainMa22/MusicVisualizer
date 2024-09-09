@@ -237,6 +237,28 @@ public class GuiUtils {
                 }
             }
         });
+        textField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String filePath = textField.getText();
+                File file = new File(filePath);
+                if (file.exists()){
+                    chooser.setSelectedFile(file);
+                    SettingsManager.getSettingsManager().put(key, file.getAbsolutePath());
+                    SettingsManager.getSettingsManager().notifyUpdate(key);
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+        });
         panel.add(textField);
         panel.add(chooserBtn1);
         return panel;
