@@ -1,7 +1,6 @@
 package me.rainma22.musicvisualizer.ui.gui;
 
 
-import com.formdev.flatlaf.FlatLightLaf;
 import me.rainma22.musicvisualizer.exporter.ExportStatusListener;
 import me.rainma22.musicvisualizer.exporter.VisualizationExporter;
 import me.rainma22.musicvisualizer.imageprocessor.AwtImageProcessor;
