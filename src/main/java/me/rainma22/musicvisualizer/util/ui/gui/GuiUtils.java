@@ -270,8 +270,9 @@ public class GuiUtils {
         panel.setLayout(layout);
         JTextField colorField = new JTextField(entry.toString());
         colorField.setEnabled(false);
-        JButton colorBtn = new JButton();
+        JButton colorBtn = new JButton("Color");
         colorBtn.setBackground(Color.decode(colorField.getText()));
+        colorBtn.setForeground(Color.decode(colorField.getText()));
         colorBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
