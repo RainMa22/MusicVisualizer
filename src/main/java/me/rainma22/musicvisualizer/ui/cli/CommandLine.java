@@ -1,22 +1,14 @@
 package me.rainma22.musicvisualizer.ui.cli;
 
-import me.rainma22.musicvisualizer.frameoutput.FrameOutput;
+import me.rainma22.musicvisualizer.VisualizationExporter;
 import me.rainma22.musicvisualizer.imageprocessor.AwtImageProcessor;
-import me.rainma22.musicvisualizer.MusicExtractor;
 import me.rainma22.musicvisualizer.settings.SettingsManager;
-import me.rainma22.musicvisualizer.util.BinaryOperations;
-import org.apache.commons.math3.complex.Complex;
-import org.apache.commons.math3.transform.DftNormalization;
-import org.apache.commons.math3.transform.FastFourierTransformer;
-import org.apache.commons.math3.transform.TransformType;
+import org.apache.commons.math3.util.FastMath;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Arrays;
-
-import static me.rainma22.musicvisualizer.util.MusicUtils.createOutput;
 
 public class CommandLine {
     private final SettingsManager settings;
@@ -52,32 +44,41 @@ public class CommandLine {
         processor.setLineColor(lineColor);
         processor.setBlurSize(blurSize);
 
+        VisualizationExporter exporter = new VisualizationExporter();
 
-        MusicExtractor me;
-        FastFourierTransformer transformer = new FastFourierTransformer(DftNormalization.STANDARD);
         try {
-            me = new MusicExtractor(filePath);
-            FrameOutput output = createOutput(filePath, (int) (me.getAudioLengthInSeconds() * FPS_TARGET + .5), ffmpegEnabled, outFilePath);
-            double[] samples = me.readFile();
-
-            int samplesPerVideoFrame = (int) (samples.length / (me.getAudioLengthInSeconds() * FPS_TARGET));
-            chunkSize = BinaryOperations.nextPowerOfTwo(samplesPerVideoFrame);
-            System.out.printf("required Samples Per Video Frame: %d, calculated ChunkSize: %d\n",
-                    samplesPerVideoFrame, chunkSize);
-            for (int j = 0; j < samples.length; j += samplesPerVideoFrame) {
-                double[] RE = Arrays.copyOfRange(samples, j, j + samplesPerVideoFrame);
-                RE = Arrays.copyOf(RE, chunkSize);
-                Complex[] transformedData = transformer.transform(RE, TransformType.FORWARD);
-
-                int i = j / samplesPerVideoFrame;
-                BufferedImage image = processor.processSample(transformedData);
-                output.writeImage(image, i);
-                System.out.printf("Image %d out of %d done\n", i + 1, samples.length / samplesPerVideoFrame + 1);
-            }
-            output.finish();
-            me.close();
-        } catch (UnsupportedAudioFileException | IOException e) {
-            throw new RuntimeException(e);
+            exporter.export(filePath, FastMath.round( (float) FPS_TARGET), ffmpegEnabled,outFilePath,processor);
+        } catch (UnsupportedAudioFileException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
+
+//        MusicExtractor me;
+//        FastFourierTransformer transformer = new FastFourierTransformer(DftNormalization.STANDARD);
+//        try {
+//            me = new MusicExtractor(filePath);
+//            FrameOutput output = createOutput(filePath, (int) (me.getAudioLengthInSeconds() * FPS_TARGET + .5), ffmpegEnabled, outFilePath);
+//            double[] samples = me.readFile();
+//
+//            int samplesPerVideoFrame = (int) (samples.length / (me.getAudioLengthInSeconds() * FPS_TARGET));
+//            chunkSize = BinaryOperations.nextPowerOfTwo(samplesPerVideoFrame);
+//            System.out.printf("required Samples Per Video Frame: %d, calculated ChunkSize: %d\n",
+//                    samplesPerVideoFrame, chunkSize);
+//            for (int j = 0; j < samples.length; j += samplesPerVideoFrame) {
+//                double[] RE = Arrays.copyOfRange(samples, j, j + samplesPerVideoFrame);
+//                RE = Arrays.copyOf(RE, chunkSize);
+//                Complex[] transformedData = transformer.transform(RE, TransformType.FORWARD);
+//
+//                int i = j / samplesPerVideoFrame;
+//                BufferedImage image = processor.processSample(transformedData);
+//                output.writeImage(image, i);
+//                System.out.printf("Image %d out of %d done\n", i + 1, samples.length / samplesPerVideoFrame + 1);
+//            }
+//            output.finish();
+//            me.close();
+//        } catch (UnsupportedAudioFileException | IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 }

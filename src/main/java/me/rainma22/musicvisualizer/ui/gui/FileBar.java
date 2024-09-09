@@ -47,6 +47,10 @@ public class FileBar extends JPanel {
         chooser.setFileFilter(filter);
     }
 
+    public String getFilePath(){
+        return pathField.getText();
+    }
+
     @Override
     public void setBounds(int x, int y, int width, int height) {
         super.setBounds(x, y, width, height);
