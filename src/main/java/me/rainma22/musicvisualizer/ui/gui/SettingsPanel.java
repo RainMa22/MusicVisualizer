@@ -41,4 +41,10 @@ public class SettingsPanel extends JPanel {
 
         return out;
     }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        exportBtn.setEnabled(enabled);
+    }
 }

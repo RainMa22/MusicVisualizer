@@ -1,5 +1,6 @@
-package me.rainma22.musicvisualizer;
+package me.rainma22.musicvisualizer.exporter;
 
+import me.rainma22.musicvisualizer.MusicExtractor;
 import me.rainma22.musicvisualizer.frameoutput.FrameOutput;
 import me.rainma22.musicvisualizer.imageprocessor.AwtImageProcessor;
 import me.rainma22.musicvisualizer.util.BinaryOperations;
@@ -12,12 +13,34 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static me.rainma22.musicvisualizer.util.MusicUtils.createOutput;
 
 public class VisualizationExporter {
-    public VisualizationExporter(){}
+    private List<ExportStatusListener> listeners;
+
+    public VisualizationExporter(){
+        listeners = new ArrayList<>(1);
+    }
+
+    public void addListener(ExportStatusListener listener){
+        if (listeners.contains(listener)) return;
+        listeners.add(listener);
+    }
+
+    public void removeListener(ExportStatusListener listener){
+        listeners.remove(listener);
+    }
+
+    public void notifyStatus(int currentFrame, int totalFrame){
+        for (ExportStatusListener listener: listeners){
+            listener.onStatusUpdate(currentFrame,totalFrame);
+        }
+    }
+
     public void export(String filePath, int FPS_TARGET, boolean ffmpegEnabled, String outFilePath, AwtImageProcessor processor) throws UnsupportedAudioFileException, FileNotFoundException,IOException {
         MusicExtractor me;
         FastFourierTransformer transformer = new FastFourierTransformer(DftNormalization.STANDARD);
@@ -37,7 +60,7 @@ public class VisualizationExporter {
                 int i = j / samplesPerVideoFrame;
                 BufferedImage image = processor.processSample(transformedData);
                 output.writeImage(image, i);
-                System.out.printf("Image %d out of %d done\n", i + 1, samples.length / samplesPerVideoFrame + 1);
+                notifyStatus(i+1, samples.length / samplesPerVideoFrame + 1);
             }
             output.finish();
             me.close();

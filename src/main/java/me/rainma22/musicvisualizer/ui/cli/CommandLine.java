@@ -1,6 +1,7 @@
 package me.rainma22.musicvisualizer.ui.cli;
 
-import me.rainma22.musicvisualizer.VisualizationExporter;
+import me.rainma22.musicvisualizer.exporter.ExportStatusListener;
+import me.rainma22.musicvisualizer.exporter.VisualizationExporter;
 import me.rainma22.musicvisualizer.imageprocessor.AwtImageProcessor;
 import me.rainma22.musicvisualizer.settings.SettingsManager;
 import org.apache.commons.math3.util.FastMath;
@@ -10,7 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class CommandLine {
+public class CommandLine implements ExportStatusListener {
     private final SettingsManager settings;
     private final String filePath;
     private final boolean ffmpegEnabled;
@@ -18,7 +19,7 @@ public class CommandLine {
 
     public CommandLine(String filePath, boolean ffmpegEnabled, String outFilePath) {
         settings = SettingsManager.getSettingsManager();
-        this.filePath =filePath;
+        this.filePath = filePath;
         this.ffmpegEnabled = ffmpegEnabled;
         this.outFilePath = outFilePath;
     }
@@ -45,40 +46,19 @@ public class CommandLine {
         processor.setBlurSize(blurSize);
 
         VisualizationExporter exporter = new VisualizationExporter();
+        exporter.addListener(this);
 
         try {
-            exporter.export(filePath, FastMath.round( (float) FPS_TARGET), ffmpegEnabled,outFilePath,processor);
+            exporter.export(filePath, FastMath.round((float) FPS_TARGET), ffmpegEnabled, outFilePath, processor);
         } catch (UnsupportedAudioFileException ex) {
             throw new RuntimeException(ex);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+    }
 
-//        MusicExtractor me;
-//        FastFourierTransformer transformer = new FastFourierTransformer(DftNormalization.STANDARD);
-//        try {
-//            me = new MusicExtractor(filePath);
-//            FrameOutput output = createOutput(filePath, (int) (me.getAudioLengthInSeconds() * FPS_TARGET + .5), ffmpegEnabled, outFilePath);
-//            double[] samples = me.readFile();
-//
-//            int samplesPerVideoFrame = (int) (samples.length / (me.getAudioLengthInSeconds() * FPS_TARGET));
-//            chunkSize = BinaryOperations.nextPowerOfTwo(samplesPerVideoFrame);
-//            System.out.printf("required Samples Per Video Frame: %d, calculated ChunkSize: %d\n",
-//                    samplesPerVideoFrame, chunkSize);
-//            for (int j = 0; j < samples.length; j += samplesPerVideoFrame) {
-//                double[] RE = Arrays.copyOfRange(samples, j, j + samplesPerVideoFrame);
-//                RE = Arrays.copyOf(RE, chunkSize);
-//                Complex[] transformedData = transformer.transform(RE, TransformType.FORWARD);
-//
-//                int i = j / samplesPerVideoFrame;
-//                BufferedImage image = processor.processSample(transformedData);
-//                output.writeImage(image, i);
-//                System.out.printf("Image %d out of %d done\n", i + 1, samples.length / samplesPerVideoFrame + 1);
-//            }
-//            output.finish();
-//            me.close();
-//        } catch (UnsupportedAudioFileException | IOException e) {
-//            throw new RuntimeException(e);
-//        }
+    @Override
+    public void onStatusUpdate(int currentFrame, int totalFrame) {
+        System.out.printf("Image %d out of %d done\n", currentFrame, totalFrame);
     }
 }
