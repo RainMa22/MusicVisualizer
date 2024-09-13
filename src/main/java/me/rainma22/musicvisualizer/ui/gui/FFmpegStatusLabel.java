@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class FFmpegStatusLabel extends JLabel implements SettingsChangeListener {
-    private static final String DISABLED_STRING = "FFmpeg not usable! Using Pure Java instead(Very Slow and no Audio in video output)!";
+    private static final String DISABLED_STRING = "Please specify FFmpeg path in file > Select Path to FFmpeg! Using Pure Java instead(no Audio in video output)!";
     private static final String ENABLED_STRING = "FFmpeg is usable!";
     private Container parent;
 
