@@ -1,6 +1,7 @@
 package me.rainma22.musicvisualizer.ui.gui;
 
 
+import com.formdev.flatlaf.FlatLaf;
 import me.rainma22.musicvisualizer.exporter.ExportStatusListener;
 import me.rainma22.musicvisualizer.exporter.VisualizationExporter;
 import me.rainma22.musicvisualizer.imageprocessor.AwtImageProcessor;
@@ -27,8 +28,9 @@ public class Graphical extends JFrame implements ExportStatusListener {
     private JMenuBar menuBar;
     private ProgressPanel progressPanel;
 
-    public Graphical(int width, int height) {
+    public Graphical(int width, int height, LookAndFeel lookAndFeel) {
         super("Music Visualizer");
+        setLookAndFeel(lookAndFeel);
         menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
         JMenuItem ffmpegPathItem = new JMenuItem("Select Path to FFmpeg");
@@ -152,6 +154,10 @@ public class Graphical extends JFrame implements ExportStatusListener {
         revalidate();
     }
 
+    public void setLookAndFeel(LookAndFeel laf){
+        FlatLaf.setup(laf);
+        FlatLaf.updateUI();
+    }
     @Override
     public void onStatusUpdate(int currentFrame, int totalFrame) {
         if (currentFrame == totalFrame)

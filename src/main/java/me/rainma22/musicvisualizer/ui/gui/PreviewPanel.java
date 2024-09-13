@@ -31,7 +31,10 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
     }
     @Override
     public void paint(Graphics g) {
-        g.clearRect(0,0, getWidth(),getHeight());
+        Color bgColor = UIManager.getColor("Panel.background");
+//        g.clearRect(0,0, getWidth(),getHeight());
+        g.setColor(bgColor);
+        g.fillRect(0,0,getWidth(),getHeight());
         Graphics2D g2d = (Graphics2D) g;
         BufferedImage image = previewProcessor.processSample(samples);
         g2d.drawImage(image, 0, 0,
