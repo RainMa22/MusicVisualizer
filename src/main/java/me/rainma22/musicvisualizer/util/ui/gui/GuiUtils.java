@@ -1,5 +1,6 @@
 package me.rainma22.musicvisualizer.util.ui.gui;
 
+import com.formdev.flatlaf.ui.FlatLineBorder;
 import me.rainma22.musicvisualizer.settings.EntryType;
 import me.rainma22.musicvisualizer.settings.SettingsEntry;
 import me.rainma22.musicvisualizer.settings.SettingsManager;
@@ -7,7 +8,6 @@ import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.math3.util.FastMath;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -304,9 +304,15 @@ public class GuiUtils {
     }
 
     public static JPanel panelFromSetting(String key, SettingsEntry entry) {
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(){
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                setBorder(new FlatLineBorder(new Insets(5,5,5,5),
+                        UIManager.getColor("Component.borderColor"), 1, 10));
+            }
+        };
         BoxLayout layout = new BoxLayout(panel, BoxLayout.Y_AXIS);
-        panel.setBorder(new LineBorder(Color.LIGHT_GRAY, 1, true));
         panel.setLayout(layout);
         JLabel label = new JLabel(entry.getDescription() + ":");
         panel.add(label);

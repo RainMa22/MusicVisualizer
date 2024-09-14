@@ -42,6 +42,7 @@ public class Graphical extends JFrame implements ExportStatusListener {
         });
         fileMenu.add(ffmpegPathItem);
         menuBar.add(fileMenu);
+        menuBar.add(new ViewMenu(this));
 
         previewPanel = new PreviewPanel();
         settingField = SettingsPanel.fromSettings();

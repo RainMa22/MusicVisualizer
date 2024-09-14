@@ -30,9 +30,9 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
 
     }
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Color bgColor = UIManager.getColor("Panel.background");
-//        g.clearRect(0,0, getWidth(),getHeight());
         g.setColor(bgColor);
         g.fillRect(0,0,getWidth(),getHeight());
         Graphics2D g2d = (Graphics2D) g;
