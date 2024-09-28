@@ -7,6 +7,7 @@
 - [Apache Commons Math3](https://commons.apache.org/proper/commons-math/)
 - [Apache Commons Lang3](https://commons.apache.org/proper/commons-lang/)
 - [jcodec](https://github.com/jcodec/jcodec)
+- [Tensorflow(for some reason)*sorry]()
 - currently supports only `.wav` files 
 ## Build Dependencies
 ```xml
@@ -35,6 +36,11 @@
             <artifactId>jcodec-javase</artifactId>
             <version>0.2.5</version>
         </dependency>
+        <dependency>
+        <groupId>org.tensorflow</groupId>
+             <artifactId>tensorflow-core-platform</artifactId>
+             <version>1.0.0-rc.2</version>
+        </dependency>
 ```
 > Apache Commons Math is licensed under Apache Licenses 2.0
 
@@ -43,6 +49,8 @@
 > flatlaf is licensed under Apache Licenses 2.0
 
 > jcodec is licensed under BSD 2-Clause License
+
+> Tensorflow licensed under Apache Licenses 2.0 
 
 ## Testing Dependencies
 ```xml
