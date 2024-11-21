@@ -278,7 +278,7 @@ public class GuiUtils {
             public void actionPerformed(ActionEvent e) {
                 Color color = JColorChooser.showDialog(panel,
                         "Choose a color", Color.decode(colorField.getText()), false);
-                String colorText = String.format("0x%6x", color.getRGB() & 0xFFFFFF);
+                String colorText = String.format("0x%06x", color.getRGB() & 0xFFFFFF);
                 SettingsManager.getSettingsManager().put(key, colorText);
                 colorField.setText(colorText);
                 colorBtn.setBackground(color);
