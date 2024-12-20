@@ -1,6 +1,7 @@
 package me.rainma22.musicvisualizer.Image;
 
 public class Circle extends ContainerComponent {
+    private static final float PI = 3.141592653589f;
     private float radius;
 
     public Float getRadius() {
@@ -40,6 +41,17 @@ public class Circle extends ContainerComponent {
     @Override
     public void setCenterY(int y) {
         setY((int) (y - radius));
+    }
+
+    public PolyLine toPolyline(int vertices){
+        Component center = getCenter();
+        PolyLine line = new PolyLine(center.getX(),center.getY());
+        line.applyInPlace(0,radius);
+        for (int i = 1; i < vertices; i++) {
+            line.addPoint(center.apply(2*PI*i/(vertices + 1), radius));
+        }
+        line.setInside(PolyLine.CENTER);
+        return line;
     }
 
     @Override

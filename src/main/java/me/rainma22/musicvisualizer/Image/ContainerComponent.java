@@ -16,6 +16,14 @@ public abstract class ContainerComponent extends Component implements Iterable<C
     public abstract Integer getCenterY();
     public abstract void setCenterY(int y);
 
+    public Component getCenter(){
+        return new Point(getCenterX(), getCenterY());
+    }
+
+    public void setCenter(Component coord){
+        setCenterX(coord.getX());
+        setCenterY(coord.getY());
+    }
 
     public Integer getBackgroundColor_rgba() {
         return backgroundColor_rgba;
