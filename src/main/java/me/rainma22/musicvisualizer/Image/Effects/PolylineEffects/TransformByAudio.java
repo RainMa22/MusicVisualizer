@@ -1,6 +1,6 @@
 package me.rainma22.musicvisualizer.Image.Effects.PolylineEffects;
 
-import me.rainma22.musicvisualizer.Image.Effects.AudioEffect;
+import me.rainma22.musicvisualizer.Image.Effects.ResourcefulEffect;
 import me.rainma22.musicvisualizer.Image.PolyLine;
 import me.rainma22.musicvisualizer.Image.Resources.Audio;
 import me.rainma22.musicvisualizer.MusicExtractor;
@@ -16,9 +16,10 @@ import java.util.Arrays;
 import java.util.List;
 import me.rainma22.musicvisualizer.Image.Resources.ResourceManager;
 
-public class TransformByAudio extends AudioEffect<PolyLine> {
+public class TransformByAudio extends ResourcefulEffect<PolyLine> {
     double data[] = null;
-    FastFourierTransformer transformer = new FastFourierTransformer(DftNormalization.STANDARD);
+    FastFourierTransformer transformer = 
+            new FastFourierTransformer(DftNormalization.STANDARD);
 
     public TransformByAudio(PolyLine target, List<String> eids) {
         super(target, eids);
