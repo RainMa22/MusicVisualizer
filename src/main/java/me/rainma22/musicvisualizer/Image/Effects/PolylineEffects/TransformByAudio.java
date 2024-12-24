@@ -28,6 +28,7 @@ public class TransformByAudio extends AudioEffect<PolyLine> {
     public PolyLine apply(int index, ResourceManager resMan){
         if(data == null) return target;
         Audio audio = resMan.findAudio(effectIds.getFirst());
+        if(audio == null) return target;
         MusicExtractor extractor = null;
         try {
             extractor = new MusicExtractor(audio.getPath().toString());
