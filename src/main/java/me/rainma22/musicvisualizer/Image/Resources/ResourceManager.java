@@ -39,7 +39,7 @@ public class ResourceManager {
     }
 
     public void setAudio(String id, Audio audio){
-        audios.put(idx, audio);
+        audios.put(id, audio);
     }
 
     public int numAudios(){

@@ -13,13 +13,21 @@ import org.apache.commons.math3.util.FastMath;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+import me.rainma22.musicvisualizer.Image.Resources.ResourceManager;
 
 public class TransformByAudio extends AudioEffect<PolyLine> {
     double data[] = null;
     FastFourierTransformer transformer = new FastFourierTransformer(DftNormalization.STANDARD);
 
-    public TransformByAudio(PolyLine target, Audio audio) {
-        super(target, audio);
+    public TransformByAudio(PolyLine target, List<String> eids) {
+        super(target, eids);
+
+    }
+
+    public PolyLine apply(int index, ResourceManager resMan){
+        if(data == null) return target;
+        Audio audio = resMan.findAudio(effectIds.getFirst());
         MusicExtractor extractor = null;
         try {
             extractor = new MusicExtractor(audio.getPath().toString());
@@ -29,10 +37,6 @@ public class TransformByAudio extends AudioEffect<PolyLine> {
         } catch (IOException e) {
             //TODO: ignored
         }
-    }
-
-    public PolyLine apply(int index){
-        if(data == null) return target;
 
         double[] subData = Arrays.copyOfRange(data, index*target.size(),(index+1)*target.size());
         Complex[] transformedData = transformer.transform(subData, TransformType.FORWARD);
