@@ -1,43 +1,45 @@
 package me.rainma22.musicvisualizer.Image.Resources;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ResourceManager {
-    private ArrayList<Image> images = new ArrayList<>();
-    private ArrayList<Audio> audios = new ArrayList<>();
+    private HashMap<String, Image> images = new HashMap<>();
+    private HashMap<String, Audio> audios = new HashMap<>();
 
     public ResourceManager(){}
 
-    public Image getImage(int id){
+    public Image getImage(String id){
         return images.get(id);
     }
 
-    public int addImage(Image image){
+    public String addImage(Image image){
         int idx = images.size();
-        images.add(image);
-        return idx;
+        String key = Integer.toString(idx);
+        setImage(key, image);
+        return key;
     }
 
-    public void setImage(int id, Image image){
-        images.set(id, image);
+    public void setImage(String id, Image image){
+        images.put(id, image);
     }
 
     public int numImages(){
         return images.size();
     }
 
-    public Audio findAudio(int id){
+    public Audio findAudio(String id){
         return audios.get(id);
     }
 
-    public int addAudio(Audio audio){
+    public String addAudio(Audio audio){
         int idx = audios.size();
-        audios.add(audio);
-        return idx;
+        String key = Integer.toString(idx);
+        setAudio(key, audio);
+        return key;
     }
 
-    public void setAudio(int idx, Audio audio){
-        audios.set(idx, audio);
+    public void setAudio(String id, Audio audio){
+        audios.put(idx, audio);
     }
 
     public int numAudios(){
