@@ -2,6 +2,9 @@ package me.rainma22.musicvisualizer.Image;
 
 import me.rainma22.musicvisualizer.Image.Resources.ResourceManager;
 
+/**
+ * represents an Image
+ */
 public class IntermediateImage extends Rectangle {
     private ResourceManager resourceManager;
 

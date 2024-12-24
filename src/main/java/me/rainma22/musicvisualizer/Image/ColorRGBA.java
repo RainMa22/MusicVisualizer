@@ -1,6 +1,8 @@
 
 package me.rainma22.musicvisualizer.Image;
-
+/**
+ * A Color represents a RGBA value
+ */
 public class ColorRGBA{
     
     public static final ColorRGBA TRANSPARENT = new ColorRGBA(0);

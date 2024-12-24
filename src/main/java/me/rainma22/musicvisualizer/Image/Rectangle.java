@@ -1,5 +1,8 @@
 package me.rainma22.musicvisualizer.Image;
 
+/**
+ * Represents a Rectangle shape/container
+ */
 public class Rectangle extends ContainerComponent {
     private int width,height;
 

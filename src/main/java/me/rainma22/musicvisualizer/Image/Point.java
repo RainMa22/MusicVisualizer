@@ -1,5 +1,8 @@
 package me.rainma22.musicvisualizer.Image;
 
+/**
+ * Represent a point in 2D space;
+ */
 public class Point extends Component {
 
     public Point(int x, int y) {

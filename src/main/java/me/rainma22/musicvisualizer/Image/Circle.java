@@ -1,6 +1,10 @@
 package me.rainma22.musicvisualizer.Image;
 
+/**
+ * Represent a circle shape/container in the intermediateImage
+ */
 public class Circle extends ContainerComponent {
+
     private static final float PI = 3.141592653589f;
     private float radius;
 
@@ -11,7 +15,6 @@ public class Circle extends ContainerComponent {
     public void setRadius(float radius) {
         this.radius = radius;
     }
-
 
     public Circle(int x, int y, float radius) {
         super(x, y);
@@ -42,19 +45,23 @@ public class Circle extends ContainerComponent {
     public void setCenterY(int y) {
         setY((int) (y - radius));
     }
-    
+
     @Override
-    public Circle copy(){
-        return new Circle(getX(),getY(), getRadius());
+    public Circle copy() {
+        return new Circle(getX(), getY(), getRadius());
     }
-    
-    
-    public PolyLine toPolyline(int vertices){
+
+    /**
+     * @return a PolyLine representation of the circle
+     * @param vertices the amount of vertices the converted PolyLine
+     * should have
+     */
+    public PolyLine toPolyline(int vertices) {
         Component center = getCenter();
-        PolyLine line = new PolyLine(center.getX(),center.getY());
-        line.applyInPlace(0,radius);
+        PolyLine line = new PolyLine(center.getX(), center.getY());
+        line.polarTranslationInPlace(0, radius);
         for (int i = 1; i < vertices; i++) {
-            line.addPoint(center.apply(2*PI*i/(vertices + 1), radius));
+            line.addPoint(center.polarTranslation(2 * PI * i / (vertices + 1), radius));
         }
         line.setInside(PolyLine.CENTER);
         return line;
