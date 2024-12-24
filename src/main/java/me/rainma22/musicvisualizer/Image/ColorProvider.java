@@ -35,6 +35,23 @@ public class ColorProvider {
         if(imageId == null) throw new UnsupportedOperationException();
         return ResMan.getImage(imageId);
     }
+    
+    public boolean isPureColor(){
+        return color != null;
+    }
+    
+    public boolean isImage(){
+        return imageId != null;
+    }
+    
+    @Override
+    public String toString(){
+        if(isPureColor()){
+            return color.toString();
+        } else {
+            return imageId;
+        }
+    }
 }
 
 

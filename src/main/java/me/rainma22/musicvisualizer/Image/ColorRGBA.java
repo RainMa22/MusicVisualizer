@@ -2,6 +2,8 @@
 package me.rainma22.musicvisualizer.Image;
 
 public class ColorRGBA{
+    
+    public static final ColorRGBA TRANSPARENT = new ColorRGBA(0);
     private byte red, green, blue, alpha;
     
     public ColorRGBA(int rgba){
@@ -48,6 +50,10 @@ public class ColorRGBA{
                 ((green & 0xFF) << 16) | 
                 ((blue & 0xFF) << 8) | 
                 (alpha & 0xFF);
-        
+    }
+    
+    @Override
+    public String toString(){
+        return "0x".concat(Integer.toHexString(intValue()));
     }
 }
