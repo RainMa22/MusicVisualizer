@@ -10,4 +10,9 @@ public class Point extends Component {
     public String getName() {
         return "Point";
     }
+
+    @Override
+    public Point copy() {
+        return new Point(getX(), getY());
+    }
 }

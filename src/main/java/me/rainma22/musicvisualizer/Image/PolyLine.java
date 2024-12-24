@@ -102,6 +102,16 @@ public class PolyLine extends ContainerComponent {
     public int size() {
         return super.size() + 1;
     }
+    
+    @Override
+    public PolyLine copy(){
+        PolyLine result = new PolyLine(getX(), getY());
+        result.setInside(getInside());
+        for(Component c: children){
+            result.addPoint((Component) c.copy());
+        }
+        return result;
+    }
 
     private Component get(int index) {
         if (index >= size()) {

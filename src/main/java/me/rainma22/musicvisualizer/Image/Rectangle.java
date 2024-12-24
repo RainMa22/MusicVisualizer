@@ -55,6 +55,11 @@ public class Rectangle extends ContainerComponent {
         return String.join(" ", super.selfString(),
                 getWidth().toString(), getHeight().toString());
     }
+    
+    @Override
+    public Rectangle copy(){
+        return new Rectangle(getX(), getY(), getWidth(), getHeight());
+    }
 
 
 }

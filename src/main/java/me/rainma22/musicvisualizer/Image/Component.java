@@ -82,7 +82,9 @@ public abstract class Component {
     }
 
     abstract public String getName();
-
+    abstract public <T extends Component> T copy();
+    
+    
     @Override
     public String toString(){
         return stringAsChild(0);

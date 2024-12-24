@@ -42,7 +42,13 @@ public class Circle extends ContainerComponent {
     public void setCenterY(int y) {
         setY((int) (y - radius));
     }
-
+    
+    @Override
+    public Circle copy(){
+        return new Circle(getX(),getY(), getRadius());
+    }
+    
+    
     public PolyLine toPolyline(int vertices){
         Component center = getCenter();
         PolyLine line = new PolyLine(center.getX(),center.getY());
