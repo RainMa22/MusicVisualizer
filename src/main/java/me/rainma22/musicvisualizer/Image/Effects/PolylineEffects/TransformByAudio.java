@@ -26,10 +26,11 @@ public class TransformByAudio extends ResourcefulEffect<PolyLine> {
 
     }
 
+    @Override
     public PolyLine apply(int index, ResourceManager resMan){
         if(data == null) return target;
         Audio audio = resMan.findAudio(effectIds.getFirst());
-        if(audio == null) return target;
+        if(audio == null) return target.copy();
         MusicExtractor extractor = null;
         try {
             extractor = new MusicExtractor(audio.getPath().toString());
