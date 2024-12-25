@@ -1,6 +1,8 @@
 package me.rainma22.musicvisualizer.Image.Resources;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A data-class containing all the resources, keyed by their resourceIds
@@ -8,8 +10,11 @@ import java.util.HashMap;
  */
 public class ResourceManager {
 
-    private HashMap<String, Image> images = new HashMap<>();
-    private HashMap<String, Audio> audios = new HashMap<>();
+    private static final String IMAGE_PREFIX = "IMAGE_";
+    private static final String AUDIO_PREFIX = "AUDIO_";
+
+    private Map<String, Image> images = new HashMap<>();
+    private Map<String, Audio> audios = new HashMap<>();
 
     public ResourceManager() {
     }
@@ -18,25 +23,41 @@ public class ResourceManager {
         return images.get(id);
     }
 
-    // TODO: add renaming function to set resources to a different key
-    // TODO: getters for the resources, make sure the HashMaps is a different copy
+    public void setImage(String id, Image image) {
+        images.put(id, image);
+    }
+
+    public Map<String, Image> getImages() {
+        return Map.copyOf(images);
+    }
+
+    public Map<String, Audio> getAudios() {
+        return Map.copyOf(audios);
+    }
+
+    private String nextUnusedDefaultKey(String prefix, Set<String> keys) {
+        String key = null;
+        for (int i = 0; i < Integer.MAX_VALUE; i++) {
+            key = prefix.concat(Integer.toString(i));
+
+            if (!keys.contains(key)) {
+                return key;
+            }
+        }
+        return key;
+    }
+
     /**
      * Adds the image to the Image data set
-     *
-     * TODO: add Collision checking
      *
      * @param image the image to add
      * @return the resource id String that corresponds to the image;
      */
     public String addImage(Image image) {
-        int idx = images.size();
-        String key = Integer.toString(idx);
+        String key = nextUnusedDefaultKey(IMAGE_PREFIX,
+                images.keySet());
         setImage(key, image);
         return key;
-    }
-
-    public void setImage(String id, Image image) {
-        images.put(id, image);
     }
 
     /**
@@ -46,27 +67,25 @@ public class ResourceManager {
         return images.size();
     }
 
-    public Audio findAudio(String id) {
+    public Audio getAudio(String id) {
         return audios.get(id);
+    }
+
+    public void setAudio(String id, Audio audio) {
+        audios.put(id, audio);
     }
 
     /**
      * Adds the image to the Audio data set
      *
-     * TODO: add Collision checking
-     *
      * @param audio the audio to add
      * @return the resource id String that corresponds to the audio
      */
     public String addAudio(Audio audio) {
-        int idx = audios.size();
-        String key = Integer.toString(idx);
+        String key = nextUnusedDefaultKey(AUDIO_PREFIX,
+                audios.keySet());
         setAudio(key, audio);
         return key;
-    }
-
-    public void setAudio(String id, Audio audio) {
-        audios.put(id, audio);
     }
 
     /**
