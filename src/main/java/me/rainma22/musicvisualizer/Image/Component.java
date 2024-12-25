@@ -55,14 +55,14 @@ public abstract class Component {
     }
 
     /**
-     * @param x the subtrahand of the 1st component 
+     * @param x the subtrahand of the 1st component
      * @param y the cubtrahand of the 2nd component
      * @return a point with x=(this.x - x) and y=(this.y - y)
      */
     public Component subtraction(int x, int y) {
         return new Point(getX() - x, getY() - y);
     }
-    
+
     /**
      * @param other the subtrahand vector
      * @return a point that has coordinates this-other by component
@@ -70,7 +70,7 @@ public abstract class Component {
     public Component subtraction(Component other) {
         return subtraction(other.getX(), other.getY());
     }
-    
+
     /**
      * @param x the 1st component to multiply
      * @param y the 2nd component to multiply
@@ -80,7 +80,6 @@ public abstract class Component {
         return new Point(getX() * x, getY() * y);
     }
 
-    
     /**
      * @param other the other vector to multiply
      * @return a point that has coordinates this*other by component
@@ -105,7 +104,7 @@ public abstract class Component {
     public int dot(Component other) {
         return dot(other.getX(), other.getY());
     }
-    
+
     /**
      * @param x the other x
      * @param y the other y
@@ -114,9 +113,9 @@ public abstract class Component {
     public int SquaredEuclideanDistance(int x, int y) {
         return SquaredEuclideanDistance(new Point(x, y));
     }
-    
+
     /**
-     * 
+     *
      * @param other the other vector
      * @return the sum of distance squared of the 2 vectors
      */
@@ -124,11 +123,12 @@ public abstract class Component {
         Component diff = subtraction(other);
         return diff.dot(diff);
     }
-    
+
     /**
      * changes this Components x and y along the given theta and magnitude
+     *
      * @see Polar Coordinates for more detail
-     * @param theta the translation direction in Radians 
+     * @param theta the translation direction in Radians
      * @param magnitude the magnitude of translation
      */
     public void polarTranslationInPlace(float theta, float magnitude) {
@@ -137,7 +137,7 @@ public abstract class Component {
     }
 
     /**
-     * 
+     *
      * @param theta the translation direction in Radians
      * @param magnitude the magnitude of translation
      * @return a copy of the Component with the translation applied
@@ -153,7 +153,8 @@ public abstract class Component {
     abstract public <T extends Component> T copy();
 
     /**
-     * @return a String that retain ALL the information that this Component maintains 
+     * @return a String that retain ALL the information that this Component
+     * maintains
      */
     @Override
     public String toString() {
@@ -161,14 +162,22 @@ public abstract class Component {
     }
 
     /**
-     * @return a string representing self 
+     * @return a string representing self
      */
     public String selfString() {
-        return String.join(getName(), getX().toString(), getY().toString());
+        return String.join("",
+                String.join(" ",
+                        effects.parallelStream()
+                                .map((fx) -> fx.toString())
+                                .toList()),
+                String.join(" ",
+                        getName(),
+                        getX().toString(),
+                        getY().toString()));
     }
 
     /**
-     * @param tabLevel the amount of tabs of self 
+     * @param tabLevel the amount of tabs of self
      * @return the string of self prefixed by the given amount of tabs
      */
     public String stringAsChild(int tabLevel) {
