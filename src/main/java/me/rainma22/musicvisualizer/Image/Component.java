@@ -1,5 +1,8 @@
 package me.rainma22.musicvisualizer.Image;
 
+import java.util.ArrayList;
+import java.util.List;
+import me.rainma22.musicvisualizer.Image.Effects.ResourcefulEffect;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.util.FastMath;
 
@@ -9,6 +12,7 @@ import org.apache.commons.math3.util.FastMath;
 public abstract class Component {
 
     private int x, y;
+    protected List<ResourcefulEffect> effects = new ArrayList<>(1);
 
     public Component(int x, int y) {
         setX(x);

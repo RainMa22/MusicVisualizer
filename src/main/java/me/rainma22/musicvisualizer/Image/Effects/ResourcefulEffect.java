@@ -31,4 +31,15 @@ public abstract class ResourcefulEffect<T extends Component> {
      * @return a **copy** of the component with the effect applied  
      **/
     public abstract T apply(int index, ResourceManager resMan);
+    
+    /**
+     * @return the name of the Effect 
+     */
+    public abstract String getName();
+    
+    @Override
+    public String toString(){
+        return String.join(" ", getName(),
+                String.join(" ", resourceIds));
+    }
 }

@@ -38,9 +38,13 @@ public class TransformByAudio extends ResourcefulEffect<PolyLine> {
     public TransformByAudio(PolyLine target, List<String> resourceIds) {
         super(target, resourceIds);
     }
+    
+    @Override
+    public String getName(){
+        return "TRANSFORM_BY_AUDIO";
+    }
 
     /**
-     * 
      * @param index
      * @param resMan
      * @return the PolyLine with the audio transformation applied,
@@ -50,7 +54,7 @@ public class TransformByAudio extends ResourcefulEffect<PolyLine> {
     @Override
     public PolyLine apply(int index, ResourceManager resMan){
         if(resourceIds.isEmpty()) return target.copy();
-        Audio audio = resMan.findAudio(resourceIds.getFirst());
+        Audio audio = resMan.getAudio(resourceIds.getFirst());
         if(audio == null) return target.copy();
         MusicExtractor extractor = null;
         try {
