@@ -14,7 +14,7 @@ public class BackgroundImage extends ResourcefulEffect<ContainerComponent> {
 
     private String imageId = null;
 
-    public Backgroundimage(ContainerComponent target, List<String> resourceIds) {
+    public BackgroundImage(ContainerComponent target, List<String> resourceIds) {
         super(target, resourceIds);
         if (!resourceIds.isEmpty()) {
             imageId = resourceIds.getFirst();
@@ -41,7 +41,9 @@ public class BackgroundImage extends ResourcefulEffect<ContainerComponent> {
         }
 
         ContainerComponent result = target.copy();
-        result.setBackgroundColor_rgba(ColorProvider.ofImage(image));
+        
+        result.setBackgroundColor_rgba
+                (ColorProvider.ofImage(image));
         return result;
     }
 
