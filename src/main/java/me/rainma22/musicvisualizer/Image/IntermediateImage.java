@@ -14,7 +14,7 @@ public class IntermediateImage extends Rectangle {
 
     @Override
     public String getName() {
-        return "IMAGE";
+        return "INTERMEDIATE_IMAGE";
     }
 
     @Override

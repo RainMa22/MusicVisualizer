@@ -9,11 +9,11 @@ import me.rainma22.musicvisualizer.Image.Resources.ResourceManager;
 public class ColorProvider {
 
     private ColorRGBA color;
-    private String imageId;
+    private Image image;
 
     private ColorProvider() {
         color = null;
-        imageId = null;
+        image = null;
     }
 
     /**
@@ -31,12 +31,12 @@ public class ColorProvider {
     /**
      * creates a ColorProvider based on an image
      *
-     * @param imageId the resource id of the image
+     * @param image the Image Resource of the image
      * @return a ColorProvider based on the image id
      */
-    public static ColorProvider ofImage(String imageId) {
+    public static ColorProvider ofImage(Image image) {
         ColorProvider result = new ColorProvider();
-        result.imageId = imageId;
+        result.image = image;
         return result;
     }
 
@@ -59,12 +59,12 @@ public class ColorProvider {
      * @throws UnsupportedOperationException if the ColorProvider does not refer
      * an image
      */
-    public Image getImage(ResourceManager ResMan)
+    public Image getImage()
             throws UnsupportedOperationException {
-        if (imageId == null) {
+        if (image == null) {
             throw new UnsupportedOperationException();
         }
-        return ResMan.getImage(imageId);
+        return image;
     }
 
     public boolean isPureColor() {
@@ -72,7 +72,7 @@ public class ColorProvider {
     }
 
     public boolean isImage() {
-        return imageId != null;
+        return image != null;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ColorProvider {
         if (isPureColor()) {
             return color.toString();
         } else {
-            return imageId;
+            return image.toString();
         }
     }
 }

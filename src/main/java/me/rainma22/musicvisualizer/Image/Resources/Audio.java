@@ -11,4 +11,9 @@ public class Audio extends Resource{
     public Audio(Path path) {
         super(path);
     }
+    
+    @Override
+    public String getName(){
+        return "AUDIO";
+    }
 }

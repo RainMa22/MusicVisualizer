@@ -1,5 +1,6 @@
 package me.rainma22.musicvisualizer.Image.Resources;
 
+import java.io.File;
 import java.nio.file.Path;
 
 /**
@@ -18,4 +19,12 @@ public abstract class Resource {
     public void setPath(Path path) {
         this.path = path;
     }
+    
+    public abstract String getName();
+    @Override
+    public String toString(){
+        String relPath = path.toUri().relativize(Path.of("./").toUri()).getPath();
+        return String.join(" ", getName(), relPath);
+    }
+
 }

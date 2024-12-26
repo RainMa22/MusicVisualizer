@@ -56,6 +56,6 @@ public class ColorRGBA{
     
     @Override
     public String toString(){
-        return "0x".concat(Integer.toHexString(intValue()));
+        return "COLOR ".concat(Integer.toHexString(intValue()));
     }
 }
