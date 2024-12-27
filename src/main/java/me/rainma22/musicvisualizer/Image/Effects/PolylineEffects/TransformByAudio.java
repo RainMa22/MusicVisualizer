@@ -14,6 +14,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import me.rainma22.musicvisualizer.Image.EffectApplier;
 import me.rainma22.musicvisualizer.Image.Resources.ResourceManager;
 import me.rainma22.musicvisualizer.util.BinaryOperations;
 
@@ -44,41 +45,46 @@ public class TransformByAudio extends ResourcefulEffect<PolyLine> {
         return "TRANSFORM_BY_AUDIO";
     }
 
-    /**
-     * @param index
-     * @param resMan
-     * @return the PolyLine with the audio transformation applied,
-               or the copy of the PolyLine if resourceIds is empty,
-               audio cannot be found, or file cannot be read
-     */
+//    /**
+//     * @param index
+//     * @param resMan
+//     * @return the PolyLine with the audio transformation applied,
+//               or the copy of the PolyLine if resourceIds is empty,
+//               audio cannot be found, or file cannot be read
+//     */
+//    @Override
+//    public PolyLine apply(int index, ResourceManager resMan){
+//        if(resourceIds.isEmpty()) return target.copy();
+//        Audio audio = resMan.getAudio(resourceIds.getFirst());
+//        if(audio == null) return target.copy();
+//        MusicExtractor extractor = null;
+//        try {
+//            extractor = new MusicExtractor(audio.getPath().toString());
+//            data = extractor.readFile();
+//        } catch (UnsupportedAudioFileException e) {
+//            //TODO: ignored
+//        } catch (IOException e) {
+//            //TODO: ignored
+//        }
+//        if(data == null) return target.copy();
+//
+//        double[] subData = Arrays.copyOfRange(data, index*target.size(),(index+1)*target.size());
+//        subData = Arrays.copyOf(subData, 
+//                BinaryOperations.nextPowerOfTwo(index));
+//        Complex[] transformedData = transformer.transform(subData, TransformType.FORWARD);
+//
+//        Float[] amp = new Float[target.size()];
+//        for (int i = 0; i < amp.length; i++) {
+//            double real = transformedData[i].getReal();
+//            double imaginary = transformedData[i].getImaginary();
+//            amp[i] = (float) FastMath.log(FastMath.sqrt(real*real + imaginary*imaginary) + 1);
+//        }
+//
+//        return target.transform(Arrays.asList(amp));
+//    }
+
     @Override
-    public PolyLine apply(int index, ResourceManager resMan){
-        if(resourceIds.isEmpty()) return target.copy();
-        Audio audio = resMan.getAudio(resourceIds.getFirst());
-        if(audio == null) return target.copy();
-        MusicExtractor extractor = null;
-        try {
-            extractor = new MusicExtractor(audio.getPath().toString());
-            data = extractor.readFile();
-        } catch (UnsupportedAudioFileException e) {
-            //TODO: ignored
-        } catch (IOException e) {
-            //TODO: ignored
-        }
-        if(data == null) return target.copy();
-
-        double[] subData = Arrays.copyOfRange(data, index*target.size(),(index+1)*target.size());
-        subData = Arrays.copyOf(subData, 
-                BinaryOperations.nextPowerOfTwo(index));
-        Complex[] transformedData = transformer.transform(subData, TransformType.FORWARD);
-
-        Float[] amp = new Float[target.size()];
-        for (int i = 0; i < amp.length; i++) {
-            double real = transformedData[i].getReal();
-            double imaginary = transformedData[i].getImaginary();
-            amp[i] = (float) FastMath.log(FastMath.sqrt(real*real + imaginary*imaginary) + 1);
-        }
-
-        return target.transform(Arrays.asList(amp));
+    public PolyLine apply(int currentFrame, EffectApplier applier, ResourceManager resMan) {
+        return applier.applyTransformByAudio(currentFrame, this, resMan);
     }
 }

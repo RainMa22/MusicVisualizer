@@ -2,6 +2,7 @@ package me.rainma22.musicvisualizer.Image.Effects;
 
 import java.util.List;
 import me.rainma22.musicvisualizer.Image.Component;
+import me.rainma22.musicvisualizer.Image.EffectApplier;
 import me.rainma22.musicvisualizer.Image.Resources.ResourceManager;
 
 /**
@@ -25,12 +26,15 @@ public abstract class ResourcefulEffect<T extends Component> {
     
     /**
      * 
-     * @param index the index of the current frame, reserved for 
+     * @param currentFrame the index of the current frame, reserved for 
      * time-aware effects
+     * @oaram applier the applier of the effect
      * @param resMan the ResourceManager
      * @return a **copy** of the component with the effect applied  
      **/
-    public abstract T apply(int index, ResourceManager resMan);
+    public abstract T apply(int currentFrame, 
+            EffectApplier applier,
+            ResourceManager resMan);
     
     /**
      * @return the name of the Effect 
