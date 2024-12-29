@@ -42,7 +42,7 @@ public class IntermediateImage extends Rectangle {
         result.setBackgroundColor_rgba(backgroundColor_rgba);
         result.setStrokeColor_rgba(strokeColor_rgba);
         result.setStrokeSize_px(strokeSize_px);
-    
+        return result;
     }
     
 }
