@@ -183,5 +183,15 @@ public abstract class Component {
     public String stringAsChild(int tabLevel) {
         return StringUtils.repeat('\t', tabLevel).concat(selfString());
     }
+    
+    public Component applyEffects(int currentFrame, EffectApplier applier){
+        if(effects.isEmpty()) return copy();
+        Component result = this;
+        for(ResourcefulEffect effect : effects){
+            effect.setTarget(this);
+            result = effect.apply(currentFrame, applier);
+        }
+        return result;
+    }
 
 }

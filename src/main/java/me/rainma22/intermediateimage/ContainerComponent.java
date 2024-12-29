@@ -106,4 +106,14 @@ public abstract class ContainerComponent extends Component {
                         .toList());
         return String.join("\n", childrenString);
     }
+
+    @Override
+    public Component applyEffects(int currentFrame, EffectApplier applier) {
+        ContainerComponent result = (ContainerComponent) super.applyEffects(currentFrame, applier);
+        result.children = new ArrayList<>();
+        for(Component child: children){
+            result.children.add(child.applyEffects(currentFrame, applier));
+        }
+         return result;
+    }
 }

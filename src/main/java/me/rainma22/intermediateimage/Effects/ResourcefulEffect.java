@@ -14,7 +14,7 @@ import me.rainma22.intermediateimage.Resources.ResourceManager;
  */
 public abstract class ResourcefulEffect<T extends Component> {
 
-    protected final T target;
+    protected T target;
     protected List<String> resourceIds;
 
     /**
@@ -31,6 +31,10 @@ public abstract class ResourcefulEffect<T extends Component> {
 
     public T getTarget() {
         return target;
+    }
+
+    public void setTarget(T target) {
+        this.target = target;
     }
 
     public List<String> getResourceIds() {
