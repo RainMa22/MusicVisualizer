@@ -54,8 +54,8 @@ public class BackgroundImage extends ResourcefulEffect<ContainerComponent> {
     }
 
     @Override
-    public ContainerComponent apply(int currentFrame, EffectApplier applier, ResourceManager resMan) {
-        return applier.applyBackgroundImage(currentFrame, this, resMan);
+    public ContainerComponent apply(int currentFrame, EffectApplier applier) {
+        return applier.applyBackgroundImage(currentFrame, this);
     }
 
 }

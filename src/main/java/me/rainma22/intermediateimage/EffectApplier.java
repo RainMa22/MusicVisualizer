@@ -7,14 +7,18 @@ import me.rainma22.intermediateimage.Resources.ResourceManager;
 /**
  * represents an effect applier;
  */
-public interface EffectApplier {
+public abstract class EffectApplier {
+    
+    protected ResourceManager resMan;
+    
+    public EffectApplier(ResourceManager resMan){
+        this.resMan = resMan;
+    }
 
-    public ContainerComponent applyBackgroundImage(int currentFrame,
-            BackgroundImage bi,
-            ResourceManager resMan);
+    public abstract ContainerComponent applyBackgroundImage(int currentFrame,
+            BackgroundImage bi);
 
-    public PolyLine applyTransformByAudio(int currentFrame,
-            TransformByAudio tba,
-            ResourceManager resMan);
+    public abstract PolyLine applyTransformByAudio(int currentFrame,
+            TransformByAudio tba);
 
 }

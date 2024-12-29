@@ -19,30 +19,34 @@ import me.rainma22.intermediateimage.Resources.ResourceManager;
 import me.rainma22.musicvisualizer.util.BinaryOperations;
 
 /**
- * An ReourcefulEffect that transforms a given PolyLine by 
- * the magnitude of the audio resource using Fourier Transform
+ * An ReourcefulEffect that transforms a given PolyLine by the magnitude of the
+ * audio resource using Fourier Transform
  */
 public class TransformByAudio extends ResourcefulEffect<PolyLine> {
+
     double data[] = null;
-    FastFourierTransformer transformer = 
-            new FastFourierTransformer(DftNormalization.STANDARD);
+    FastFourierTransformer transformer
+            = new FastFourierTransformer(DftNormalization.STANDARD);
 
     /**
      * Constructor
-     * 
+     *
      * @param target the PolyLine to apply this effect to.
-     * @param resourceIds the resourceIds needed by this effect,
-       where the first item is the audio resource needed,
-       if the resourceIds is empty, apply() will simply 
-       return a copy of the target.
+     * @param resourceIds the resourceIds needed by this effect, where the first
+     * item is the audio resource needed, if the resourceIds is empty, apply()
+     * will simply return a copy of the target.
      */
     public TransformByAudio(PolyLine target, List<String> resourceIds) {
         super(target, resourceIds);
     }
-    
+
     @Override
-    public String getName(){
+    public String getName() {
         return "TRANSFORM_BY_AUDIO";
+    }
+
+    public FastFourierTransformer getTransformer() {
+        return transformer;
     }
 
 //    /**
@@ -82,9 +86,8 @@ public class TransformByAudio extends ResourcefulEffect<PolyLine> {
 //
 //        return target.transform(Arrays.asList(amp));
 //    }
-
     @Override
-    public PolyLine apply(int currentFrame, EffectApplier applier, ResourceManager resMan) {
-        return applier.applyTransformByAudio(currentFrame, this, resMan);
+    public PolyLine apply(int currentFrame, EffectApplier applier) {
+        return applier.applyTransformByAudio(currentFrame, this);
     }
 }
