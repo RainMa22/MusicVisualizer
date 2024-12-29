@@ -48,7 +48,14 @@ public class Circle extends ContainerComponent {
 
     @Override
     public Circle copy() {
-        return new Circle(getX(), getY(), getRadius());
+        Circle result = new Circle(getX(), getY(), getRadius()); 
+        for(Component child: children){
+            result.children.add(child.copy());
+        }
+        result.setBackgroundColor_rgba(backgroundColor_rgba);
+        result.setStrokeColor_rgba(strokeColor_rgba);
+        result.setStrokeSize_px(strokeSize_px);
+        return result;
     }
 
     /**
