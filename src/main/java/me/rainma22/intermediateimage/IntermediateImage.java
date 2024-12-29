@@ -32,6 +32,17 @@ public class IntermediateImage extends Rectangle {
     public void setResourceManager(ResourceManager resourceManager) {
         this.resourceManager = resourceManager;
     }
+    @Override
+    public IntermediateImage copy(){
     
+        IntermediateImage result = new IntermediateImage(getWidth(),getHeight()); 
+        for(Component child: children){
+            result.children.add(child.copy());
+        }
+        result.setBackgroundColor_rgba(backgroundColor_rgba);
+        result.setStrokeColor_rgba(strokeColor_rgba);
+        result.setStrokeSize_px(strokeSize_px);
+    
+    }
     
 }
