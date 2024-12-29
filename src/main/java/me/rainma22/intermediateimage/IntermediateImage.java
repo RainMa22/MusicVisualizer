@@ -24,4 +24,14 @@ public class IntermediateImage extends Rectangle {
                 Integer.toString(resourceManager.numImages()),
                 Integer.toString(resourceManager.numAudios()));
     }
+
+    public ResourceManager getResourceManager() {
+        return resourceManager;
+    }
+
+    public void setResourceManager(ResourceManager resourceManager) {
+        this.resourceManager = resourceManager;
+    }
+    
+    
 }
