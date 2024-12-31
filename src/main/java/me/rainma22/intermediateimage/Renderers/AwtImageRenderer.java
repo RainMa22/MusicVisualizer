@@ -81,6 +81,7 @@ public class AwtImageRenderer extends ImageRenderer<java.awt.Image> {
                     backgroundColor.getGreen(),
                     backgroundColor.getBlue(),
                     backgroundColor.getAlpha());
+            g2d.setColor(background);
             g2d.setClip(circleClip);
             g2d.fillOval(c.getX(), c.getY(), circleDiameter, circleDiameter);
         }
@@ -92,8 +93,8 @@ public class AwtImageRenderer extends ImageRenderer<java.awt.Image> {
         g2d.setColor(stroke);
         int outlineX = c.getX() - strokeSize;
         int outlineY = c.getY() - strokeSize;
-        int OutlineDiameter = (int) (c.getRadius() + strokeSize) * 2;
-        g2d.drawOval(outlineX, outlineY, OutlineDiameter, OutlineDiameter);
+        int outlineDiameter = (int) (c.getRadius() + (strokeSize * 2));
+        g2d.drawOval(outlineX, outlineY, outlineDiameter, outlineDiameter);
     }
 
     @Override
@@ -131,6 +132,60 @@ public class AwtImageRenderer extends ImageRenderer<java.awt.Image> {
 
     @Override
     public void drawRectangle(Rectangle r) {
+        ColorRGBA strokeColor = r.getStrokeColor_rgba();
+        Color stroke = new Color(strokeColor.getRed(), strokeColor.getGreen(),
+                strokeColor.getBlue(), strokeColor.getAlpha());
+        int strokeSize = r.getStrokeSize_px();
+
+        int width = r.getWidth();
+        int height = r.getHeight();
+        Rectangle2D rectangleClip = new Rectangle2D.Float(r.getX(), r.getY(),
+                width, height);
+
+        if (r.getBackgroundColorProvider().isImage()) {
+            java.awt.Image toDraw;
+            try {
+                Image image = r.getBackgroundColorProvider().getImage();
+                toDraw = sysApplier.getResourceLoader().loadImage(image);
+            } catch (IOException ex) {
+                Logger.getLogger(AwtImageRenderer.class.getName()).log(Level.SEVERE, null, ex);
+                return;
+            }
+
+            int x = (int) (r.getX() + (width - toDraw.getWidth(null)) / 2);
+            int y = (int) (r.getY() + (height - toDraw.getHeight(null) / 2));
+            float scale = FastMath.max((float) width / toDraw.getWidth(null),
+                    (float) height / toDraw.getHeight(null));
+
+            AffineTransform at = new AffineTransform();
+            at.translate(x, y);
+            at.scale(scale, scale);
+
+            g2d.setClip(rectangleClip);
+            g2d.drawImage(toDraw, at, null);
+
+        } else {//c.getBackgroundColorProvider().isColor()
+            ColorRGBA backgroundColor = r.getBackgroundColorProvider().getColor();
+            Color background = new Color(backgroundColor.getRed(),
+                    backgroundColor.getGreen(),
+                    backgroundColor.getBlue(),
+                    backgroundColor.getAlpha());
+            g2d.setColor(background);
+            g2d.setClip(rectangleClip);
+            g2d.fillRect(r.getX(), r.getY(), width, height);
+        }
+        for (Component child : r.getChildren()) {
+            child.render(this);
+        }
+        g2d.setClip(null);
+        g2d.setStroke(new BasicStroke(strokeSize));
+        g2d.setColor(stroke);
+        int outlineX = r.getX() - strokeSize;
+        int outlineY = r.getY() - strokeSize;
+        int outlineWidth = width + strokeSize * 2;
+        int outlineHeight = height + strokeSize * 2;
+
+        g2d.drawRect(outlineX, outlineY, outlineWidth, outlineHeight);
 
     }
 
