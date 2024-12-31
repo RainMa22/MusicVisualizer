@@ -3,9 +3,9 @@ package me.rainma22.intermediateimage;
 /**
  * represents a renderer of a intermediate Image
  */
-public abstract class ImageRenderer {
+public abstract class ImageRenderer<T> {
 
-    private EffectApplier applier;
+    protected EffectApplier applier;
 
     public ImageRenderer(EffectApplier applier) {
         setApplier(applier);
@@ -28,4 +28,6 @@ public abstract class ImageRenderer {
     public abstract void drawPolyLine(PolyLine pl);
 
     public abstract void drawRectangle(Rectangle r);
+    
+    public abstract T finalizeImage();
 }

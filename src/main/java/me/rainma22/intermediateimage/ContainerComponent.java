@@ -11,24 +11,23 @@ import java.util.List;
 public abstract class ContainerComponent extends Component {
 
     protected List<Component> children;
-    protected ColorProvider backgroundColor_rgba
+    protected ColorProvider backgroundColorProvider
             = ColorProvider.ofColor(ColorRGBA.TRANSPARENT);
-    protected ColorProvider strokeColor_rgba
-            = ColorProvider.ofColor(ColorRGBA.TRANSPARENT);
+    protected ColorRGBA strokeColor_rgba = ColorRGBA.TRANSPARENT;
 
-    public ColorProvider getBackgroundColor_rgba() {
-        return backgroundColor_rgba;
+    public ColorProvider getBackgroundColorProvider() {
+        return backgroundColorProvider;
     }
 
-    public void setBackgroundColor_rgba(ColorProvider backgroundColor_rgba) {
-        this.backgroundColor_rgba = backgroundColor_rgba;
+    public void setBackgroundColorProvider(ColorProvider backgroundColor_rgba) {
+        this.backgroundColorProvider = backgroundColor_rgba;
     }
 
-    public ColorProvider getStrokeColor_rgba() {
+    public ColorRGBA getStrokeColor_rgba() {
         return strokeColor_rgba;
     }
 
-    public void setStrokeColor_rgba(ColorProvider strokeColor_rgba) {
+    public void setStrokeColor_rgba(ColorRGBA strokeColor_rgba) {
         this.strokeColor_rgba = strokeColor_rgba;
     }
     protected int strokeSize_px = 0;
@@ -64,7 +63,7 @@ public abstract class ContainerComponent extends Component {
     }
 
     public List<Component> getChildren() {
-        return List.copyOf(children);
+        return children;
     }
 
     public int size() {
@@ -85,7 +84,7 @@ public abstract class ContainerComponent extends Component {
                 super.selfString(),
                 getStrokeSize_px().toString(),
                 getStrokeColor_rgba().toString(),
-                getBackgroundColor_rgba().toString());
+                getBackgroundColorProvider().toString());
     }
 
     /**
@@ -111,9 +110,9 @@ public abstract class ContainerComponent extends Component {
     public Component applyEffects(int currentFrame, EffectApplier applier) {
         ContainerComponent result = (ContainerComponent) super.applyEffects(currentFrame, applier);
         result.children = new ArrayList<>();
-        for(Component child: children){
+        for (Component child : children) {
             result.children.add(child.applyEffects(currentFrame, applier));
         }
-         return result;
+        return result;
     }
 }

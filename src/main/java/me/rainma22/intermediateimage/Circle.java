@@ -52,7 +52,7 @@ public class Circle extends ContainerComponent {
         for(Component child: children){
             result.children.add(child.copy());
         }
-        result.setBackgroundColor_rgba(backgroundColor_rgba);
+        result.setBackgroundColorProvider(backgroundColorProvider);
         result.setStrokeColor_rgba(strokeColor_rgba);
         result.setStrokeSize_px(strokeSize_px);
         return result;
@@ -79,5 +79,10 @@ public class Circle extends ContainerComponent {
         return String.join(" ",
                 super.selfString(),
                 getRadius().toString());
+    }
+
+    @Override
+    public void render(ImageRenderer renderer) {
+        renderer.drawCircle(this);
     }
 }

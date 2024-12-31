@@ -18,4 +18,9 @@ public class Point extends Component {
     public Point copy() {
         return new Point(getX(), getY());
     }
+
+    @Override
+    public void render(ImageRenderer renderer) {
+        renderer.drawPoint(this);
+    }
 }

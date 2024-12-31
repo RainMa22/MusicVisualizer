@@ -62,7 +62,7 @@ public class SystemEffectApplier extends EffectApplier {
 
         ContainerComponent result = target.copy();
 
-        result.setBackgroundColor_rgba(ColorProvider.ofImage(image));
+        result.setBackgroundColorProvider(ColorProvider.ofImage(image));
         return result;
 
     }
@@ -74,9 +74,10 @@ public class SystemEffectApplier extends EffectApplier {
             return target.copy();
         }
         String audioId = tba.getResourceIds().getFirst();
+        Audio audio = resMan.getAudio(audioId);
         double[] data = null;
         try {
-            data = getResourceLoader().loadAudio(audioId);
+            data = getResourceLoader().loadAudio(audio);
         } catch (UnsupportedAudioFileException ex) {
             Logger.getLogger(SystemEffectApplier.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -104,41 +105,39 @@ public class SystemEffectApplier extends EffectApplier {
     
     }
 
-    private class ResourceLoader {
+    class ResourceLoader {
 
-        private HashMap<String, java.awt.Image> cachedImages = new HashMap<>();
-        private HashMap<String, double[]> cachedAudios = new HashMap<>();
+        private HashMap<Image, java.awt.Image> cachedImages = new HashMap<>();
+        private HashMap<Audio, double[]> cachedAudios = new HashMap<>();
         private ResourceManager resMan;
 
         public ResourceLoader(ResourceManager resMan) {
             this.resMan = resMan;
         }
 
-        public double[] loadAudio(String resId) throws UnsupportedAudioFileException, IOException {
-            Audio audio = resMan.getAudio(resId);
+        public double[] loadAudio(Audio audio) throws UnsupportedAudioFileException, IOException {
             if (audio == null) {
-                cachedAudios.put(resId, null);
+                cachedAudios.put(audio, null);
             }
-            if (!cachedAudios.containsKey(resId)) {
+            if (!cachedAudios.containsKey(audio)) {
                 MusicExtractor me = new MusicExtractor(audio.getPath().toString());
                 double[] data = me.readFile();
-                cachedAudios.put(resId, data);
+                cachedAudios.put(audio, data);
             }
 
-            return cachedAudios.get(resId);
+            return cachedAudios.get(audio);
 
         }
 
-        public java.awt.Image loadImage(String resId) throws IOException {
-            Image image = resMan.getImage(resId);
+        public java.awt.Image loadImage(Image image) throws IOException {
             if (image == null) {
-                cachedImages.put(resId, null);
+                cachedImages.put(image, null);
             }
-            if (!cachedImages.containsKey(resId)) {
+            if (!cachedImages.containsKey(image)) {
                 java.awt.Image result = ImageIO.read(image.getPath().toFile());
-                cachedImages.put(resId, result);
+                cachedImages.put(image, result);
             }
-            return cachedImages.get(resId);
+            return cachedImages.get(image);
         }
 
     }

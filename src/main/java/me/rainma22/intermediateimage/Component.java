@@ -148,9 +148,11 @@ public abstract class Component {
         return p;
     }
 
-    abstract public String getName();
+    public abstract String getName();
 
-    abstract public <T extends Component> T copy();
+    public abstract <T extends Component> T copy();
+
+    public abstract void render(ImageRenderer renderer);
 
     /**
      * @return a String that retain ALL the information that this Component
@@ -183,11 +185,13 @@ public abstract class Component {
     public String stringAsChild(int tabLevel) {
         return StringUtils.repeat('\t', tabLevel).concat(selfString());
     }
-    
-    public Component applyEffects(int currentFrame, EffectApplier applier){
-        if(effects.isEmpty()) return copy();
+
+    public Component applyEffects(int currentFrame, EffectApplier applier) {
+        if (effects.isEmpty()) {
+            return copy();
+        }
         Component result = this;
-        for(ResourcefulEffect effect : effects){
+        for (ResourcefulEffect effect : effects) {
             effect.setTarget(this);
             result = effect.apply(currentFrame, applier);
         }

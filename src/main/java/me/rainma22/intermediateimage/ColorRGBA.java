@@ -15,32 +15,32 @@ public class ColorRGBA{
         alpha = (byte) (rgba & 0x000000ff);
     }
 
-    public byte getRed() {
-        return red;
+    public int getRed() {
+        return red & 0xff;
     }
 
     public void setRed(byte red) {
         this.red = red;
     }
 
-    public byte getGreen() {
-        return green;
+    public int getGreen() {
+        return green & 0xff;
     }
 
     public void setGreen(byte green) {
         this.green = green;
     }
 
-    public byte getBlue() {
-        return blue;
+    public int getBlue() {
+        return blue & 0xff;
     }
 
     public void setBlue(byte blue) {
         this.blue = blue;
     }
 
-    public byte getAlpha() {
-        return alpha;
+    public int getAlpha() {
+        return alpha & 0xff;
     }
 
     public void setAlpha(byte alpha) {

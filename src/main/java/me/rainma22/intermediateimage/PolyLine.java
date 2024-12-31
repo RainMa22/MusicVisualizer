@@ -235,5 +235,11 @@ public class PolyLine extends ContainerComponent {
     public void setInside(InsideDirection insideAt) {
         inside = insideAt;
     }
+    
+    
+    @Override
+    public void render(ImageRenderer renderer) {
+        renderer.drawPolyLine(this);
+    }
 
 }

@@ -39,7 +39,7 @@ public class IntermediateImage extends Rectangle {
         for(Component child: children){
             result.children.add(child.copy());
         }
-        result.setBackgroundColor_rgba(backgroundColor_rgba);
+        result.setBackgroundColorProvider(backgroundColorProvider);
         result.setStrokeColor_rgba(strokeColor_rgba);
         result.setStrokeSize_px(strokeSize_px);
         return result;
