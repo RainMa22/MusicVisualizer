@@ -127,7 +127,7 @@ public class PolyLine extends ContainerComponent {
                     new Point(1, 0) :
                     new Point(0, 1);
         } else if (index == 0) {
-            delta = subtraction(children.getFirst());
+            delta = subtraction(children.get(0));
         } else if (index == size() - 1) {
             delta = get(index - 1).subtraction(get(index));
         } else {
@@ -145,7 +145,7 @@ public class PolyLine extends ContainerComponent {
     public PolyLine transform(List<Float> magnitudeAlongNormal) {
         if (magnitudeAlongNormal.size() != size()) throw new ArithmeticException("Arity Mismatch");
         float normal = getNormalTheta(0);
-        float magnitude = magnitudeAlongNormal.getFirst();
+        float magnitude = magnitudeAlongNormal.get(0);
         int newX = (int) (getX() * magnitude * FastMath.cos(normal));
         int newY = (int) (getY() * magnitude * FastMath.sin(normal));
         PolyLine transformed = new PolyLine(newX, newY);

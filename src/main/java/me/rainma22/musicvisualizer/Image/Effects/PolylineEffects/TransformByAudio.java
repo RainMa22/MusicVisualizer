@@ -3,6 +3,7 @@ package me.rainma22.musicvisualizer.Image.Effects.PolylineEffects;
 import me.rainma22.musicvisualizer.Image.Effects.ResourcefulEffect;
 import me.rainma22.musicvisualizer.Image.PolyLine;
 import me.rainma22.musicvisualizer.Image.Resources.Audio;
+import me.rainma22.musicvisualizer.Image.Resources.ResourceManager;
 import me.rainma22.musicvisualizer.MusicExtractor;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
@@ -14,7 +15,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import me.rainma22.musicvisualizer.Image.Resources.ResourceManager;
 
 public class TransformByAudio extends ResourcefulEffect<PolyLine> {
     double data[] = null;
@@ -29,7 +29,7 @@ public class TransformByAudio extends ResourcefulEffect<PolyLine> {
     @Override
     public PolyLine apply(int index, ResourceManager resMan){
         if(data == null) return target;
-        Audio audio = resMan.findAudio(effectIds.getFirst());
+        Audio audio = resMan.findAudio(effectIds.get(0));
         if(audio == null) return target.copy();
         MusicExtractor extractor = null;
         try {
