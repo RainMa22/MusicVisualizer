@@ -148,8 +148,8 @@ public class AwtImageRenderer extends ImageRenderer<java.awt.Image> {
 
             float scale = FastMath.max((float) width / toDraw.getWidth(null),
                     (float) height / toDraw.getHeight(null));
-            int x = (int) (r.getX() + (width - toDraw.getWidth(null)) * scale / 2);
-            int y = (int) (r.getY() + (height - toDraw.getHeight(null) * scale / 2));
+            int x = (int) (r.getX() + (width - toDraw.getWidth(null) * scale)  / 2);
+            int y = (int) (r.getY() + (height - toDraw.getHeight(null) * scale)  / 2);
 
 
             AffineTransform at = new AffineTransform();
@@ -173,6 +173,8 @@ public class AwtImageRenderer extends ImageRenderer<java.awt.Image> {
             child.render(this);
         }
         g2d.setClip(null);
+//        g2d.setStroke(new BasicStroke(5));
+//        g2d.setColor(Color.BLACK);
         g2d.setStroke(new BasicStroke(strokeSize));
         g2d.setColor(stroke);
         int outlineX = r.getX() - strokeSize;
