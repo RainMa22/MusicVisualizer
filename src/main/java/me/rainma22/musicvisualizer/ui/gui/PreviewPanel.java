@@ -27,6 +27,7 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
     private final SettingsManager settings;
     private AwtImageRenderer renderer;
     private IntermediateImage finalImage;
+    private int sampleSize = 2048;
 
     public PreviewPanel() {
         super();
@@ -39,12 +40,7 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setDoubleBuffered(true);
 
-        double[] samples = new double[2048];
-        for (int i = 0; i < samples.length; i++) {
-            samples[i] = FastMath.random() * 32d;
-        }
-        imageTemplate = ImageUtils.getDefaultIntermediateImage(1, 1, 256,
-                ColorRGBA.BLACK);
+        imageTemplate = new IntermediateImage(1,1);
         resMan = imageTemplate.getResourceManager();
         applier = SystemEffectApplier.of(resMan);
         resMan.setAudio("Audio", new Audio(Path.of("test_16bitInt.wav")));
@@ -100,7 +96,8 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
 
         String lineColor = settings.get("line_color_hex");
 
-        imageTemplate = ImageUtils.getDefaultIntermediateImage(width, height, 256,
+        imageTemplate = ImageUtils.getDefaultIntermediateImage(width, height,
+                sampleSize,
                 new ColorRGBA(Integer.decode(lineColor)));
         imageTemplate.setResourceManager(resMan);
 
@@ -111,7 +108,7 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
         resMan.setImage(SettingsManager.KEY_BACKGROUND_IMG, backgroundResource);
         double rotationPerFrameTheta = (Double) settings.getObj(SettingsManager.KEY_ROTATION_THETA);
         renderer = new AwtImageRenderer(imageTemplate);
-        finalImage = (IntermediateImage) imageTemplate.applyEffects(22, applier);
+        finalImage = (IntermediateImage) imageTemplate.applyEffects(120, applier);
 //        finalImage.setResourceManager(resMan);
         renderer = new AwtImageRenderer(finalImage);
     }
