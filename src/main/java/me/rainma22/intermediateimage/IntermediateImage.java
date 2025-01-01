@@ -6,7 +6,7 @@ import me.rainma22.intermediateimage.Resources.ResourceManager;
  * represents an Image
  */
 public class IntermediateImage extends Rectangle {
-    private ResourceManager resourceManager;
+    private ResourceManager resourceManager = new ResourceManager();
 
     public IntermediateImage(int width, int height){
         super(0,0, width, height);
@@ -42,6 +42,7 @@ public class IntermediateImage extends Rectangle {
         result.setBackgroundColorProvider(backgroundColorProvider);
         result.setStrokeColor_rgba(strokeColor_rgba);
         result.setStrokeSize_px(strokeSize_px);
+        result.setResourceManager(this.getResourceManager());
         return result;
     }
     

@@ -19,7 +19,9 @@ public class PolyLine extends ContainerComponent {
         POSITVE_X,
         POSITIVE_Y,
         CENTER
-    };
+    }
+
+
 
     public static final InsideDirection NEGATIVE_Y = InsideDirection.NEGATIVE_Y;
     public static final InsideDirection POSITIVE_Y = InsideDirection.POSITIVE_Y;
@@ -28,7 +30,26 @@ public class PolyLine extends ContainerComponent {
     public static final InsideDirection CENTER = InsideDirection.CENTER;
     private InsideDirection inside = NEGATIVE_Y;
 
-    private final Component center;
+    private Component center;
+
+    @Override
+    public void setX(int x){
+        int totalX = center.getX()*size();
+        totalX -= getX();
+        totalX += x;
+        center.setX(totalX/size());
+        super.setX(x);
+    }
+
+
+    @Override
+    public void setY(int y){
+        int totalY = center.getY()*size();
+        totalY -= getY();
+        totalY += y;
+        center.setY(totalY/size());
+        super.setY(y);
+    }
 
     @Override
     public Integer getCenterX() {
@@ -76,14 +97,21 @@ public class PolyLine extends ContainerComponent {
                 getInside());
     }
 
-    public void addPoint(Component component) {
+    @Override
+    public void add(Component component) {
         int newX = getCenterX() * size();
         int newY = getCenterX() * size();
         newX += component.getX();
         newY += component.getY();
-        children.add(component);
-        center.setX(newX);
-        center.setY(newY);
+        center.setX(newX / (size() + 1));
+        center.setY(newY / (size() + 1));
+        super.add(component);
+    }
+
+    @Override
+    public void polarTranslationInPlace(float theta, float magnitude) {
+        super.polarTranslationInPlace(theta, magnitude);
+        center.polarTranslationInPlace(theta, magnitude);
     }
 
     private float outsideTheta(float theta, Component component) {
@@ -119,11 +147,14 @@ public class PolyLine extends ContainerComponent {
 
     @Override
     public PolyLine copy() {
-        PolyLine result = new PolyLine(getX(), getY());
-        result.setInside(inside);
-        for (Component c : children) {
-            result.addPoint((Component) c.copy());
-        }
+//        PolyLine result = new PolyLine(getX(), getY());
+//        result.setInside(inside);
+//        for (Component c : children) {
+//            result.add((Component) c.copy());
+//        }
+        PolyLine result = (PolyLine) super.copy();
+        result.inside = inside;
+        result.center = center.copy();
         return result;
     }
 
@@ -141,7 +172,7 @@ public class PolyLine extends ContainerComponent {
                     ? new Point(1, 0)
                     : new Point(0, 1);
         } else if (index == 0) {
-            delta = subtraction(children.getFirst());
+            delta = subtraction(children.get(0));
         } else if (index == size() - 1) {
             delta = get(index - 1).subtraction(get(index));
         } else {
@@ -153,9 +184,8 @@ public class PolyLine extends ContainerComponent {
     }
 
     /**
-     *
      * @param index the index of the coordinates(0 being the polyline object
-     * itself)
+     *              itself)
      * @return the radians representation of the direction of the normal which
      * points OUTSIDE of the defined inside position
      * @throws IndexOutOfBoundsException if index is out of bounds
@@ -165,24 +195,25 @@ public class PolyLine extends ContainerComponent {
     }
 
     /**
-     * @requires magnitudeAlongNormal.size() == self.size()
      * @param magnitudeAlongNormal magnitude of change along Normal theta
      * @return a copy of this PolyLine which all of its points are modified to
+     * @requires magnitudeAlongNormal.size() == self.size()
      */
     public PolyLine transform(List<Float> magnitudeAlongNormal) {
         if (magnitudeAlongNormal.size() != size()) {
             throw new ArithmeticException("Arity Mismatch");
         }
         float normal = getNormalTheta(0);
-        float magnitude = magnitudeAlongNormal.getFirst();
+        float magnitude = magnitudeAlongNormal.get(0);
         int newX = (int) (getX() * magnitude * FastMath.cos(normal));
         int newY = (int) (getY() * magnitude * FastMath.sin(normal));
-        PolyLine transformed = new PolyLine(newX, newY);
-        transformed.setInside(inside);
+        PolyLine transformed = copy();
+        transformed.setX(newX);
+        transformed.setY(newY);
         for (int i = 1; i < size(); i++) {
             normal = getNormalTheta(i);
             magnitude = magnitudeAlongNormal.get(i);
-            transformed.addPoint(get(i).polarTranslation(normal, magnitude));
+            transformed.add(get(i).polarTranslation(normal, magnitude));
         }
         return transformed;
     }
@@ -235,8 +266,8 @@ public class PolyLine extends ContainerComponent {
     public void setInside(InsideDirection insideAt) {
         inside = insideAt;
     }
-    
-    
+
+
     @Override
     public void render(ImageRenderer renderer) {
         renderer.drawPolyLine(this);

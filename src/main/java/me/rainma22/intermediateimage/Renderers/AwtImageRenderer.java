@@ -1,9 +1,13 @@
 package me.rainma22.intermediateimage.Renderers;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
+import me.rainma22.intermediateimage.Component;
+import me.rainma22.intermediateimage.Point;
+import me.rainma22.intermediateimage.Rectangle;
+import me.rainma22.intermediateimage.*;
+import me.rainma22.intermediateimage.Resources.Image;
+import org.apache.commons.math3.util.FastMath;
+
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
@@ -11,18 +15,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.rainma22.intermediateimage.Circle;
-import me.rainma22.intermediateimage.ColorRGBA;
-import me.rainma22.intermediateimage.Component;
-import me.rainma22.intermediateimage.EffectApplier;
-import me.rainma22.intermediateimage.ImageRenderer;
-import me.rainma22.intermediateimage.IntermediateImage;
-import me.rainma22.intermediateimage.Point;
-import me.rainma22.intermediateimage.PolyLine;
-import me.rainma22.intermediateimage.Rectangle;
-import me.rainma22.intermediateimage.Resources.Image;
-import me.rainma22.intermediateimage.Resources.ResourceManager;
-import org.apache.commons.math3.util.FastMath;
 
 /**
  * renders Intermediate Images into BufferedImages
@@ -63,10 +55,12 @@ public class AwtImageRenderer extends ImageRenderer<java.awt.Image> {
                 return;
             }
 
-            int x = (int) (c.getX() + (c.getRadius() - toDraw.getWidth(null) / 2));
-            int y = (int) (c.getY() + (c.getRadius() - toDraw.getHeight(null) / 2));
             float scale = FastMath.max((float) circleDiameter / toDraw.getWidth(null),
                     (float) circleDiameter / toDraw.getHeight(null));
+
+
+            int x = (int) (c.getX() + (circleDiameter - toDraw.getWidth(null) * scale) / 2);
+            int y = (int) (c.getY() + (circleDiameter - toDraw.getHeight(null) * scale) / 2);
 
             AffineTransform at = new AffineTransform();
             at.translate(x, y);
@@ -152,14 +146,15 @@ public class AwtImageRenderer extends ImageRenderer<java.awt.Image> {
                 return;
             }
 
-            int x = (int) (r.getX() + (width - toDraw.getWidth(null)) / 2);
-            int y = (int) (r.getY() + (height - toDraw.getHeight(null) / 2));
             float scale = FastMath.max((float) width / toDraw.getWidth(null),
                     (float) height / toDraw.getHeight(null));
+            int x = (int) (r.getX() + (width - toDraw.getWidth(null)) * scale / 2);
+            int y = (int) (r.getY() + (height - toDraw.getHeight(null) * scale / 2));
+
 
             AffineTransform at = new AffineTransform();
-            at.translate(x, y);
             at.scale(scale, scale);
+            at.translate(x, y);
 
             g2d.setClip(rectangleClip);
             g2d.drawImage(toDraw, at, null);

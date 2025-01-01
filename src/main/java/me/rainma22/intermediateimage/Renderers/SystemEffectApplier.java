@@ -1,12 +1,5 @@
 package me.rainma22.intermediateimage.Renderers;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import me.rainma22.intermediateimage.ColorProvider;
 import me.rainma22.intermediateimage.ContainerComponent;
 import me.rainma22.intermediateimage.EffectApplier;
@@ -23,6 +16,14 @@ import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.transform.TransformType;
 import org.apache.commons.math3.util.FastMath;
 
+import javax.imageio.ImageIO;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * represent a EffectApplier implemented using System's audio library for audio
  * and AWT for image;
@@ -30,7 +31,7 @@ import org.apache.commons.math3.util.FastMath;
 public class SystemEffectApplier extends EffectApplier {
 
     private ResourceLoader loader;
-    private static HashMap<ResourceManager, SystemEffectApplier> appliers;
+    private static HashMap<ResourceManager, SystemEffectApplier> appliers = new HashMap<>();
 
     private SystemEffectApplier(ResourceManager resMan) {
         super(resMan);
@@ -52,15 +53,15 @@ public class SystemEffectApplier extends EffectApplier {
     public ContainerComponent applyBackgroundImage(int currentFrame, BackgroundImage bi) {
         ContainerComponent target = bi.getTarget();
         if (bi.getResourceIds().isEmpty()) {
-            return target.copy();
+            return (ContainerComponent) target.copy();
         }
-        String imageId = bi.getResourceIds().getFirst();
+        String imageId = bi.getResourceIds().get(0);
         Image image = resMan.getImage(imageId);
         if (image == null) {
-            return target.copy();
+            return (ContainerComponent) target.copy();
         }
 
-        ContainerComponent result = target.copy();
+        ContainerComponent result = (ContainerComponent) target.copy();
 
         result.setBackgroundColorProvider(ColorProvider.ofImage(image));
         return result;
@@ -73,7 +74,7 @@ public class SystemEffectApplier extends EffectApplier {
         if (tba.getResourceIds().isEmpty()) {
             return target.copy();
         }
-        String audioId = tba.getResourceIds().getFirst();
+        String audioId = tba.getResourceIds().get(0);
         Audio audio = resMan.getAudio(audioId);
         double[] data = null;
         try {
@@ -86,12 +87,12 @@ public class SystemEffectApplier extends EffectApplier {
         if (data == null) {
             return target.copy();
         }
-        
         FastFourierTransformer transformer = tba.getTransformer();
         double[] subData = Arrays.copyOfRange(data, currentFrame*target.size(),
                 (currentFrame+1)*target.size());
         subData = Arrays.copyOf(subData, 
-                BinaryOperations.nextPowerOfTwo(currentFrame));
+                BinaryOperations.nextPowerOfTwo(target.size()));
+
         Complex[] transformedData = transformer.transform(subData, TransformType.FORWARD);
 
         Float[] amp = new Float[target.size()];

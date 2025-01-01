@@ -1,12 +1,10 @@
 package me.rainma22.intermediateimage.Effects.ContainerEffects;
 
-import java.util.List;
-import me.rainma22.intermediateimage.ColorProvider;
 import me.rainma22.intermediateimage.ContainerComponent;
 import me.rainma22.intermediateimage.EffectApplier;
 import me.rainma22.intermediateimage.Effects.ResourcefulEffect;
-import me.rainma22.intermediateimage.Resources.Image;
-import me.rainma22.intermediateimage.Resources.ResourceManager;
+
+import java.util.List;
 
 /**
  * Represents a background image effect
@@ -18,7 +16,7 @@ public class BackgroundImage extends ResourcefulEffect<ContainerComponent> {
     public BackgroundImage(ContainerComponent target, List<String> resourceIds) {
         super(target, resourceIds);
         if (!resourceIds.isEmpty()) {
-            imageId = resourceIds.getFirst();
+            imageId = resourceIds.get(0);
         }
     }
 

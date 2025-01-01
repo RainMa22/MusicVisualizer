@@ -1,7 +1,6 @@
 package me.rainma22.intermediateimage;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -44,6 +43,7 @@ public abstract class ContainerComponent extends Component {
         return new Point(getCenterX(), getCenterY());
     }
 
+
     public void setCenter(Component coord) {
         setCenterX(coord.getX());
         setCenterY(coord.getY());
@@ -74,6 +74,10 @@ public abstract class ContainerComponent extends Component {
         children = new ArrayList<>();
     }
 
+    public void add(Component c){
+        children.add(c);
+    }
+
     /**
      *
      * @return a String representative of self, excluding the children
@@ -85,6 +89,16 @@ public abstract class ContainerComponent extends Component {
                 getStrokeSize_px().toString(),
                 getStrokeColor_rgba().toString(),
                 getBackgroundColorProvider().toString());
+    }
+
+    @Override
+    public Component copy() {
+        ContainerComponent component = (ContainerComponent) super.copy();
+        component.children = new ArrayList<>();
+        component.children.addAll(children.stream().map(child -> child.copy()).toList());
+        component.backgroundColorProvider = backgroundColorProvider.copy();
+        component.strokeColor_rgba = strokeColor_rgba;
+        return component;
     }
 
     /**

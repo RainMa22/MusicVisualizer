@@ -1,9 +1,10 @@
 package me.rainma22.intermediateimage.Effects;
 
-import java.util.List;
 import me.rainma22.intermediateimage.Component;
 import me.rainma22.intermediateimage.EffectApplier;
-import me.rainma22.intermediateimage.Resources.ResourceManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A class that represent an Effect to be applied to an Image which is mindful
@@ -12,7 +13,7 @@ import me.rainma22.intermediateimage.Resources.ResourceManager;
  * @param <T> the type of the component Target
  *
  */
-public abstract class ResourcefulEffect<T extends Component> {
+public abstract class ResourcefulEffect<T extends Component> implements Cloneable{
 
     protected T target;
     protected List<String> resourceIds;
@@ -46,7 +47,6 @@ public abstract class ResourcefulEffect<T extends Component> {
      * @param currentFrame the index of the current frame, reserved for
      * time-aware effects
      * @oaram applier the applier of the effect
-     * @param resMan the ResourceManager
      * @return a **copy** of the component with the effect applied
      *
      */
@@ -57,6 +57,17 @@ public abstract class ResourcefulEffect<T extends Component> {
      * @return the name of the Effect
      */
     public abstract String getName();
+
+    public ResourcefulEffect<T> copy(){
+        try {
+            ResourcefulEffect<T> result = (ResourcefulEffect<T>) clone();
+            result.resourceIds = new ArrayList<>(1);
+            result.resourceIds.addAll(resourceIds);
+            return result;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public String toString() {

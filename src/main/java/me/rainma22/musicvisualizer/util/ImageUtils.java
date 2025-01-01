@@ -1,6 +1,18 @@
 package me.rainma22.musicvisualizer.util;
 
+import me.rainma22.intermediateimage.Circle;
+import me.rainma22.intermediateimage.ColorRGBA;
+import me.rainma22.intermediateimage.Effects.ContainerEffects.BackgroundImage;
+import me.rainma22.intermediateimage.Effects.PolylineEffects.TransformByAudio;
+import me.rainma22.intermediateimage.IntermediateImage;
+import me.rainma22.intermediateimage.PolyLine;
+import me.rainma22.intermediateimage.Resources.Image;
+import me.rainma22.musicvisualizer.settings.SettingsManager;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.nio.DoubleBuffer;
+import java.util.List;
 
 public class ImageUtils {
 
@@ -14,6 +26,39 @@ public class ImageUtils {
             newDataBuffer.put(data[i]);
         }
         return newDataBuffer.array();
+    }
+
+    public static BufferedImage loadImage(Image resource){
+        try {
+            return ImageIO.read(resource.getPath().toFile());
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static IntermediateImage getDefaultIntermediateImage(int width,
+                                                                int height,
+                                                                int sampleSize,
+                                                                ColorRGBA strokeColor){
+//        SettingsManager settings = SettingsManager.getSettingsManager();
+        IntermediateImage result = new IntermediateImage(width, height);
+//        ResourceManager resourceManager = result.getResourceManager();
+//        result.setBackgroundColorProvider(ColorProvider.ofImage((Image)
+//                settings.getObj(SettingsManager.KEY_BACKGROUND_IMG)));
+        result.addEffect(new BackgroundImage(result, List.of(SettingsManager.KEY_BACKGROUND_IMG)));
+        int circleDiameter = Math.max(width/5, height/5);
+        int circleX = (width - circleDiameter)/2;
+        int circleY = (height - circleDiameter)/2;
+        Circle center = new Circle(circleX, circleY, circleDiameter/2);
+        PolyLine visualization = center.toPolyline(sampleSize);
+        center.addEffect(new BackgroundImage(center, List.of(SettingsManager.KEY_FOREGROUND_IMG)));
+        visualization.addEffect(new TransformByAudio(visualization, List.of("Audio")));
+        visualization.setStrokeColor_rgba(strokeColor);
+        result.add(center);
+        result.add(visualization);
+        return result;
+
     }
 
 

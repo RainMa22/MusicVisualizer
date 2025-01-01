@@ -48,15 +48,11 @@ public class Circle extends ContainerComponent {
 
     @Override
     public Circle copy() {
-        Circle result = new Circle(getX(), getY(), getRadius()); 
-        for(Component child: children){
-            result.children.add(child.copy());
-        }
-        result.setBackgroundColorProvider(backgroundColorProvider);
-        result.setStrokeColor_rgba(strokeColor_rgba);
-        result.setStrokeSize_px(strokeSize_px);
+        Circle result = (Circle) super.copy();
+        result.radius = radius;
         return result;
     }
+
 
     /**
      * @return a PolyLine representation of the circle
@@ -68,7 +64,7 @@ public class Circle extends ContainerComponent {
         PolyLine line = new PolyLine(center.getX(), center.getY());
         line.polarTranslationInPlace(0, radius);
         for (int i = 1; i < vertices; i++) {
-            line.addPoint(center.polarTranslation(2 * PI * i / (vertices + 1), radius));
+            line.add(center.polarTranslation(2 * PI * i / (vertices + 1), radius));
         }
         line.setInside(PolyLine.CENTER);
         return line;

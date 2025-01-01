@@ -1,22 +1,23 @@
 package me.rainma22.intermediateimage;
 
-import java.util.ArrayList;
-import java.util.List;
 import me.rainma22.intermediateimage.Effects.ResourcefulEffect;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.util.FastMath;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * represents a Component of an IntermediateImage
  */
-public abstract class Component {
+public abstract class Component implements Cloneable {
 
     private int x, y;
-    protected List<ResourcefulEffect> effects = new ArrayList<>(1);
+    protected List<ResourcefulEffect<?>> effects = new ArrayList<>(1);
 
     public Component(int x, int y) {
-        setX(x);
-        setY(y);
+        this.x = x;
+        this.y = y;
     }
 
     public Integer getX() {
@@ -127,7 +128,6 @@ public abstract class Component {
     /**
      * changes this Components x and y along the given theta and magnitude
      *
-     * @see Polar Coordinates for more detail
      * @param theta the translation direction in Radians
      * @param magnitude the magnitude of translation
      */
@@ -150,7 +150,17 @@ public abstract class Component {
 
     public abstract String getName();
 
-    public abstract <T extends Component> T copy();
+    public Component copy(){
+        try {
+            Component result = (Component) clone();
+            result.effects = new ArrayList<>(1);
+            result.effects.addAll(effects.stream().map(ResourcefulEffect::copy).toList());
+            return result;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
     public abstract void render(ImageRenderer renderer);
 
@@ -186,6 +196,13 @@ public abstract class Component {
         return StringUtils.repeat('\t', tabLevel).concat(selfString());
     }
 
+    public List<ResourcefulEffect<?>> getEffects() {
+        return effects;
+    }
+
+    public void addEffect(ResourcefulEffect<?> effect){
+        effects.add(effect);
+    }
     public Component applyEffects(int currentFrame, EffectApplier applier) {
         if (effects.isEmpty()) {
             return copy();

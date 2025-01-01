@@ -6,6 +6,7 @@ import me.rainma22.musicvisualizer.exporter.ExportStatusListener;
 import me.rainma22.musicvisualizer.exporter.VisualizationExporter;
 import me.rainma22.musicvisualizer.imageprocessor.AwtImageProcessor;
 import me.rainma22.musicvisualizer.settings.SettingsManager;
+import me.rainma22.musicvisualizer.util.ImageUtils;
 import me.rainma22.musicvisualizer.util.ProcessUtils;
 import org.apache.commons.math3.util.FastMath;
 
@@ -80,13 +81,14 @@ public class Graphical extends JFrame implements ExportStatusListener {
                 File musicFile = new File(inputFileBar.getFilePath());
                 VisualizationExporter exporter = new VisualizationExporter();
                 SettingsManager settings = SettingsManager.getSettingsManager();
-
+                BufferedImage foregroundImage = ImageUtils.loadImage(settings.getImage("foreground_img", null));
+                BufferedImage backgroundImage = ImageUtils.loadImage(settings.getImage("background_img", null));
                 AwtImageProcessor processor = new AwtImageProcessor(
                         (Integer) settings.getObj("width"),
                         (Integer) settings.getObj("height"),
                         (Double) settings.getObj("amplitude_threshold"),
-                        (BufferedImage) settings.getObj("foreground_img"),
-                        (BufferedImage) settings.getObj("background_img"),
+                        foregroundImage,
+                        backgroundImage,
                         (Double) settings.getObj("rotation_per_theta"));
                 processor.setBlurSize((Integer) settings.getObj("blur_size"));
                 processor.setLineColor(Color.decode(settings.get("line_color_hex")));

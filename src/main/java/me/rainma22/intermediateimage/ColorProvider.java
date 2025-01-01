@@ -1,12 +1,11 @@
 package me.rainma22.intermediateimage;
 
 import me.rainma22.intermediateimage.Resources.Image;
-import me.rainma22.intermediateimage.Resources.ResourceManager;
 
 /**
  * A provider of color for a ContainerComponent, either a pure color or an image
  */
-public class ColorProvider {
+public class ColorProvider implements Cloneable{
 
     private ColorRGBA color;
     private Image image;
@@ -40,6 +39,14 @@ public class ColorProvider {
         return result;
     }
 
+    public ColorProvider copy(){
+        try {
+            return (ColorProvider) clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      *
      * @return the color maintained by the colorProvider
@@ -54,7 +61,6 @@ public class ColorProvider {
 
     /**
      *
-     * @param ResMan the resourceManager
      * @return the image that this ColorProvider refers to
      * @throws UnsupportedOperationException if the ColorProvider does not refer
      * an image

@@ -62,14 +62,17 @@ public class Rectangle extends ContainerComponent {
 
     @Override
     public Rectangle copy() {
-        Rectangle result = new Rectangle(getX(), getY(), getWidth(), getHeight());
-        for (Component child : children) {
-            result.children.add(child.copy());
-        }
-        
-        result.setBackgroundColorProvider(backgroundColorProvider);
-        result.setStrokeColor_rgba(strokeColor_rgba);
-        result.setStrokeSize_px(strokeSize_px);
+        Rectangle result = (Rectangle) super.copy();
+        result.width = width;
+        result.height = height;
+//        Rectangle result = new Rectangle(getX(), getY(), getWidth(), getHeight());
+//        for (Component child : children) {
+//            result.children.add(child.copy());
+//        }
+//
+//        result.setBackgroundColorProvider(backgroundColorProvider);
+//        result.setStrokeColor_rgba(strokeColor_rgba);
+//        result.setStrokeSize_px(strokeSize_px);
 
         return result;
     }

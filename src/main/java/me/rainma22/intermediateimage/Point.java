@@ -16,7 +16,7 @@ public class Point extends Component {
 
     @Override
     public Point copy() {
-        return new Point(getX(), getY());
+        return (Point) super.copy();
     }
 
     @Override
