@@ -12,7 +12,6 @@ import me.rainma22.musicvisualizer.settings.SettingsManager;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.nio.DoubleBuffer;
-import java.util.List;
 
 public class ImageUtils {
 
@@ -46,15 +45,16 @@ public class ImageUtils {
 //        ResourceManager resourceManager = result.getResourceManager();
 //        result.setBackgroundColorProvider(ColorProvider.ofImage((Image)
 //                settings.getObj(SettingsManager.KEY_BACKGROUND_IMG)));
-        result.addEffect(new BackgroundImage(result, List.of(SettingsManager.KEY_BACKGROUND_IMG)));
+        result.addEffect(new BackgroundImage(result, SettingsManager.KEY_BACKGROUND_IMG));
         int circleDiameter = Math.max(width/5, height/5);
         int circleX = (width - circleDiameter)/2;
         int circleY = (height - circleDiameter)/2;
         Circle center = new Circle(circleX, circleY, circleDiameter/2);
         PolyLine visualization = center.toPolyline(sampleSize);
-        center.addEffect(new BackgroundImage(center, List.of(SettingsManager.KEY_FOREGROUND_IMG)));
-        visualization.addEffect(new TransformByAudio(visualization, List.of("Audio")));
+        center.addEffect(new BackgroundImage(center,SettingsManager.KEY_FOREGROUND_IMG));
+        visualization.addEffect(new TransformByAudio(visualization, "Audio", "tbd", "tbd"));
         visualization.setStrokeColor_rgba(strokeColor);
+        visualization.setStrokeSize_px(1);
         result.add(center);
         result.add(visualization);
         return result;

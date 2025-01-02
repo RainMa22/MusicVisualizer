@@ -4,6 +4,8 @@ import org.apache.commons.math3.util.FastMath;
 
 import java.util.List;
 
+import static org.apache.commons.math3.util.FastMath.atan2;
+
 /**
  * Represent a line which is drawn from its own coordinates through each child's
  * coordinates, and the last line is of the last child and its own XY
@@ -129,15 +131,33 @@ public class PolyLine extends ContainerComponent {
                 return (y < 0) ? theta + PI : theta;
             case CENTER:
                 Point other = new Point(component.getX(), component.getY());
-                other.polarTranslationInPlace(theta, 1);
-                if (other.SquaredEuclideanDistance(center)
-                        >= component.SquaredEuclideanDistance(center)) {
+                other.polarTranslationInPlace(theta, 5);
+                int otherDist = other.SquaredEuclideanDistance(center);
+                int thisDist = component.SquaredEuclideanDistance(center);
+                if (otherDist >= thisDist) {
                     return theta;
                 } else {
                     return theta + PI;
                 }
 
         }
+    }
+
+    private void recalculateCenter(){
+        int totalX = 0;
+        int totalY = 0;
+        for (int i = 0; i < size(); i++) {
+            totalX += get(i).getX();
+            totalY += get(i).getY();
+        }
+        center = new Point(totalX/size(), totalY/size());
+    }
+
+    @Override
+    public Component applyEffects(int currentFrame, EffectApplier applier) {
+        PolyLine result = (PolyLine) super.applyEffects(currentFrame, applier);
+        result.recalculateCenter();
+        return result;
     }
 
     @Override
@@ -178,9 +198,7 @@ public class PolyLine extends ContainerComponent {
         } else {
             delta = get(index - 1).subtraction(get(index + 1));
         }
-        int deltaX = delta.getX();
-        int deltaY = delta.getY();
-        return (float) FastMath.atan2(deltaY, deltaX);
+        return (float) atan2(delta.getY(), delta.getX());
     }
 
     /**
@@ -191,7 +209,10 @@ public class PolyLine extends ContainerComponent {
      * @throws IndexOutOfBoundsException if index is out of bounds
      */
     public float getNormalTheta(int index) throws IndexOutOfBoundsException {
-        return outsideTheta(getTangentTheta(index) + PI / 2f, get(index));
+        if (inside != CENTER) return outsideTheta(getTangentTheta(index) + PI / 2f, get(index));
+        Component delta = center.subtraction(get(index));
+        return outsideTheta((float) atan2(delta.getY(), delta.getX()), get(index));
+
     }
 
     /**
@@ -203,6 +224,7 @@ public class PolyLine extends ContainerComponent {
         if (magnitudeAlongNormal.size() != size()) {
             throw new ArithmeticException("Arity Mismatch");
         }
+        recalculateCenter();
         float normal = getNormalTheta(0);
         float magnitude = magnitudeAlongNormal.get(0);
         int newX = (int) (getX() * magnitude * FastMath.cos(normal));
@@ -211,11 +233,19 @@ public class PolyLine extends ContainerComponent {
         transformed.setX(newX);
         transformed.setY(newY);
         for (int i = 1; i < size(); i++) {
+            Component point = get(i);
             normal = getNormalTheta(i);
             magnitude = magnitudeAlongNormal.get(i);
-            transformed.add(get(i).polarTranslation(normal, magnitude));
+            Component otherPoint = point.polarTranslation(normal, magnitude);
+            transformed.add(otherPoint);
         }
         return transformed;
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        this.center = new Point(getX(), getY());
     }
 
     /**

@@ -3,9 +3,6 @@ package me.rainma22.intermediateimage.Effects;
 import me.rainma22.intermediateimage.Component;
 import me.rainma22.intermediateimage.EffectApplier;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * A class that represent an Effect to be applied to an Image which is mindful
  * of the provided resources
@@ -16,18 +13,15 @@ import java.util.List;
 public abstract class ResourcefulEffect<T extends Component> implements Cloneable{
 
     protected T target;
-    protected List<String> resourceIds;
 
     /**
      * Constructor, creates a ResourcefulEffect
      *
      * @param target the target Component
-     * @param resourceIds The list of resourceIds used by this Effect
      *
      */
-    public ResourcefulEffect(T target, List<String> resourceIds) {
+    public ResourcefulEffect(T target) {
         this.target = target;
-        this.resourceIds = List.copyOf(resourceIds);
     }
 
     public T getTarget() {
@@ -38,9 +32,6 @@ public abstract class ResourcefulEffect<T extends Component> implements Cloneabl
         this.target = target;
     }
 
-    public List<String> getResourceIds() {
-        return resourceIds;
-    }
 
     /**
      *
@@ -61,8 +52,6 @@ public abstract class ResourcefulEffect<T extends Component> implements Cloneabl
     public ResourcefulEffect<T> copy(){
         try {
             ResourcefulEffect<T> result = (ResourcefulEffect<T>) clone();
-            result.resourceIds = new ArrayList<>(1);
-            result.resourceIds.addAll(resourceIds);
             return result;
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
@@ -71,7 +60,6 @@ public abstract class ResourcefulEffect<T extends Component> implements Cloneabl
 
     @Override
     public String toString() {
-        return String.join(" ", getName(),
-                String.join(" ", resourceIds));
+        return String.join(" ", getName());
     }
 }

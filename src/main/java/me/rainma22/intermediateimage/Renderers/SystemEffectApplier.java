@@ -52,10 +52,10 @@ public class SystemEffectApplier extends EffectApplier {
     @Override
     public ContainerComponent applyBackgroundImage(int currentFrame, BackgroundImage bi) {
         ContainerComponent target = bi.getTarget();
-        if (bi.getResourceIds().isEmpty()) {
-            return (ContainerComponent) target.copy();
+        String imageId = bi.getImageId();
+        if (imageId == null) {
+            return target.copy();
         }
-        String imageId = bi.getResourceIds().get(0);
         Image image = resMan.getImage(imageId);
         if (image == null) {
             return (ContainerComponent) target.copy();
@@ -71,11 +71,22 @@ public class SystemEffectApplier extends EffectApplier {
     @Override
     public PolyLine applyTransformByAudio(int currentFrame, TransformByAudio tba) {
         PolyLine target = tba.getTarget();
-        if (tba.getResourceIds().isEmpty()) {
-            return target.copy();
+        String audioId = tba.getAudioId();
+        String scaleId = tba.getScaleId();
+        String strokeSizeId = tba.getStrokeSizeId();
+        int scale = 50;
+        int strokeSize = 1;
+        if(scaleId != null) ;// load from resMan;
+        if(strokeSizeId != null) ;// load from resMan;
+
+        PolyLine result = target.copy();
+        result.setStrokeSize_px(strokeSize);
+        if(audioId == null){
+            return result;
         }
-        String audioId = tba.getResourceIds().get(0);
         Audio audio = resMan.getAudio(audioId);
+        if (audio == null) return result;
+
         double[] data = null;
         try {
             data = getResourceLoader().loadAudio(audio);
@@ -85,7 +96,7 @@ public class SystemEffectApplier extends EffectApplier {
             Logger.getLogger(SystemEffectApplier.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (data == null) {
-            return target.copy();
+            return result;
         }
         FastFourierTransformer transformer = tba.getTransformer();
         double[] subData = Arrays.copyOfRange(data, currentFrame*target.size(),
@@ -99,11 +110,10 @@ public class SystemEffectApplier extends EffectApplier {
         for (int i = 0; i < amp.length; i++) {
             double real = transformedData[i].getReal();
             double imaginary = transformedData[i].getImaginary();
-            amp[i] = (float) FastMath.log(FastMath.sqrt(real*real + imaginary*imaginary) + 1);
+            amp[i] = (float) FastMath.log(FastMath.sqrt(real*real + imaginary*imaginary) + 1) * scale;
         }
 
         return target.transform(Arrays.asList(amp));
-    
     }
 
     class ResourceLoader {
@@ -119,8 +129,7 @@ public class SystemEffectApplier extends EffectApplier {
         public double[] loadAudio(Audio audio) throws UnsupportedAudioFileException, IOException {
             if (audio == null) {
                 cachedAudios.put(audio, null);
-            }
-            if (!cachedAudios.containsKey(audio)) {
+            } else if (!cachedAudios.containsKey(audio)) {
                 MusicExtractor me = new MusicExtractor(audio.getPath().toString());
                 double[] data = me.readFile();
                 cachedAudios.put(audio, data);

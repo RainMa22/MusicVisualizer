@@ -4,8 +4,6 @@ import me.rainma22.intermediateimage.ContainerComponent;
 import me.rainma22.intermediateimage.EffectApplier;
 import me.rainma22.intermediateimage.Effects.ResourcefulEffect;
 
-import java.util.List;
-
 /**
  * Represents a background image effect
  */
@@ -13,38 +11,14 @@ public class BackgroundImage extends ResourcefulEffect<ContainerComponent> {
 
     private String imageId = null;
 
-    public BackgroundImage(ContainerComponent target, List<String> resourceIds) {
-        super(target, resourceIds);
-        if (!resourceIds.isEmpty()) {
-            imageId = resourceIds.get(0);
-        }
+    public BackgroundImage(ContainerComponent target, String imageId) {
+        super(target);
+        this.imageId = imageId;
     }
 
-//    /**
-//     *
-//     * @param index the index of frame
-//     * @param resMan the resource manager
-//     * @return a copy of target with the background image set to the image
-//     * associated with given imageId, simply returns a copy if resourceIds is
-//     * not given or the first of the given resourceIds does not refer to an
-//     * Image;
-//     */
-//    @Override
-//    public ContainerComponent apply(int index, ResourceManager resMan) {
-//        if (imageId == null) {
-//            return target.copy();
-//        }
-//        Image image = resMan.getImage(imageId);
-//        if (image == null) {
-//            return target.copy();
-//        }
-//
-//        ContainerComponent result = target.copy();
-//        
-//        result.setBackgroundColor_rgba
-//                (ColorProvider.ofImage(image));
-//        return result;
-//    }
+    public String getImageId() {
+        return imageId;
+    }
 
     @Override
     public String getName() {

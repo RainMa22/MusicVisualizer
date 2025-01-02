@@ -15,7 +15,6 @@ import me.rainma22.musicvisualizer.util.ImageUtils;
 import org.apache.commons.math3.util.FastMath;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicBorders;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.nio.file.Path;
@@ -27,11 +26,11 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
     private final SettingsManager settings;
     private AwtImageRenderer renderer;
     private IntermediateImage finalImage;
-    private int sampleSize = 2048;
+    private int sampleSize = 8192;
 
     public PreviewPanel() {
         super();
-        setBorder(BasicBorders.getButtonBorder());
+//        setBorder(BasicBorders.getButtonBorder());
         settings = SettingsManager.getSettingsManager();
         settings.addListener(this);
         update(null, null);

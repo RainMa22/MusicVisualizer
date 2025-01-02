@@ -92,7 +92,7 @@ public abstract class ContainerComponent extends Component {
     }
 
     @Override
-    public Component copy() {
+    public ContainerComponent copy() {
         ContainerComponent component = (ContainerComponent) super.copy();
         component.children = new ArrayList<>();
         component.children.addAll(children.stream().map(child -> child.copy()).toList());
@@ -123,10 +123,12 @@ public abstract class ContainerComponent extends Component {
     @Override
     public Component applyEffects(int currentFrame, EffectApplier applier) {
         ContainerComponent result = (ContainerComponent) super.applyEffects(currentFrame, applier);
-        result.children = new ArrayList<>();
-        for (Component child : children) {
-            result.children.add(child.applyEffects(currentFrame, applier));
+        for (int i = 0; i < result.children.size(); i++) {
+            Component newChild = result.children.get(i).applyEffects(currentFrame, applier);
+            result.children.set(i, newChild);
         }
+
+
         return result;
     }
 }
