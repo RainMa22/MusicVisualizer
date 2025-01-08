@@ -56,7 +56,7 @@ public class SystemEffectApplier extends EffectApplier {
         if (imageId == null) {
             return target.copy();
         }
-        Image image = resMan.getImage(imageId);
+        Image image = resMan.get(Image.class, imageId);
         if (image == null) {
             return (ContainerComponent) target.copy();
         }
@@ -84,7 +84,7 @@ public class SystemEffectApplier extends EffectApplier {
         if(audioId == null){
             return result;
         }
-        Audio audio = resMan.getAudio(audioId);
+        Audio audio = resMan.get(Audio.class, audioId);
         if (audio == null) return result;
 
         double[] data = null;

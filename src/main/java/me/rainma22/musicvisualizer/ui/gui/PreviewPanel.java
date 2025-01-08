@@ -42,7 +42,7 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
         imageTemplate = new IntermediateImage(1,1);
         resMan = imageTemplate.getResourceManager();
         applier = SystemEffectApplier.of(resMan);
-        resMan.setAudio("Audio", new Audio(Path.of("test_16bitInt.wav")));
+        resMan.set("Audio", new Audio(Path.of("test_16bitInt.wav")));
         renderer = AwtImageRenderer.fromImageParam(imageTemplate);
         finalImage = new IntermediateImage(1, 1);
     }
@@ -103,8 +103,8 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
         double threshold = (Double) settings.getObj(SettingsManager.KEY_AMPLITUDE_THRESHOLD);
         Image foregroundResource = (Image) settings.getObj(SettingsManager.KEY_FOREGROUND_IMG);
         Image backgroundResource = (Image) settings.getObj(SettingsManager.KEY_BACKGROUND_IMG);
-        resMan.setImage(SettingsManager.KEY_FOREGROUND_IMG, foregroundResource);
-        resMan.setImage(SettingsManager.KEY_BACKGROUND_IMG, backgroundResource);
+        resMan.set(SettingsManager.KEY_FOREGROUND_IMG, foregroundResource);
+        resMan.set(SettingsManager.KEY_BACKGROUND_IMG, backgroundResource);
         double rotationPerFrameTheta = (Double) settings.getObj(SettingsManager.KEY_ROTATION_THETA);
 //        renderer = AwtImageRenderer.fromImageParam(imageTemplate);
         finalImage = (IntermediateImage) imageTemplate.applyEffects(120, applier);

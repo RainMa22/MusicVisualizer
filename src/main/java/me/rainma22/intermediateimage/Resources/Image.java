@@ -5,7 +5,7 @@ import java.nio.file.Path;
 /**
  * Represents an Image Resource
  */
-public class Image extends Resource {
+public class Image extends FileResource {
 
     public Image(Path path) {
         super(path);

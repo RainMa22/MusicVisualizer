@@ -6,33 +6,84 @@ import java.util.Set;
 
 /**
  * A data-class containing all the resources, keyed by their resourceIds
- *
  */
 public class ResourceManager {
 
     private static final String IMAGE_PREFIX = "IMAGE_";
     private static final String AUDIO_PREFIX = "AUDIO_";
+    private static final String NUMERICAL_PREFIX = "AUDIO_";
 
-    private Map<String, Image> images = new HashMap<>();
-    private Map<String, Audio> audios = new HashMap<>();
+    private static final HashMap<Class<?>, String> prefixMap = new HashMap<>();
+
+    static {
+        prefixMap.put(Image.class, "IMAGE_");
+        prefixMap.put(Audio.class, "Audio_");
+        prefixMap.put(Numerical.class, "NUMERICAL_");
+        prefixMap.put(BaseResource.class, "UNKNOWN_RESOURCE_");
+    }
+
+//    private Map<String, Image> images = new HashMap<>();
+//    private Map<String, Audio> audios = new HashMap<>();
+
+    private Map<String, BaseResource> resourceMap = new HashMap<>();
 
     public ResourceManager() {
     }
 
-    public Image getImage(String id) {
-        return images.get(id);
+    private BaseResource getResource(String id) {
+        return resourceMap.get(id);
     }
 
-    public void setImage(String id, Image image) {
-        images.put(id, image);
+    public void set(String id, BaseResource resource) {
+        resourceMap.put(id, resource);
     }
 
-    public Map<String, Image> getImages() {
-        return Map.copyOf(images);
+    public <T extends BaseResource> String add(Class<T> aClass, BaseResource toAdd) {
+        String key = nextUnusedDefaultKey(
+                prefixMap.getOrDefault(aClass, prefixMap.get(BaseResource.class)),
+                resourceMap.keySet());
+        set(key, toAdd);
+        return key;
+
     }
 
-    public Map<String, Audio> getAudios() {
-        return Map.copyOf(audios);
+    public <T extends BaseResource> int numResourceOfType(Class<T> aClass) {
+        int num = 0;
+        for (String key : resourceMap.keySet()) {
+            if (aClass.isInstance(resourceMap.get(key))) num++;
+        }
+        return num;
+    }
+
+    public <T extends BaseResource> T get(Class<T> aClass, String id)
+            throws WrongResourceTypeException {
+        try {
+            return aClass.cast(getResource(id));
+        } catch (ClassCastException cce) {
+            throw new WrongResourceTypeException(cce);
+        }
+    }
+
+    public <T extends Number> Numerical<T> getNumerical(Class<T> numClass, String id)
+            throws WrongResourceTypeException {
+        Numerical<? extends Number> result = (Numerical<? extends Number>) get(Numerical.class, id);
+        if (!numClass.isInstance(result.getValue())) throw new WrongResourceTypeException();
+
+        return (Numerical<T>) result;
+    }
+
+    /**
+     * Adds the image to the Audio data set
+     *
+     * @param audio the audio to add
+     * @return the resource id String that corresponds to the audio
+     */
+    public String addAudio(Audio audio) {
+        return add(Audio.class, audio);
+    }
+
+    public Map<String, BaseResource> getResourceMap() {
+        return resourceMap;
     }
 
     private String nextUnusedDefaultKey(String prefix, Set<String> keys) {
@@ -45,54 +96,5 @@ public class ResourceManager {
             }
         }
         return key;
-    }
-
-    /**
-     * Adds the image to the Image data set
-     *
-     * @param image the image to add
-     * @return the resource id String that corresponds to the image;
-     */
-    public String addImage(Image image) {
-        String key = nextUnusedDefaultKey(IMAGE_PREFIX,
-                images.keySet());
-        setImage(key, image);
-        return key;
-    }
-
-    /**
-     * @return the amount of images stored in the resource manager
-     */
-    public int numImages() {
-        return images.size();
-    }
-
-    public Audio getAudio(String id) {
-        return audios.get(id);
-    }
-
-    public void setAudio(String id, Audio audio) {
-        audios.put(id, audio);
-    }
-
-    /**
-     * Adds the image to the Audio data set
-     *
-     * @param audio the audio to add
-     * @return the resource id String that corresponds to the audio
-     */
-    public String addAudio(Audio audio) {
-        String key = nextUnusedDefaultKey(AUDIO_PREFIX,
-                audios.keySet());
-        setAudio(key, audio);
-        return key;
-    }
-
-    /**
-     *
-     * @return the amount of audio in the audio data set
-     */
-    public int numAudios() {
-        return audios.size();
     }
 }

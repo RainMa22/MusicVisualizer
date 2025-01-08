@@ -1,5 +1,6 @@
 package me.rainma22.intermediateimage;
 
+import me.rainma22.intermediateimage.Resources.BaseResource;
 import me.rainma22.intermediateimage.Resources.ResourceManager;
 
 /**
@@ -21,8 +22,7 @@ public class IntermediateImage extends Rectangle {
     public String selfString() {
         return String.join(" ",
                 super.selfString(),
-                Integer.toString(resourceManager.numImages()),
-                Integer.toString(resourceManager.numAudios()));
+                Integer.toString(resourceManager.numResourceOfType(BaseResource.class)));
     }
 
     public ResourceManager getResourceManager() {
