@@ -25,13 +25,49 @@ public class AwtImageRenderer extends ImageRenderer<java.awt.Image> {
     private Graphics2D g2d;
     private SystemEffectApplier sysApplier;
 
-    public AwtImageRenderer(IntermediateImage intermediateImage) {
+    public AwtImageRenderer(SystemEffectApplier applier, int width, int height) {
+        super(applier);
+        sysApplier = applier;
+        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        g2d = image.createGraphics();
+    }
+
+    /**
+     * creates a AwtImageRenderer based on the parameters of the given intermediate image
+     * <br>
+     * in detail:
+     * <br>
+     * creates the EffectApplier from the image's ResourceManager
+     * <br>
+     * the internal buffer will be created using the intermediateImage's width and height;
+     * <br>
+     * HOWEVER! this does not draw the given intermediateImage
+     *
+     * @param intermediateImage the intermediateImage with the needed parameters.
+     */
+    private AwtImageRenderer(IntermediateImage intermediateImage) {
         super(SystemEffectApplier.of(intermediateImage.getResourceManager()));
         sysApplier = (SystemEffectApplier) super.applier;
         int width = intermediateImage.getWidth();
         int height = intermediateImage.getHeight();
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         g2d = image.createGraphics();
+    }
+
+    /**
+     * in detail:
+     * <br>
+     * creates the EffectApplier from the image's ResourceManager
+     * <br>
+     * the internal buffer will be created using the intermediateImage's width and height;
+     * <br>
+     * HOWEVER! this does not draw the given intermediateImage
+     *
+     * @param iimg the intermediateImage with the needed parameters.
+     * @return a AwtImageRenderer based on the parameters of the given intermediate image
+     */
+    public static AwtImageRenderer fromImageParam(IntermediateImage iimg) {
+        return new AwtImageRenderer(iimg);
     }
 
     @Override
@@ -93,7 +129,10 @@ public class AwtImageRenderer extends ImageRenderer<java.awt.Image> {
 
     @Override
     public void drawIntermediateImage(IntermediateImage iimg) {
-        AwtImageRenderer renderer = new AwtImageRenderer(iimg);
+        SystemEffectApplier effectApplier = SystemEffectApplier.of(iimg.getResourceManager());
+        int width = iimg.getWidth();
+        int height = iimg.getHeight();
+        AwtImageRenderer renderer = new AwtImageRenderer(effectApplier, width, height);
         renderer.drawRectangle(iimg);
         java.awt.Image image = renderer.finalizeImage();
         g2d.drawImage(image, iimg.getX(), iimg.getY(), null);
@@ -148,8 +187,8 @@ public class AwtImageRenderer extends ImageRenderer<java.awt.Image> {
 
             float scale = FastMath.max((float) width / toDraw.getWidth(null),
                     (float) height / toDraw.getHeight(null));
-            int x = (int) (r.getX() + (width - toDraw.getWidth(null) * scale)  / 2);
-            int y = (int) (r.getY() + (height - toDraw.getHeight(null) * scale)  / 2);
+            int x = (int) (r.getX() + (width - toDraw.getWidth(null) * scale) / 2);
+            int y = (int) (r.getY() + (height - toDraw.getHeight(null) * scale) / 2);
 
 
             AffineTransform at = new AffineTransform();
