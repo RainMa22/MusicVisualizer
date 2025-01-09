@@ -67,7 +67,7 @@ public class ResourceManager {
     public <T extends Number> Numerical<T> getNumerical(Class<T> numClass, String id)
             throws WrongResourceTypeException {
         Numerical<? extends Number> result = (Numerical<? extends Number>) get(Numerical.class, id);
-        if (!numClass.isInstance(result.getValue())) throw new WrongResourceTypeException();
+        if (!numClass.isInstance(result.getValue(0))) throw new WrongResourceTypeException();
 
         return (Numerical<T>) result;
     }

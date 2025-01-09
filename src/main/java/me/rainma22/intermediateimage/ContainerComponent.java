@@ -12,7 +12,16 @@ public abstract class ContainerComponent extends Component {
     protected List<Component> children;
     protected ColorProvider backgroundColorProvider
             = ColorProvider.ofColor(ColorRGBA.TRANSPARENT);
+    protected int backgroundGaussianBlurSize = 1;
     protected ColorRGBA strokeColor_rgba = ColorRGBA.TRANSPARENT;
+
+    public int getBackgroundGaussianBlurSize() {
+        return backgroundGaussianBlurSize;
+    }
+
+    public void setBackgroundGaussianBlurSize(int backgroundGaussianBlurSize) {
+        this.backgroundGaussianBlurSize = backgroundGaussianBlurSize;
+    }
 
     public ColorProvider getBackgroundColorProvider() {
         return backgroundColorProvider;

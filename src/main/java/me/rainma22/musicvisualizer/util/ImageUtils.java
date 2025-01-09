@@ -2,6 +2,7 @@ package me.rainma22.musicvisualizer.util;
 
 import me.rainma22.intermediateimage.Circle;
 import me.rainma22.intermediateimage.ColorRGBA;
+import me.rainma22.intermediateimage.Effects.ContainerEffects.BackgroundBlurSizeEffect;
 import me.rainma22.intermediateimage.Effects.ContainerEffects.BackgroundImage;
 import me.rainma22.intermediateimage.Effects.PolylineEffects.TransformByAudio;
 import me.rainma22.intermediateimage.IntermediateImage;
@@ -46,10 +47,11 @@ public class ImageUtils {
 //        result.setBackgroundColorProvider(ColorProvider.ofImage((Image)
 //                settings.getObj(SettingsManager.KEY_BACKGROUND_IMG)));
         result.addEffect(new BackgroundImage(result, SettingsManager.KEY_BACKGROUND_IMG));
+        result.addEffect(new BackgroundBlurSizeEffect(result, SettingsManager.KEY_BLUR_SIZE));
         int circleDiameter = Math.max(width/5, height/5);
         int circleX = (width - circleDiameter)/2;
         int circleY = (height - circleDiameter)/2;
-        Circle center = new Circle(circleX, circleY, circleDiameter/2);
+        Circle center = new Circle(circleX, circleY, circleDiameter/2f);
         PolyLine visualization = center.toPolyline(sampleSize);
         center.addEffect(new BackgroundImage(center,SettingsManager.KEY_FOREGROUND_IMG));
         visualization.addEffect(new TransformByAudio(visualization, "Audio", "tbd", "tbd"));

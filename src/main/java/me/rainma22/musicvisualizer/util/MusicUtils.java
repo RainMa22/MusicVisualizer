@@ -1,5 +1,6 @@
 package me.rainma22.musicvisualizer.util;
 
+import me.rainma22.intermediateimage.Resources.Numerical;
 import me.rainma22.musicvisualizer.frameoutput.FrameFFMPEGOutput;
 import me.rainma22.musicvisualizer.frameoutput.FrameMOVOutput;
 import me.rainma22.musicvisualizer.frameoutput.FrameOutput;
@@ -17,20 +18,20 @@ public class MusicUtils {
         SettingsManager settings = SettingsManager.getSettingsManager();
         File outFile = new File(outFilePath);
         int indexOfPeriod = outFile.getName().lastIndexOf(".");
-        String format = outFile.getName().substring(indexOfPeriod+1).toUpperCase();
+        String format = outFile.getName().substring(indexOfPeriod + 1).toUpperCase();
         String outPath = outFile.getParentFile().getAbsolutePath();
         String outFileName = outFile.getName();
         String fileNameNoExtension = outFileName.substring(0, indexOfPeriod);
 //        outFileName = String.join(".", outFileName, format);
-        int width = settings.getInt("width", 1920);
-        int height = settings.getInt("height", 1080);
+        int width = settings.getInt("width", new Numerical<>(1920)).getValue(0);
+        int height = settings.getInt("height", new Numerical<>(1080)).getValue(0);
         String ffmpegPath = settings.get("path_to_ffmpeg");
 
         double fps = settings.getDouble("fps", 60);
         switch (format) {
             case "PNG":
                 System.out.println("Using PNG output");
-                return new FramePNGOutput(outPath,fileNameNoExtension, numFrames);
+                return new FramePNGOutput(outPath, fileNameNoExtension, numFrames);
             case "MOV":
             default:
                 if (ffmpegEnabled) {

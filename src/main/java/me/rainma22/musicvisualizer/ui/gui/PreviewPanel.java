@@ -7,6 +7,7 @@ import me.rainma22.intermediateimage.Renderers.AwtImageRenderer;
 import me.rainma22.intermediateimage.Renderers.SystemEffectApplier;
 import me.rainma22.intermediateimage.Resources.Audio;
 import me.rainma22.intermediateimage.Resources.Image;
+import me.rainma22.intermediateimage.Resources.Numerical;
 import me.rainma22.intermediateimage.Resources.ResourceManager;
 import me.rainma22.musicvisualizer.settings.SettingsChangeListener;
 import me.rainma22.musicvisualizer.settings.SettingsEntry;
@@ -81,8 +82,8 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
         int viewHeight = this.getHeight();
         if (viewWidth == 0 || viewHeight == 0) return;
 
-        int width = (Integer) settings.getObj(SettingsManager.KEY_WIDTH);
-        int height = (Integer) settings.getObj(SettingsManager.KEY_HEIGHT);
+        int width = ((Numerical<Integer>) settings.getObj(SettingsManager.KEY_WIDTH)).getValue(0);
+        int height = ((Numerical<Integer>) settings.getObj(SettingsManager.KEY_HEIGHT)).getValue(0);
 
 
         float scale = FastMath.min((float) viewWidth / width, (float) viewHeight / height);
@@ -91,21 +92,22 @@ public class PreviewPanel extends JPanel implements SettingsChangeListener {
 
         width = FastMath.round(width * scale);
         height = FastMath.round(height * scale);
-        int blurSize = (Integer) settings.getObj("blur_size");
+        Numerical<Integer> blurSize = (Numerical<Integer>) settings.getObj(SettingsManager.KEY_BLUR_SIZE);
 
-        String lineColor = settings.get("line_color_hex");
+        String lineColor = settings.get(SettingsManager.KEY_LINE_COLOR_HEX);
 
         imageTemplate = ImageUtils.getDefaultIntermediateImage(width, height,
                 sampleSize,
                 new ColorRGBA(Integer.decode(lineColor)));
         imageTemplate.setResourceManager(resMan);
 
-        double threshold = (Double) settings.getObj(SettingsManager.KEY_AMPLITUDE_THRESHOLD);
+        Numerical<Double> threshold = (Numerical<Double>) settings.getObj(SettingsManager.KEY_AMPLITUDE_THRESHOLD);
         Image foregroundResource = (Image) settings.getObj(SettingsManager.KEY_FOREGROUND_IMG);
         Image backgroundResource = (Image) settings.getObj(SettingsManager.KEY_BACKGROUND_IMG);
         resMan.set(SettingsManager.KEY_FOREGROUND_IMG, foregroundResource);
         resMan.set(SettingsManager.KEY_BACKGROUND_IMG, backgroundResource);
-        double rotationPerFrameTheta = (Double) settings.getObj(SettingsManager.KEY_ROTATION_THETA);
+        resMan.set(SettingsManager.KEY_BLUR_SIZE, blurSize);
+        Numerical<Double> rotationPerFrameTheta = (Numerical<Double>) settings.getObj(SettingsManager.KEY_ROTATION_THETA);
 //        renderer = AwtImageRenderer.fromImageParam(imageTemplate);
         finalImage = (IntermediateImage) imageTemplate.applyEffects(120, applier);
 //        finalImage.setResourceManager(resMan);

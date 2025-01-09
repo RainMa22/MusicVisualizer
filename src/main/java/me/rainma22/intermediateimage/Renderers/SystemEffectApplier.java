@@ -58,10 +58,10 @@ public class SystemEffectApplier extends EffectApplier {
         }
         Image image = resMan.get(Image.class, imageId);
         if (image == null) {
-            return (ContainerComponent) target.copy();
+            return target.copy();
         }
 
-        ContainerComponent result = (ContainerComponent) target.copy();
+        ContainerComponent result = target.copy();
 
         result.setBackgroundColorProvider(ColorProvider.ofImage(image));
         return result;
@@ -115,6 +115,7 @@ public class SystemEffectApplier extends EffectApplier {
 
         return target.transform(Arrays.asList(amp));
     }
+
 
     class ResourceLoader {
 

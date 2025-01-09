@@ -1,6 +1,8 @@
 package me.rainma22.musicvisualizer.ui.cli;
 
+import me.rainma22.intermediateimage.ColorRGBA;
 import me.rainma22.intermediateimage.Resources.Image;
+import me.rainma22.intermediateimage.Resources.Numerical;
 import me.rainma22.musicvisualizer.exporter.ExportStatusListener;
 import me.rainma22.musicvisualizer.exporter.VisualizationExporter;
 import me.rainma22.musicvisualizer.imageprocessor.AwtImageProcessor;
@@ -28,8 +30,8 @@ public class CommandLine implements ExportStatusListener {
 
     public void start() {
         double FPS_TARGET = settings.getDouble("fps", 60);
-        int width = settings.getInt("width", 1920);
-        int height = settings.getInt("height", 1080);
+        int width = settings.getInt("width", new Numerical<Integer>(1920)).getValue(0);
+        int height = settings.getInt("height", new Numerical<Integer>(1080)).getValue(0);
         double rotationPerTheta = settings.getDouble("rotation_per_theta", 0);//Math.PI/60
         double amplitudeThreshold = settings.getDouble("amplitude_threshold", 0);
         Image foregroudResource = settings.getImage(SettingsManager.KEY_FOREGROUND_IMG, null);
@@ -46,14 +48,15 @@ public class CommandLine implements ExportStatusListener {
         } catch (Exception e) {
             //ignored
         }
-        Color lineColor = settings.getColor("line_color_hex", Color.BLUE);
-        int blurSize = Math.max(0, settings.getInt("blur_size", 50));
+        ColorRGBA lineColor = settings.getColor("line_color_hex", ColorRGBA.BLUE);
+        int blurSize = Math.max(0, settings.getInt("blur_size", new Numerical<>(50))
+                .getValue(0));
         if (blurSize % 2 == 0) blurSize++;
 
         AwtImageProcessor processor = new AwtImageProcessor(width, height, amplitudeThreshold,
                 foregroundImage, backgroundImage, rotationPerTheta);
 
-        processor.setLineColor(lineColor);
+        processor.setLineColor(new Color(lineColor.intValue()));
         processor.setBlurSize(blurSize);
 
         VisualizationExporter exporter = new VisualizationExporter();

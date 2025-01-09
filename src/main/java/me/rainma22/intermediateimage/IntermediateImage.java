@@ -8,6 +8,7 @@ import me.rainma22.intermediateimage.Resources.ResourceManager;
  */
 public class IntermediateImage extends Rectangle {
     private ResourceManager resourceManager = new ResourceManager();
+    private int gaussianBlurSize = 0;
 
     public IntermediateImage(int width, int height){
         super(0,0, width, height);
@@ -45,5 +46,12 @@ public class IntermediateImage extends Rectangle {
         result.setResourceManager(this.getResourceManager());
         return result;
     }
-    
+
+    public int getGaussianBlurSize() {
+        return gaussianBlurSize;
+    }
+
+    public void setGaussianBlurSize(int gaussianBlurSize) {
+        this.gaussianBlurSize = gaussianBlurSize;
+    }
 }

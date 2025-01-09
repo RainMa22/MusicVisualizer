@@ -209,7 +209,7 @@ public abstract class Component implements Cloneable {
         }
         Component result = this;
         for (ResourcefulEffect effect : effects) {
-            effect.setTarget(this);
+            effect.setTarget(result);
             result = effect.apply(currentFrame, applier);
         }
         return result;

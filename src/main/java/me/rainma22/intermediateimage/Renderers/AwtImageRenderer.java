@@ -5,6 +5,7 @@ import me.rainma22.intermediateimage.Point;
 import me.rainma22.intermediateimage.Rectangle;
 import me.rainma22.intermediateimage.*;
 import me.rainma22.intermediateimage.Resources.Image;
+import me.rainma22.musicvisualizer.imageprocessor.blur.GaussianBlur;
 import org.apache.commons.math3.util.FastMath;
 
 import java.awt.*;
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
 /**
  * renders Intermediate Images into BufferedImages
  */
-public class AwtImageRenderer extends ImageRenderer<java.awt.Image> {
+public class AwtImageRenderer extends ImageRenderer<BufferedImage> {
 
     private BufferedImage image;
     private Graphics2D g2d;
@@ -78,32 +79,38 @@ public class AwtImageRenderer extends ImageRenderer<java.awt.Image> {
         int strokeSize = c.getStrokeSize_px();
 
         int circleDiameter = (int) (c.getRadius() * 2);
+        int width = circleDiameter;
+        int height = circleDiameter;
         Ellipse2D circleClip = new Ellipse2D.Float(c.getX(), c.getY(),
                 circleDiameter, circleDiameter);
 
         if (c.getBackgroundColorProvider().isImage()) {
-            java.awt.Image toDraw;
+            BufferedImage toDraw = new BufferedImage(width,height,
+                    BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d2 = toDraw.createGraphics();
+
+            AffineTransform at = new AffineTransform();
             try {
                 Image image = c.getBackgroundColorProvider().getImage();
-                toDraw = sysApplier.getResourceLoader().loadImage(image);
+                BufferedImage bi = (BufferedImage) sysApplier.getResourceLoader().loadImage(image);
+                float scale = FastMath.max((float) width / bi.getWidth(null),
+                        (float) height / bi.getHeight(null));
+                int x = (int) ((width - bi.getWidth(null) * scale) / 2);
+                int y = (int) ((height - bi.getHeight(null) * scale) / 2);
+                at.scale(scale, scale);
+                at.translate(x, y);
+
+                g2d2.drawImage(bi, at, null);
+                g2d2.dispose();
+//                GaussianBlur blur = GaussianBlur.ofSize(c.getBackgroundGaussianBlurSize());
+//                blur.filter(toDraw,toDraw);
+
             } catch (IOException ex) {
                 Logger.getLogger(AwtImageRenderer.class.getName()).log(Level.SEVERE, null, ex);
                 return;
             }
-
-            float scale = FastMath.max((float) circleDiameter / toDraw.getWidth(null),
-                    (float) circleDiameter / toDraw.getHeight(null));
-
-
-            int x = (int) (c.getX() + (circleDiameter - toDraw.getWidth(null) * scale) / 2);
-            int y = (int) (c.getY() + (circleDiameter - toDraw.getHeight(null) * scale) / 2);
-
-            AffineTransform at = new AffineTransform();
-            at.translate(x, y);
-            at.scale(scale, scale);
-
             g2d.setClip(circleClip);
-            g2d.drawImage(toDraw, at, null);
+            g2d.drawImage(toDraw, c.getX(), c.getY(), null);
 
         } else {//c.getBackgroundColorProvider().isColor()
             ColorRGBA backgroundColor = c.getBackgroundColorProvider().getColor();
@@ -130,11 +137,13 @@ public class AwtImageRenderer extends ImageRenderer<java.awt.Image> {
     @Override
     public void drawIntermediateImage(IntermediateImage iimg) {
         SystemEffectApplier effectApplier = SystemEffectApplier.of(iimg.getResourceManager());
+        GaussianBlur blur = GaussianBlur.ofSize(iimg.getGaussianBlurSize());
         int width = iimg.getWidth();
         int height = iimg.getHeight();
         AwtImageRenderer renderer = new AwtImageRenderer(effectApplier, width, height);
         renderer.drawRectangle(iimg);
-        java.awt.Image image = renderer.finalizeImage();
+        BufferedImage image = renderer.finalizeImage();
+        image = blur.filter(image, null);
         g2d.drawImage(image, iimg.getX(), iimg.getY(), null);
     }
 
@@ -176,27 +185,37 @@ public class AwtImageRenderer extends ImageRenderer<java.awt.Image> {
                 width, height);
 
         if (r.getBackgroundColorProvider().isImage()) {
-            java.awt.Image toDraw;
+            BufferedImage toDraw = new BufferedImage(width,height,
+                    BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d2 = toDraw.createGraphics();
+
+
+
+            AffineTransform at = new AffineTransform();
             try {
                 Image image = r.getBackgroundColorProvider().getImage();
-                toDraw = sysApplier.getResourceLoader().loadImage(image);
+                BufferedImage bi = (BufferedImage) sysApplier.getResourceLoader().loadImage(image);
+                float scale = FastMath.max((float) width / bi.getWidth(null),
+                        (float) height / bi.getHeight(null));
+                int x = (int) ((width - bi.getWidth(null) * scale) / 2);
+                int y = (int) ((height - bi.getHeight(null) * scale) / 2);
+                at.scale(scale, scale);
+                at.translate(x, y);
+
+                g2d2.drawImage(bi, at, null);
+                g2d2.dispose();
+                GaussianBlur blur = GaussianBlur.ofSize(r.getBackgroundGaussianBlurSize());
+                blur.filter(toDraw,toDraw);
+
             } catch (IOException ex) {
                 Logger.getLogger(AwtImageRenderer.class.getName()).log(Level.SEVERE, null, ex);
                 return;
             }
 
-            float scale = FastMath.max((float) width / toDraw.getWidth(null),
-                    (float) height / toDraw.getHeight(null));
-            int x = (int) (r.getX() + (width - toDraw.getWidth(null) * scale) / 2);
-            int y = (int) (r.getY() + (height - toDraw.getHeight(null) * scale) / 2);
 
-
-            AffineTransform at = new AffineTransform();
-            at.scale(scale, scale);
-            at.translate(x, y);
 
             g2d.setClip(rectangleClip);
-            g2d.drawImage(toDraw, at, null);
+            g2d.drawImage(toDraw,r.getX(),r.getY(), null);
 
         } else {//c.getBackgroundColorProvider().isColor()
             ColorRGBA backgroundColor = r.getBackgroundColorProvider().getColor();
@@ -226,7 +245,7 @@ public class AwtImageRenderer extends ImageRenderer<java.awt.Image> {
     }
 
     @Override
-    public java.awt.Image finalizeImage() {
+    public BufferedImage finalizeImage() {
         g2d.dispose();
         return image;
     }

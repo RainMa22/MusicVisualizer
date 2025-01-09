@@ -4,7 +4,10 @@ package me.rainma22.intermediateimage;
  * A Color represents a RGBA value
  */
 public class ColorRGBA{
-    public static final ColorRGBA BLACK = new ColorRGBA(0x000000ff);
+    public static final ColorRGBA BLACK = new ColorRGBA(0x000000FF);
+    public static final ColorRGBA RED = new ColorRGBA(0xFF0000FF);
+    public static final ColorRGBA GREEN = new ColorRGBA(0x00FF00FF);
+    public static final ColorRGBA BLUE = new ColorRGBA(0x0000FFFF);
     public static final ColorRGBA TRANSPARENT = new ColorRGBA(0x00000000);
     private byte red, green, blue, alpha;
     

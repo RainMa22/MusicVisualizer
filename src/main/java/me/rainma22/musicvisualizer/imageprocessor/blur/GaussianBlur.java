@@ -25,17 +25,23 @@ public class GaussianBlur {
     private final FastFourierTransformer transformer;
     private ArrayList<Complex[]> transformedKernels;
     private boolean active;
+//    private static final HashMap<Integer, GaussianBlur> cache = new HashMap<>();
 
-    public GaussianBlur(float sigma) {
-        this(sigma, (int) (sigma * 2));
-
+    public static GaussianBlur ofSize(int Size){
+//        return cache.computeIfAbsent(Size, (GaussianBlur::new));
+        return new GaussianBlur(Size);
     }
 
-    public GaussianBlur(int size) {
+//    public GaussianBlur(float sigma) {
+//        this(sigma, (int) (sigma * 2));
+//
+//    }
+
+    private GaussianBlur(int size) {
         this(size / 2f, size);
     }
 
-    public GaussianBlur(float sigma, int size) {
+    private GaussianBlur(float sigma, int size) {
         active = true;
         if (size <= 1 || sigma <= 0) active = false;
         else if (size % 2 == 0) size++;
@@ -70,7 +76,7 @@ public class GaussianBlur {
         return out;
     }
 
-    private void filterHelper(int inputWidth, int inputHeight, Raster imgData, WritableRaster outputRaster, FilterDirection direction) {
+    private void filter1D(int inputWidth, int inputHeight, Raster imgData, WritableRaster outputRaster, FilterDirection direction) {
 
         boolean isHorizontal = direction == FilterDirection.HORIZONTAL;
         int ogSize;
@@ -144,12 +150,10 @@ public class GaussianBlur {
         }
 
         Raster imgData = input.getData();
-
-
         WritableRaster outputRaster = output.getRaster();
-        filterHelper(inputWidth, inputHeight, imgData, outputRaster, FilterDirection.HORIZONTAL);
+        filter1D(inputWidth, inputHeight, imgData, outputRaster, FilterDirection.HORIZONTAL);
         imgData = output.getData();
-        filterHelper(inputWidth, inputHeight, imgData, outputRaster, FilterDirection.VERTICAL);
+        filter1D(inputWidth, inputHeight, imgData, outputRaster, FilterDirection.VERTICAL);
         return output;
     }
 

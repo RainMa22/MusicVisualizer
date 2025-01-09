@@ -10,7 +10,7 @@ public class Numerical<T extends Number> extends BaseResource {
         this.number = number;
     }
 
-    public T getValue(){
+    public T getValue(int frame){
         return number;
     }
 

@@ -149,7 +149,7 @@ public class AwtImageProcessor {
         if (!forceChange && (blurSize == this.blurSize)) return;
         this.blurSize = blurSize;
         if (backgroundImage != null) {
-            GaussianBlur blur = new GaussianBlur(blurSize);
+            GaussianBlur blur = GaussianBlur.ofSize(blurSize);
             if (blurredImage !=null &&
                     blurredImage.getWidth() == backgroundImage.getWidth() &&
                     blurredImage.getHeight() == backgroundImage.getHeight())
